@@ -1,0 +1,48 @@
+<!doctype html>
+<head>
+	<meta charset=utf8>
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<title>beadsOnString</title>
+	<link rel=stylesheet href="http://fonts.googleapis.com/css?family=Noto+Sans:400,700|Source+Code+Pro:400,600">
+</head>
+<body> 
+	<h1>EXAMPLE 3 - Understanding the different parameters of the oscillator </h1>
+	<p>  </p>
+	<p> Click anywhere on the screen to start playing. You will be asked to pick a type of wave for your sound (choose from sawtooth, sine, square, triangle), and to pick a frequency. The frequency range for young people is 20 to 20000 hz, but depending on the type of wave you picked you may not hear anything. </p>
+
+	<script>
+		var ac = new AudioContext();
+		var	osc;
+
+		function playNote(frequency, startTime, type) {
+		 	osc = ac.createOscillator();
+		 	osc.type = type;
+
+		 	osc.connect(ac.destination);
+
+		 	osc.frequency.value = frequency;
+		 	osc.start();
+		 }
+
+		var playing = true;
+		document.addEventListener('click', onClick, false);
+
+		function start() {
+			var typ = prompt("Please enter a type of wave for the first oscillator", "sine");
+			var freq = prompt("Please enter a frequency for the note you want to play","500");
+			playNote(freq, ac.currentTime, typ);
+			console.log("You are playing a " + typ + "wave at frequency " + freq + ".");
+			playing = false;	
+		}
+		function stop(){
+			osc.stop();
+			playing = true;
+		}
+		function onClick() {
+			if (playing)
+				start();
+			else stop();
+		}
+
+	</script>
+</body>

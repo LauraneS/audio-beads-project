@@ -1,0 +1,57 @@
+<!doctype html>
+<head>
+	<meta charset=utf8>
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<title>beadsOnString</title>
+	<link rel=stylesheet href="http://fonts.googleapis.com/css?family=Noto+Sans:400,700|Source+Code+Pro:400,600">
+</head>
+<body> 
+	<h1>EXAMPLE 6 - Using a biquad filter and a gain node </h1>
+	
+	<p> Click anywhere on the screen to hear a sound. Click again to stop it. </p>
+
+	<script>
+		var ac = new AudioContext();
+		var osc1, osc2, biquadFilter, gain;
+		
+		var playing = true;
+		document.addEventListener('click', onClick, false);
+
+		function start() {
+			osc1 = ac.createOscillator();
+			osc2 = ac.createOscillator();
+			gain = ac.createGain();
+			biquadFilter = ac.createBiquadFilter();
+
+			osc1.connect(biquadFilter);
+			osc2.connect(biquadFilter);
+			biquadFilter.connect(gain);
+			gain.connect(ac.destination);
+
+			osc1.type = 'sawtooth';
+			console.log(osc1.frequency);
+			osc2.type = 'triangle';
+			osc2.frequency.value = 700;
+			console.log(osc2.frequency);
+
+			biquadFilter.type = 'lowpass';
+			biquadFilter.frequency.value = 300;
+			biquadFilter.gain.value = 25;
+			
+			osc1.start();
+			osc2.start();
+			
+			playing = false;
+		}
+		function stop(){
+			osc1.stop();
+			osc2.stop();
+			playing = true;
+		}
+		function onClick() {
+			if (playing)
+				start();
+			else stop();
+		}
+	</script>
+</body>

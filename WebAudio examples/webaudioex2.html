@@ -1,0 +1,42 @@
+<!doctype html>
+<head>
+	<meta charset=utf8>
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<title>beadsOnString</title>
+	<link rel=stylesheet href="http://fonts.googleapis.com/css?family=Noto+Sans:400,700|Source+Code+Pro:400,600">
+</head>
+<body> 
+	<h1>EXAMPLE 2 - Manipulating the volume level</h1>
+	<p> Being able to manipulate the volume of a sound using a GainNode. </p>
+	<p> Click anywhere on the screen to hear a sound. Click again to stop it. Each time you click again for the sound to start, the GainNode value is increased by 1. </p>
+
+	<script>
+		var ac = new AudioContext();
+		var osc = ac.createOscillator;
+		var gain = ac.createGain();
+		
+		gain.gain.value = 0;
+		gain.connect(ac.destination);
+		
+		var playing = true;
+		document.addEventListener('click', onClick, false);
+
+		function start() {
+			osc = ac.createOscillator();
+			osc.connect(gain);
+			gain.gain.value++;
+			console.log(gain.gain.value);
+			osc.start();
+			playing = false;	
+		}
+		function stop(){
+			osc.stop();
+			playing = true;
+		}
+		function onClick() {
+			if (playing)
+				start();
+			else stop();
+		}
+	</script>
+</body>

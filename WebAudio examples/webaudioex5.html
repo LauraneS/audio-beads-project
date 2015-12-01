@@ -1,0 +1,47 @@
+<!doctype html>
+<head>
+	<meta charset=utf8>
+	<meta name=viewport content="width=device-width, initial-scale=1">
+	<title>beadsOnString</title>
+	<link rel=stylesheet href="http://fonts.googleapis.com/css?family=Noto+Sans:400,700|Source+Code+Pro:400,600">
+</head>
+<body> 
+	<h1>EXAMPLE 5 - Use a conditional to specify the type of the sound wave</h1>
+	<p> The code generates a random number between 20 and 20000 for the frequency and if the frequency is below 200, the oscillator produces a square wave. Else it produces a sawtooth wave.</p>
+	<p> Click anywhere on the screen to hear a sound. Click again to stop it. </p>
+
+	<script>
+		var ac = new AudioContext();
+		var osc;
+		var nbr;
+		
+		var playing = true;
+		document.addEventListener('click', onClick, false);
+
+		function start() {
+			nbr = Math.floor((Math.random() * 10000) + 20);
+			osc = ac.createOscillator();
+			osc.frequency.value = nbr;
+			console.log(nbr);
+			if (nbr < 200)
+				osc.type = 'square';
+			else osc.type = 'sawtooth';
+			console.log(osc.type);
+			osc.connect(ac.destination);
+			
+			osc.start();
+			
+			playing = false;
+		}
+		function stop(){
+			osc.stop();
+			
+			playing = true;
+		}
+		function onClick() {
+			if (playing)
+				start();
+			else stop();
+		}
+	</script>
+</body>
