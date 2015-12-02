@@ -1,37 +1,126 @@
-
 <!doctype html>
 <head>
-	<meta charset=utf8>
-	<meta name=viewport content="width=device-width, initial-scale=1">
-	<title>beadsOnString</title>
-	<link rel=stylesheet href="http://fonts.googleapis.com/css?family=Noto+Sans:400,700|Source+Code+Pro:400,600">
+    <title>Experimenting with the Canvas and fabric.js</title>
 </head>
-<body> 
-	<h1>EXAMPLE 1 - Play a sound</h1>
-	<p> Being able to create a sound and stop it. </p>
-	<p> Click anywhere on the screen to hear a sound. Click again to stop it. </p>
+<body>
+    <canvas id="canvas">
+        This text is displayed if your browser does not support HTML5 Canvas.
+    </canvas>
 
-	<script>
-		var ac = new AudioContext();
-		var osc;
-		
-		var playing = true;
-		document.addEventListener('click', onClick, false);
+    <script src="fabric.js/dist/fabric.js"></script>
+    <script>
+        var canvas = new fabric.Canvas('canvas');
+        canvas.setHeight(window.innerHeight);
+        canvas.setWidth(window.innerWidth);
 
-		function start() {
-			osc = ac.createOscillator();
-			osc.connect(ac.destination);
-			osc.start();
-			playing = false;
-		}
-		function stop(){
-			osc.stop();
-			playing = true;
-		}
-		function onClick() {
-			if (playing)
-				start();
-			else stop();
-		}
-	</script>
+        var LabeledRect = fabric.util.createClass(fabric.Rect, {
+
+          type: 'labeledRect',
+
+          initialize: function(options) {
+            options || (options = { });
+
+            this.callSuper('initialize', options);
+            this.set('label', options.label || '');
+          },
+
+          toObject: function() {
+            return fabric.util.object.extend(this.callSuper('toObject'), {
+              label: this.get('label')
+            });
+          },
+
+          _render: function(ctx) {
+            this.callSuper('_render', ctx);
+
+            ctx.font = '20px Helvetica';
+            ctx.fillStyle = 'black';
+            ctx.fillText(this.label, -this.width/2, -this.height/2+20);
+          }
+        });
+
+        var LabeledCircle = fabric.util.createClass(fabric.Circle, {
+
+          type: 'labeledCircle',
+
+          initialize: function(options) {
+            options || (options = { });
+
+            this.callSuper('initialize', options);
+            this.set('label', options.label || '');
+          },
+
+          toObject: function() {
+            return fabric.util.object.extend(this.callSuper('toObject'), {
+              label: this.get('label')
+            });
+          },
+
+          _render: function(ctx) {
+            this.callSuper('_render', ctx);
+
+            ctx.font = '20px Helvetica';
+            ctx.fillStyle = 'black';
+            ctx.textAlign = "center";
+            ctx.fillText(this.label, -this.radius/2+20, this.radius/2-20);
+          }
+        });
+
+        var playc = new LabeledCircle({
+            left: 300, 
+            top: 300,
+            radius: 50,
+            fill: '#eef',
+            label: 'play note'
+        });
+
+        canvas.add(playc);
+
+
+        var start = new LabeledRect({
+            top: 100,
+            left: 100,
+            width: 40, 
+            height: 40,
+            fill: undefined,
+            strokeWidth: 1,
+            stroke: 'black',
+            label: 'start'
+        });
+
+        var end = new LabeledRect({
+            top: 400,
+            left: 400,
+            width: 40, 
+            height: 40,
+            fill: undefined,
+            strokeWidth: 1,
+            stroke: 'black',
+            label: 'end'
+        });
+ 
+        canvas.add(start, end);
+        
+        var state = JSON.stringify(canvas);
+        // console.log(state);
+
+        console.log(canvas.item(0).get('label'));
+
+        document.addEventListener('click', generateSound, false);
+
+        function generateSound(){
+            console.log(JSON.stringify(canvas));
+
+            console.log(state.search("labeledCircle"));
+
+            if (state.search("labeledCircle") > 0){
+                var ac = new AudioContext();
+                var osc = ac.createOscillator();
+                osc.connect(ac.destination);
+                osc.start();
+                osc.stop(ac.currentTime + 3);
+            }
+        };
+        
+    </script>
 </body>
