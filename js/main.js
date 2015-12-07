@@ -2,6 +2,11 @@ var canvas = new fabric.Canvas('canvas');
 canvas.setHeight(window.innerHeight);
 canvas.setWidth(window.innerWidth);
 
+window.addEventListener('resize', function(){
+	canvas.setHeight(window.innerHeight);
+	canvas.setWidth(window.innerWidth);
+})
+
 console.log("0");
 OscNode();
 console.log("1");
