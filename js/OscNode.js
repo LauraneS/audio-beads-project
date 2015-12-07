@@ -9,7 +9,7 @@ var OscRect = fabric.util.createClass(fabric.Rect, {
 		this.set('freq', options.freq || 0 );
 		this.set('duration', options.duration || 0);
 		this.set('label', options.label || '');
-		this.set('id', options.id = generateUUID());
+		// this.set('id', options.id = generateUUID());
 	},
 
 	toObject: function(){
