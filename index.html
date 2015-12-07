@@ -1,126 +1,20 @@
 <!doctype html>
 <head>
-    <title>Experimenting with the Canvas and fabric.js</title>
-</head>
+<meta charset=utf8>
+<meta name=viewport content="width=device-width, initial-scale=1">
+<title>Beads</title>
 <body>
-    <canvas id="canvas">
+<canvas id="canvas" style="border:1px solid #000000;">
         This text is displayed if your browser does not support HTML5 Canvas.
-    </canvas>
-
-    <script src="fabric.js/dist/fabric.js"></script>
-    <script>
-        var canvas = new fabric.Canvas('canvas');
-        canvas.setHeight(window.innerHeight);
-        canvas.setWidth(window.innerWidth);
-
-        var LabeledRect = fabric.util.createClass(fabric.Rect, {
-
-          type: 'labeledRect',
-
-          initialize: function(options) {
-            options || (options = { });
-
-            this.callSuper('initialize', options);
-            this.set('label', options.label || '');
-          },
-
-          toObject: function() {
-            return fabric.util.object.extend(this.callSuper('toObject'), {
-              label: this.get('label')
-            });
-          },
-
-          _render: function(ctx) {
-            this.callSuper('_render', ctx);
-
-            ctx.font = '20px Helvetica';
-            ctx.fillStyle = 'black';
-            ctx.fillText(this.label, -this.width/2, -this.height/2+20);
-          }
-        });
-
-        var LabeledCircle = fabric.util.createClass(fabric.Circle, {
-
-          type: 'labeledCircle',
-
-          initialize: function(options) {
-            options || (options = { });
-
-            this.callSuper('initialize', options);
-            this.set('label', options.label || '');
-          },
-
-          toObject: function() {
-            return fabric.util.object.extend(this.callSuper('toObject'), {
-              label: this.get('label')
-            });
-          },
-
-          _render: function(ctx) {
-            this.callSuper('_render', ctx);
-
-            ctx.font = '20px Helvetica';
-            ctx.fillStyle = 'black';
-            ctx.textAlign = "center";
-            ctx.fillText(this.label, -this.radius/2+20, this.radius/2-20);
-          }
-        });
-
-        var playc = new LabeledCircle({
-            left: 300, 
-            top: 300,
-            radius: 50,
-            fill: '#eef',
-            label: 'play note'
-        });
-
-        canvas.add(playc);
-
-
-        var start = new LabeledRect({
-            top: 100,
-            left: 100,
-            width: 40, 
-            height: 40,
-            fill: undefined,
-            strokeWidth: 1,
-            stroke: 'black',
-            label: 'start'
-        });
-
-        var end = new LabeledRect({
-            top: 400,
-            left: 400,
-            width: 40, 
-            height: 40,
-            fill: undefined,
-            strokeWidth: 1,
-            stroke: 'black',
-            label: 'end'
-        });
- 
-        canvas.add(start, end);
-        
-        var state = JSON.stringify(canvas);
-        // console.log(state);
-
-        console.log(canvas.item(0).get('label'));
-
-        document.addEventListener('click', generateSound, false);
-
-        function generateSound(){
-            console.log(JSON.stringify(canvas));
-
-            console.log(state.search("labeledCircle"));
-
-            if (state.search("labeledCircle") > 0){
-                var ac = new AudioContext();
-                var osc = ac.createOscillator();
-                osc.connect(ac.destination);
-                osc.start();
-                osc.stop(ac.currentTime + 3);
-            }
-        };
-        
-    </script>
+</canvas>
 </body>
+
+<button onclick="play()">Play</button>
+<script src="fabric.js/dist/fabric.js"></script>
+<script src=""//cdnjs.cloudflare.com/ajax/libs/mousetrap/1.4.6/mousetrap.min.js""></script>
+
+<script src="js/OscNode.js"></script>
+<script src="js/BufferNode.js"></script>
+<script src="js/generateUUID.js"></script>
+
+<script src="js/main.js"></script>
