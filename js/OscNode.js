@@ -6,7 +6,7 @@ var OscRect = fabric.util.createClass(fabric.Rect, {
 
 		this.callSuper('initialize', options);
 		this.set('wave', options.wave || '');
-		this.set('freq', options.freq || 0 );
+		this.set('frequency', options.frequency || 0 );
 		this.set('duration', options.duration || 0);
 		this.set('label', options.label || '');
 		this.set({hasControls: false, hasBorders: false, selectable: false});

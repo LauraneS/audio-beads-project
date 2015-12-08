@@ -12,22 +12,6 @@ window.addEventListener('resize', function(){
 	canvas.setWidth(window.innerWidth);
 })
 
-
-//
-// canvas.on('object:selected', function(e){
-// 	var activeObject = e.target;
-// 	if (activeObject.get('type') === 'oscillator') {
-// 		activeObject.set('wave', window.prompt("Please enter a type of wave", "sine"));
-
-// 		activeObject.set('freq', window.prompt("Please enter a frequency", "200"));		
-// 		activeObject.set('duration', window.prompt("Please enter a duration", "2"));
-// 	} else if (activeObject.get('type') === 'buffer') {
-// 		activeObject.set('url', window.prompt("Please enter an url to a wav sound", "hihat-plain.wav"));
-// 		activeObject.set('loop', window.prompt("Please enter true if you want the sound to loop", "true"));		
-// 	}
-	
-// });
-
 function makeLine(coords) {
     return new fabric.Line(coords, {
         fill: '',
@@ -150,6 +134,20 @@ window.addChild = function () {
 // function onObjectMoving(e){
 // 	canvas.renderAll();
 // }
+
+
+canvas.on('mouse:over', function(e){
+	if(isShiftDown){
+		var activeObject = e.target;
+		setParameters(activeObject);
+	}
+});
+
+function setParameters(obj) {
+	var key = '' + window.prompt("What parameter would you like to set?", "freq");
+	var value = window.prompt("Set a value for that parameter");
+	obj.set(key,value);
+}
 
 document.onkeydown = function(e) {
     switch (e.keyCode) {
