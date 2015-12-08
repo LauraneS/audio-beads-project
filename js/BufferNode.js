@@ -8,7 +8,7 @@ var BufferNode = fabric.util.createClass(fabric.Rect, {
 		this.set('url', options.url || '');
 		this.set('loop', options.loop || false);
 		this.set('label', options.label || '');
-		this.set({hasControls: false, hasBorders: false});
+		this.set({hasControls: false, hasBorders: false, selectable: false});
 	},
 
 	toObject: function(){
