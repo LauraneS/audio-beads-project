@@ -1,3 +1,8 @@
+var ac = new AudioContext(), buf, source;
+var line, isMouseDown, isMouseOver, isShiftDown, center;
+
+
+//Canvas Initialisation 
 var canvas = new fabric.Canvas('canvas');
 canvas.setHeight(window.innerHeight);
 canvas.setWidth(window.innerWidth);
@@ -7,30 +12,165 @@ window.addEventListener('resize', function(){
 	canvas.setWidth(window.innerWidth);
 })
 
-console.log("0");
-OscNode();
-console.log("1");
-BufferNod('hihat-plain.wav', true);
-console.log(JSON.stringify(canvas));
-console.log("2");
 
+//
+// canvas.on('object:selected', function(e){
+// 	var activeObject = e.target;
+// 	if (activeObject.get('type') === 'oscillator') {
+// 		activeObject.set('wave', window.prompt("Please enter a type of wave", "sine"));
 
-canvas.on('object:selected', function(e){
-	var activeObject = e.target;
-	if (activeObject.get('type') === 'oscillator') {
-		activeObject.set('wave', window.prompt("Please enter a type of wave", "sine"));
-
-		activeObject.set('freq', window.prompt("Please enter a frequency", "200"));		
-		activeObject.set('duration', window.prompt("Please enter a duration", "2"));
-	} else if (activeObject.get('type') === 'buffer') {
-		activeObject.set('url', window.prompt("Please enter an url to a wav sound", "hihat-plain.wav"));
-		activeObject.set('loop', window.prompt("Please enter true if you want the sound to loop", "true"));		
-	}
+// 		activeObject.set('freq', window.prompt("Please enter a frequency", "200"));		
+// 		activeObject.set('duration', window.prompt("Please enter a duration", "2"));
+// 	} else if (activeObject.get('type') === 'buffer') {
+// 		activeObject.set('url', window.prompt("Please enter an url to a wav sound", "hihat-plain.wav"));
+// 		activeObject.set('loop', window.prompt("Please enter true if you want the sound to loop", "true"));		
+// 	}
 	
-});
+// });
 
-var ac = new AudioContext();
-var buf;
+function makeLine(coords) {
+    return new fabric.Line(coords, {
+        fill: '',
+        stroke: 'black',
+        selectable: false
+    });
+}
+
+['object:moving', 'object:scaling'].forEach(addChildMoveLine);
+
+function addChildLine(options) {
+    canvas.off('object:selected', addChildLine);
+
+    // add the line
+    var fromObject = canvas.addChild.start;
+    var toObject = options.target;
+    var from = fromObject.getCenterPoint();
+    var to = toObject.getCenterPoint();
+    var coords = [from.x, from.y, to.x, to.y];
+    var line = makeLine(coords);
+    canvas.add(line);
+    // so that the line is behind the connected shapes
+    line.sendToBack();
+
+    // add a reference to the line to each object
+    fromObject.addChild = {
+        // this retains the existing arrays (if there were any)
+        from: (fromObject.addChild && fromObject.addChild.from) || [],
+        to: (fromObject.addChild && fromObject.addChild.to)
+    }
+    fromObject.addChild.from.push(line);
+    toObject.addChild = {
+        from: (toObject.addChild && toObject.addChild.from),
+        to: (toObject.addChild && toObject.addChild.to) || []
+    }
+    toObject.addChild.to.push(line);
+
+    // to remove line references when the line gets removed
+    line.addChildRemove = function () {
+        fromObject.addChild.from.forEach(function(e, i, arr) {
+            if (e === line)
+                arr.splice(i, 1);
+        });
+        toObject.addChild.to.forEach(function (e, i, arr) {
+            if (e === line)
+                arr.splice(i, 1);
+        });
+    }
+
+    // undefined instead of delete since we are anyway going to do this many times
+    canvas.addChild = undefined;
+}
+
+function addChildMoveLine(event) {
+    canvas.on(event, function (options) {
+        var object = options.target;
+        var objectCenter = object.getCenterPoint();
+        // udpate lines (if any)
+        if (object.addChild) {
+            if (object.addChild.from)
+                object.addChild.from.forEach(function (line) {
+                    line.set({ 'x1': objectCenter.x, 'y1': objectCenter.y });
+                })
+            if (object.addChild.to)
+                object.addChild.to.forEach(function (line) {
+                    line.set({ 'x2': objectCenter.x, 'y2': objectCenter.y });
+                })
+        }
+
+        canvas.renderAll();
+    });
+}
+
+window.addChild = function () {
+    canvas.addChild = {
+        start: canvas.getActiveObject()
+    }
+
+    // for when addChild is clicked twice
+    canvas.off('object:selected', addChildLine);
+    canvas.on('object:selected', addChildLine);
+}
+
+
+// canvas.on('mouse:down', function(v){
+// 	isMouseDown = true;
+//   	if (isShiftDown && isMouseOver){
+// 	  	//var pointer = canvas.getPointer(v.e)
+// 		//var points = [pointer.x, pointer.y, pointer.x, pointer.y]
+// 		var points = [center.x, center.y, center.x, center.y]
+// 		line = new fabric.Line(points, {
+// 			stroke: 'black',
+// 		    selectable: false,
+// 		    originX: 'center', 
+// 		    originY: 'center'
+// 		});
+// 		canvas.add(line);
+// 	}  
+// });
+
+// canvas.on('mouse:move', function(v){
+// 	if (!isMouseDown) return;
+// 	if (isShiftDown && isMouseOver) {
+// 		//var pointer = canvas.getPointer(v.e);
+// 		line.set({x2: center.x, y2: center.y});
+// 		canvas.renderAll();	
+// 	}
+// });
+
+// canvas.on('mouse:up', function(v){
+// 	isMouseDown = false;
+// });
+
+// canvas.on('mouse:over', function(e) {
+// 	isMouseOver = true;
+//     center = e.target.getCenterPoint();
+//     console.log(center);
+//   });
+
+// function onObjectMoving(e){
+// 	canvas.renderAll();
+// }
+
+document.onkeydown = function(e) {
+    switch (e.keyCode) {
+        case 16:  // Shift key down
+            isShiftDown = true;
+        break;
+        case 83: 
+        	canvas.forEachObject(function(obj){
+        		obj.set({selectable: true});
+        	});
+        break;
+      }
+}
+
+document.onkeyup = function(e) {
+	switch (e.keyCode) {
+		case 16: //Shift key released
+			isShiftDown = false;
+		break;
+	}
+}
 
 function play(){
 	
@@ -81,11 +221,12 @@ function getData(url, loop) {
 
 			  request.send();
 }
-var source;
+
 function startb(url, loop){
 	getData(url, loop);
 	source.start(0);
 }
 
-
+OscNode();
+BufferNod('hihat-plain.wav', true);
 
