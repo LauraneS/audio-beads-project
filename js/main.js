@@ -12,6 +12,7 @@ window.addEventListener('resize', function(){
 	canvas.setWidth(window.innerWidth);
 })
 
+//Function to draw a line
 function makeLine(coords) {
     return new fabric.Line(coords, {
         fill: '',
@@ -20,6 +21,7 @@ function makeLine(coords) {
     });
 }
 
+// Functions + Events to draw a line between objects by 'adding a child' to a clicked object
 ['object:moving', 'object:scaling'].forEach(addChildMoveLine);
 
 function addChildLine(options) {
@@ -135,7 +137,7 @@ window.addChild = function () {
 // 	canvas.renderAll();
 // }
 
-
+// If Shift key down and mouse over object, user prompted to set parameters for said object
 canvas.on('mouse:over', function(e){
 	if(isShiftDown){
 		var activeObject = e.target;
@@ -149,6 +151,7 @@ function setParameters(obj) {
 	obj.set(key,value);
 }
 
+//Functions to link keydown events to various functions 
 document.onkeydown = function(e) {
     switch (e.keyCode) {
         case 16:  // Shift key down
@@ -170,6 +173,8 @@ document.onkeyup = function(e) {
 	}
 }
 
+
+//Code to generate the web audio api code
 function play(){
 	
 	var state = JSON.stringify(canvas);
@@ -225,6 +230,13 @@ function startb(url, loop){
 	source.start(0);
 }
 
-OscNode();
-BufferNod('hihat-plain.wav', true);
+
+//Code to add node to the canvas manually 
+TempoNode();
+LoopNode();
+animateBead(bead, dur);
+console.log(dur);
+
+// OscNode();
+// BufferNod('hihat-plain.wav', true);
 
