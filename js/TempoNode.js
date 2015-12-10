@@ -8,6 +8,7 @@ function TempoNode(){
         hasControls: false,
         lockMovementX: true,
         lockMovementY: true,
+        type: 'tempo'
 
 	});
 

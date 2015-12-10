@@ -1,0 +1,15 @@
+
+
+#canvas {
+    border: 2px solid black;
+}
+
+#drag-elements li {
+	display: inline-block;
+	padding: 0.5em 1em;
+	margin: 0 1em 1em 0;
+	border: 1px solid #D9D9D9;
+	background: #F7F7F7;
+	border-radius: 3px;
+}
+

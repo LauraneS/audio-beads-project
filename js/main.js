@@ -4,13 +4,33 @@ var line, isMouseDown, isMouseOver, isShiftDown, center;
 
 //Canvas Initialisation 
 var canvas = new fabric.Canvas('canvas');
-canvas.setHeight(window.innerHeight);
-canvas.setWidth(window.innerWidth);
+canvas.setHeight(window.innerHeight -150);
+canvas.setWidth(window.innerWidth -20);
 
 window.addEventListener('resize', function(){
-	canvas.setHeight(window.innerHeight);
-	canvas.setWidth(window.innerWidth);
+	canvas.setHeight(window.innerHeight - 150);
+	canvas.setWidth(window.innerWidth - 20);
 })
+
+TempoNode();
+console.log(canvas.item(1).type);
+console.log(parseInt(canvas.item(1).getText()));
+function createNode(arg){
+    switch(arg){
+        case 'play':
+            PlayNode();
+            break;
+        case 'loop':
+            LoopNode();
+            if (canvas.item(0).type === 'tempo'){
+                animateBead(bead, 60000/parseInt(canvas.item(1).getText()));
+            }
+            break;
+        case 'fx':
+            EffectNode();
+            break;
+    }
+}
 
 //Function to draw a line
 function makeLine(coords) {
@@ -19,7 +39,7 @@ function makeLine(coords) {
         stroke: 'black',
         selectable: false
     });
-}
+};
 
 // Functions + Events to draw a line between objects by 'adding a child' to a clicked object
 ['object:moving', 'object:scaling'].forEach(addChildMoveLine);
@@ -97,46 +117,6 @@ window.addChild = function () {
     canvas.on('object:selected', addChildLine);
 }
 
-
-// canvas.on('mouse:down', function(v){
-// 	isMouseDown = true;
-//   	if (isShiftDown && isMouseOver){
-// 	  	//var pointer = canvas.getPointer(v.e)
-// 		//var points = [pointer.x, pointer.y, pointer.x, pointer.y]
-// 		var points = [center.x, center.y, center.x, center.y]
-// 		line = new fabric.Line(points, {
-// 			stroke: 'black',
-// 		    selectable: false,
-// 		    originX: 'center', 
-// 		    originY: 'center'
-// 		});
-// 		canvas.add(line);
-// 	}  
-// });
-
-// canvas.on('mouse:move', function(v){
-// 	if (!isMouseDown) return;
-// 	if (isShiftDown && isMouseOver) {
-// 		//var pointer = canvas.getPointer(v.e);
-// 		line.set({x2: center.x, y2: center.y});
-// 		canvas.renderAll();	
-// 	}
-// });
-
-// canvas.on('mouse:up', function(v){
-// 	isMouseDown = false;
-// });
-
-// canvas.on('mouse:over', function(e) {
-// 	isMouseOver = true;
-//     center = e.target.getCenterPoint();
-//     console.log(center);
-//   });
-
-// function onObjectMoving(e){
-// 	canvas.renderAll();
-// }
-
 // If Shift key down and mouse over object, user prompted to set parameters for said object
 canvas.on('mouse:over', function(e){
 	if(isShiftDown){
@@ -156,20 +136,24 @@ document.onkeydown = function(e) {
     switch (e.keyCode) {
         case 16:  // Shift key down
             isShiftDown = true;
-        break;
+            break;
+        case 67: //C key down
+            canvas.clear().renderAll();
+            TempoNode();
+            break;
         case 83: 
         	canvas.forEachObject(function(obj){
         		obj.set({selectable: true});
         	});
-        break;
+            break;
       }
 }
 
 document.onkeyup = function(e) {
 	switch (e.keyCode) {
 		case 16: //Shift key released
-			isShiftDown = false;
-		break;
+		  isShiftDown = false;
+		  break;
 	}
 }
 
@@ -232,7 +216,6 @@ function startb(url, loop){
 
 
 //Code to add node to the canvas manually
-PlayNode();
 
 // TempoNode();
 // LoopNode();
@@ -241,4 +224,3 @@ PlayNode();
 
 // OscNode();
 // BufferNod('hihat-plain.wav', true);
-
