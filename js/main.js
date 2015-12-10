@@ -231,11 +231,13 @@ function startb(url, loop){
 }
 
 
-//Code to add node to the canvas manually 
-TempoNode();
-LoopNode();
-animateBead(bead, dur);
-console.log(dur);
+//Code to add node to the canvas manually
+PlayNode();
+
+// TempoNode();
+// LoopNode();
+// animateBead(bead, dur);
+// console.log(dur);
 
 // OscNode();
 // BufferNod('hihat-plain.wav', true);
