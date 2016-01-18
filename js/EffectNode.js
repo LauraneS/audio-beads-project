@@ -19,7 +19,7 @@ function EffectNode(){
 		parentNode: [],
 		children: []
 	})
-	fabric.Image.fromURL('/svg/fx.png', function(oImg){
+	fabric.Image.fromURL('/png/fx.png', function(oImg){
 		oImg.scale(0.32);
 		fxGroup.add(oImg.set({left: -oImg.getWidth()/2, top:-oImg.getHeight()/2}));
 		canvas.renderAll();

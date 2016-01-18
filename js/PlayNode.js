@@ -21,7 +21,7 @@ function PlayNode(){
 		frequency: Math.floor(Math.random() * (800-50)+50),
 		duration: Math.floor(Math.random()*(10-1)+1) 
 	})
-	fabric.Image.fromURL('/svg/playnote.png', function(oImg){
+	fabric.Image.fromURL('/png/playnote.png', function(oImg){
 		oImg.scale(0.35);
 		playGroup.add(oImg.set({left: -oImg.getWidth()/2, top:-oImg.getHeight()/2}));
 		canvas.renderAll();
