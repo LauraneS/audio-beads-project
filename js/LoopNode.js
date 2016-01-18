@@ -1,21 +1,22 @@
-var orbit, bead, dur = 1000;
+var orbit, bead, dur = 1000, oCoords;
 function LoopNode(){
   function createOrbit() {
     orbit = new fabric.Circle({
-      radius: 220,
+      radius: 100,
+      left: Math.floor((Math.random() * canvas.getWidth()) - 99), 
+      top: Math.floor((Math.random() * canvas.getHeight()) -99),
       fill: '',
-      stroke: 'rgba(0,192,255,0.5)',
+      stroke: 'black',
       hasBorders: false,
       hasControls: false,
-      lockMovementX: true,
-      lockMovementY: true,
+      selectable: true,
+      type: 'loop'
     });
     canvas.add(orbit);
-    orbit.center();
   }
 
   function createBead(){
-    var oCoords = orbit.getCenterPoint();
+    oCoords = orbit.getCenterPoint();
     bead = new fabric.Circle({
       radius: 5,
       left: oCoords.x - 5,
@@ -34,18 +35,23 @@ function LoopNode(){
 
   function init() {
     createOrbit();
-    createBead();
+    //createBead();
   }
 
-  init();        
+  init();   
+  // orbit.on('moving', function(){
+  //   oCoords = orbit.getCenterPoint();
+  //   bead.set({left: oCoords.x - 5, top: oCoords.y - orbit.radius - 5});
+  //   animateBead(bead, 60000/parseInt(canvas.item(1).getText()));
+  // });     
 }
 
 function animateBead(bead, dur) {
 
   var radius = orbit.radius,
       // rotate around canvas center
-      cx = canvas.getWidth() / 2 - bead.radius,
-      cy = canvas.getHeight() / 2 - bead.radius,
+      cx = oCoords.x - bead.radius,
+      cy = oCoords.y - bead.radius,
       // speed of rotation slows down for further planets
       duration = dur,
       // randomize starting angle to avoid planets starting on one line
@@ -69,7 +75,7 @@ function animateBead(bead, dur) {
         var y = cy + radius * Math.sin(angle);
 
         bead.set({ left: x, top: y }).setCoords();
-        canvas.renderAll();
+        canvas.renderAll.bind(canvas)
         
       },
       onComplete: animate
