@@ -1,20 +1,108 @@
 var ac = new AudioContext(), buf, source;
 var line, isMouseDown, isMouseOver, isShiftDown, center;
 
+function guid() {
+    function s4() {
+        return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    }
+    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+}
+
+//Setting properties for all objects
+fabric.Object.prototype.set({
+    hasControls: false, hasBorders: false, selectable: true
+});
+
+fabric.Object.prototype.toObject = (function (toObject){
+    return function(){
+        return fabric.util.object.extend(toObject.call(this), {
+            ID: this.ID,
+            children: this.children,
+            parentNode: this.parentNode,
+            frequency: this.frequency,
+            duration: this.duration,
+            sample: this.sample
+        });
+    };
+})(fabric.Object.prototype.toObject);
+
+//fabric.Object.prototype.toObject([this.height, this.ID, this.left, this.text, this.top, this.type, this.width]);
 
 //Canvas Initialisation 
 var canvas = new fabric.Canvas('canvas');
 canvas.setHeight(window.innerHeight -150);
 canvas.setWidth(window.innerWidth -20);
+canvas.selection = false;
+canvas.hoverCursor = canvas.moveCursor ='pointer';
+canvas.on({
+    // 'object:moving': canvasChange,
+    'object:added': canvasChange,
+    'object:removed': canvasChange,
+    'canvas:cleared' : canvasCleared
+});
+
+function canvasChange(){
+    var state = JSON.parse(JSON.stringify(canvas));
+
+    var i, nbr; 
+    for (i = 0, nbr = state.objects.length; i<nbr; i++){
+        console.log(state.objects[i].type);
+        if (state.objects[i].type === 'playNode'){
+            var osc = ac.createOscillator();
+            osc.frequency = state.objects[i].frequency;
+            osc.connect(ac.destination);
+            osc.start(ac.currentTime);
+            osc.stop(ac.currentTime + state.objects[i].duration);
+        } else if (state.objects[i].type === 'sampleNode'){
+            source = ac.createBufferSource();
+            var request = new XMLHttpRequest();
+
+            request.open('GET', state.objects[i].sample, true);
+            
+
+            request.responseType = 'arraybuffer';
+
+
+            request.onload = function() {
+                var audioData = request.response;
+
+                ac.decodeAudioData(audioData, function(buffer) {
+                    source.buffer = buffer;
+
+                    source.connect(ac.destination);
+                    source.loop = true;              
+                },
+
+                function(e){"Error with decoding audio data" + e.err});
+
+            }
+            console.log(state.objects[i].sample);
+            request.send();
+            source.start(0);
+        }
+    }
+
+}
+
+function canvasCleared(){
+    ac.close();
+    ac = new AudioContext();
+}
 
 window.addEventListener('resize', function(){
 	canvas.setHeight(window.innerHeight - 150);
 	canvas.setWidth(window.innerWidth - 20);
 })
 
-TempoNode();
-console.log(canvas.item(1).type);
-console.log(parseInt(canvas.item(1).getText()));
+//Adding double click event listener (not supported by fabric.js)
+window.addEventListener('dblclick', function (e, self) {
+    var target = canvas.findTarget(e);
+    if (target) {
+       console.log('dblclick inside ' + target.type);
+    }   
+});
+
+
 function createNode(arg){
     switch(arg){
         case 'play':
@@ -22,12 +110,12 @@ function createNode(arg){
             break;
         case 'loop':
             LoopNode();
-            if (canvas.item(0).type === 'tempo'){
-                animateBead(bead, 60000/parseInt(canvas.item(1).getText()));
-            }
             break;
         case 'fx':
             EffectNode();
+            break;
+        case 'sample':
+            SampleNode();
             break;
     }
 }
@@ -35,14 +123,42 @@ function createNode(arg){
 //Function to draw a line
 function makeLine(coords) {
     return new fabric.Line(coords, {
-        fill: '',
         stroke: 'black',
         selectable: false
     });
 };
 
+// ['object:moving'].forEach(clipToLoop);
+// function clipToLoop(event){
+//     canvas.on(event, function (options){
+//         var object = options.target;
+//         canvas.forEachObject(function (obj){
+//             if (obj == object) return;
+//             obj.setOpacity(options.target.intersectsWithObject(obj) ? 0.5 : 1);
+//         });
+//     });
+// }
+
+// canvas.on({
+//     'object:moving': onMove,
+    
+//   });
+
+//   function onMove(options) {
+//     options.target.setCoords();
+//     canvas.forEachObject(function(obj) {
+//       if (obj === options.target) return;
+//       if (options.target.intersectsWithObject(obj)){
+//         if(obj.type === 'loop') {
+//             var ta = (Math.floor((Math.random() * 360) + 1))*Math.PI/180;
+//             options.target.set({left:obj.getCenterPoint().x + Math.cos(ta), top: obj.getCenterPoint().y + Math.sin(ta)});
+//         }
+//       } 
+//     });
+//   }
+
 // Functions + Events to draw a line between objects by 'adding a child' to a clicked object
-['object:moving', 'object:scaling'].forEach(addChildMoveLine);
+['object:moving'].forEach(addChildMoveLine);
 
 function addChildLine(options) {
     canvas.off('object:selected', addChildLine);
@@ -50,11 +166,14 @@ function addChildLine(options) {
     // add the line
     var fromObject = canvas.addChild.start;
     var toObject = options.target;
-    var from = fromObject.getCenterPoint();
+    var from = fromObject.getCenterPoint()
     var to = toObject.getCenterPoint();
-    var coords = [from.x, from.y, to.x, to.y];
+    var coords = [from.x + fromObject.getWidth()/2, from.y, to.x - toObject.getWidth()/2, to.y];
     var line = makeLine(coords);
     canvas.add(line);
+    fromObject.children.push(toObject.ID);
+    toObject.parentNode.push(fromObject.ID);
+    
     // so that the line is behind the connected shapes
     line.sendToBack();
 
@@ -95,11 +214,11 @@ function addChildMoveLine(event) {
         if (object.addChild) {
             if (object.addChild.from)
                 object.addChild.from.forEach(function (line) {
-                    line.set({ 'x1': objectCenter.x, 'y1': objectCenter.y });
+                    line.set({ 'x1': objectCenter.x + object.getWidth()/2, 'y1': objectCenter.y });
                 })
             if (object.addChild.to)
                 object.addChild.to.forEach(function (line) {
-                    line.set({ 'x2': objectCenter.x, 'y2': objectCenter.y });
+                    line.set({ 'x2': objectCenter.x - object.getWidth()/2, 'y2': objectCenter.y });
                 })
         }
 
@@ -155,6 +274,15 @@ document.onkeyup = function(e) {
 		  isShiftDown = false;
 		  break;
 	}
+}
+
+function resetCanvas(){
+    canvas.clear();
+}
+
+function canvasState(){
+    var state = JSON.parse(JSON.stringify(canvas));
+    console.log(state);
 }
 
 
@@ -214,13 +342,32 @@ function startb(url, loop){
 	source.start(0);
 }
 
+var dialog, form;
+var note = $( "#note" );
+var duration = $( "#duration" );
+var allFields = $( [] ).add( note ).add( duration );
 
-//Code to add node to the canvas manually
+dialog = $( "#dialog-form" ).dialog({
+    autoOpen: false,
+    height: 300,
+    width: 350,
+    modal: false,
+    buttons: {
+        "Apply": console.log('applied'),
+        Cancel: function() {
+          dialog.dialog( "close" );
+          console.log('closed');
+        }
+    },
+    close: function() {
+        form[ 0 ].reset();
+        allFields.removeClass( "ui-state-error" );
+    }
+});
 
-// TempoNode();
-// LoopNode();
-// animateBead(bead, dur);
-// console.log(dur);
-
-// OscNode();
-// BufferNod('hihat-plain.wav', true);
+form = dialog.find( "form" ).on( "submit", function( event ) {
+      event.preventDefault(); 
+    });
+function openDialog(){
+    dialog.dialog( "open" );
+}
