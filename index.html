@@ -3,6 +3,7 @@
 <meta charset=utf8>
 <meta name=viewport content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="style.css">
+<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 <title>Beads</title>
 <body>
 
@@ -15,21 +16,40 @@
 		<li onclick="createNode('play')">Play Node</li>
 		<li onclick="createNode('loop')">Loop Node</li>
 		<li onclick="createNode('fx')"> Effect Node</li>
+		<!-- <li onClick="animateBead(bead, 60000/parseInt(canvas.item(1).getText()))">Animate Bead</li> -->
+		<li onclick="createNode('sample')"> SampleNode</li>
+		<li onClick="resetCanvas()">Clear Canvas</li>
+		<li onClick="canvasState()">What's on the canvas?</li>
 	</ul>
+</div>
+<div id="dialog-form" title="Set parameters">
+  <form>
+    <fieldset>
+      <label for="note">Note</label>
+      <input type="text" name="note" id="note" value="440" class="text ui-widget-content ui-corner-all">
+      <label for="duration">Duration</label>
+      <input type="text" name="duration" id="duration" value="2" class="text ui-widget-content ui-corner-all">
+      <!-- Allow form submission with keyboard without duplicating the dialog button -->
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </fieldset>
+  </form>
 </div>
 </body>
 
 <button onclick="play()">Play</button>
 <button onClick="addChild()">Add Child</button>
+
 <script src="fabric.js/dist/fabric.js"></script>
 <script type="text/javascript" src="http://cdn.tonejs.org/latest/Tone.min.js"></script>
-
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
 <script src="js/BufferNode.js"></script>
 <script src="js/EffectNode.js"></script>
 <script src="js/OscNode.js"></script>
 <script src="js/LoopNode.js"></script>
 <script src="js/PlayNode.js"></script>
+<script src="js/SampleNode.js"></script>
 <script src ="js/TempoNode.js"></script>
 
 
