@@ -19,70 +19,149 @@ fabric.Object.prototype.toObject = (function (toObject){
             ID: this.ID,
             children: this.children,
             parentNode: this.parentNode,
-            frequency: this.frequency,
+            note: this.note,
             duration: this.duration,
-            sample: this.sample
+            sample: this.sample,
+            wave: this.wave,
+            attack: this.attack,
+            release: this.release
+
         });
     };
 })(fabric.Object.prototype.toObject);
+
+
 
 //fabric.Object.prototype.toObject([this.height, this.ID, this.left, this.text, this.top, this.type, this.width]);
 
 //Canvas Initialisation 
 var canvas = new fabric.Canvas('canvas');
 canvas.setHeight(window.innerHeight -150);
-canvas.setWidth(window.innerWidth -20);
+canvas.setWidth(window.innerWidth*0.80 -20);
 canvas.selection = false;
 canvas.hoverCursor = canvas.moveCursor ='pointer';
-canvas.on({
-    // 'object:moving': canvasChange,
-    'object:added': canvasChange,
-    'object:removed': canvasChange,
-    'canvas:cleared' : canvasCleared
+// canvas.on({
+//     'object:added': canvasChange,
+//     'object:removed': canvasChange,
+//     'canvas:cleared' : canvasCleared
+// });
+
+canvas.on('object:selected', function(e){
+    var activeObjectType = e.target.type;
+    if (activeObjectType === 'effectNode'){
+         document.getElementById('node-name').innerHTML = "This is an "+ activeObjectType;
+    } else {
+         document.getElementById('node-name').innerHTML = "This is a "+ activeObjectType;
+    }
+   
+});
+var pointer, oX, oY, tX, tY;
+$('canvas').mousedown(function() {
+        pointer = canvas.getPointer(event.e);
+        isMouseDown = true;
+        //var pointer = canvas.getPointer(event.e);
+        //oX = pointer.x;
+        //oY = pointer.y; 
+        console.log('we are down');
+        var line = makeLine([pointer.x, pointer.y, pointer.x, pointer.y]);
+        canvas.add(line);
+        $('canvas').mousemove(function(){
+            if (isMouseDown){
+                var pm = canvas.getPointer(event.e);
+                line.set({'x2': pm.x, 'y2': pm.y});
+                canvas.renderAll();
+                console.log("we are moving");
+            }
+        });
+
+        $('canvas').mouseup(function() {
+        isMouseDown = false;
+        var pf = canvas.getPointer(event.e);
+        console.log('we are up');
+        canvas.off('mouse:move');
+        canvas.remove(line);
+        var finalLine = makeLine([pointer.x, pointer.y, pf.x, pf.y]);
+        canvas.add(finalLine);
+        canvas.renderAll();
+        console.log('stop');
+        // var line = makeLine([oX, oY, tX, tY]);
+        // canvas.add(line);
+    });
+    });
+
+canvas.on('mouse:over', function(e){
+    var activeObject= e.target;
+    var activeWidth = activeObject.getWidth();
+    var activeHeight = activeObject.getHeight();
+    var activeCentre = activeObject.getCenterPoint();
+    var pointer = canvas.getPointer(event.e);
+    var posX = pointer.x;
+    var posY = pointer.y;
+    if (isShiftDown) 
+    {   canvas.hoverCursor = 'crosshair';
+        if(activeCentre.x+activeWidth/4 < posX < activeCentre.x+activeWidth/2 && activeCentre.y-activeHeight/8 < posY < activeCentre.y+activeHeight/8){
+            activeObject.selectable = false;
+            $('canvas').mousedown(function(){
+                 console.log("we're down");
+            })
+        }
+
+        // if(isMouseDown){
+        //     console.log("we're down");
+        //     activeObject.selectable = false;
+        //     if(activeCentre.x+activeWidth/4 < posX < activeCentre.x+activeWidth/2 && activeCentre.y-activeHeight/8 < posY < activeCentre.y+activeHeight/8){
+        //         //Draw line from right triangle
+        //         makeline([activeCentre.x +activeWidth/2, activeCentre.y, posX, posY]);
+        //     } else if (activeCentre.x-activeWidth/2 < posX < activeCentre.x-activeWidth/4 && activeCentre.y-activeHeight/8 < posY < activeCentre.y+activeHeight/8) {
+        //         makeline([activeCentre.x - activeWidth/2, activeCentre.y, posX, posY]);
+        //     }
+        // }
+    }
+    
 });
 
-function canvasChange(){
-    var state = JSON.parse(JSON.stringify(canvas));
+// function canvasChange(){
+//     var state = JSON.parse(JSON.stringify(canvas));
 
-    var i, nbr; 
-    for (i = 0, nbr = state.objects.length; i<nbr; i++){
-        console.log(state.objects[i].type);
-        if (state.objects[i].type === 'playNode'){
-            var osc = ac.createOscillator();
-            osc.frequency = state.objects[i].frequency;
-            osc.connect(ac.destination);
-            osc.start(ac.currentTime);
-            osc.stop(ac.currentTime + state.objects[i].duration);
-        } else if (state.objects[i].type === 'sampleNode'){
-            source = ac.createBufferSource();
-            var request = new XMLHttpRequest();
+//     var i, nbr; 
+//     for (i = 0, nbr = state.objects.length; i<nbr; i++){
+//         console.log(state.objects[i].type);
+//         if (state.objects[i].type === 'playNode'){
+//             var osc = ac.createOscillator();
+//             osc.frequency = state.objects[i].frequency;
+//             osc.connect(ac.destination);
+//             osc.start(ac.currentTime);
+//             osc.stop(ac.currentTime + state.objects[i].duration);
+//         } else if (state.objects[i].type === 'sampleNode'){
+//             source = ac.createBufferSource();
+//             var request = new XMLHttpRequest();
 
-            request.open('GET', state.objects[i].sample, true);
+//             request.open('GET', state.objects[i].sample, true);
             
 
-            request.responseType = 'arraybuffer';
+//             request.responseType = 'arraybuffer';
 
 
-            request.onload = function() {
-                var audioData = request.response;
+//             request.onload = function() {
+//                 var audioData = request.response;
 
-                ac.decodeAudioData(audioData, function(buffer) {
-                    source.buffer = buffer;
+//                 ac.decodeAudioData(audioData, function(buffer) {
+//                     source.buffer = buffer;
 
-                    source.connect(ac.destination);
-                    source.loop = true;              
-                },
+//                     source.connect(ac.destination);
+//                     source.loop = true;              
+//                 },
 
-                function(e){"Error with decoding audio data" + e.err});
+//                 function(e){"Error with decoding audio data" + e.err});
 
-            }
-            console.log(state.objects[i].sample);
-            request.send();
-            source.start(0);
-        }
-    }
+//             }
+//             console.log(state.objects[i].sample);
+//             request.send();
+//             source.start(0);
+//         }
+//     }
 
-}
+// }
 
 function canvasCleared(){
     ac.close();
@@ -91,8 +170,9 @@ function canvasCleared(){
 
 window.addEventListener('resize', function(){
 	canvas.setHeight(window.innerHeight - 150);
-	canvas.setWidth(window.innerWidth - 20);
+	canvas.setWidth(window.innerWidth*0.80 - 20);
 })
+
 
 //Adding double click event listener (not supported by fabric.js)
 window.addEventListener('dblclick', function (e, self) {
@@ -117,6 +197,9 @@ function createNode(arg){
         case 'sample':
             SampleNode();
             break;
+        case 'sleep':
+            SleepNode();
+            break;
     }
 }
 
@@ -127,35 +210,6 @@ function makeLine(coords) {
         selectable: false
     });
 };
-
-// ['object:moving'].forEach(clipToLoop);
-// function clipToLoop(event){
-//     canvas.on(event, function (options){
-//         var object = options.target;
-//         canvas.forEachObject(function (obj){
-//             if (obj == object) return;
-//             obj.setOpacity(options.target.intersectsWithObject(obj) ? 0.5 : 1);
-//         });
-//     });
-// }
-
-// canvas.on({
-//     'object:moving': onMove,
-    
-//   });
-
-//   function onMove(options) {
-//     options.target.setCoords();
-//     canvas.forEachObject(function(obj) {
-//       if (obj === options.target) return;
-//       if (options.target.intersectsWithObject(obj)){
-//         if(obj.type === 'loop') {
-//             var ta = (Math.floor((Math.random() * 360) + 1))*Math.PI/180;
-//             options.target.set({left:obj.getCenterPoint().x + Math.cos(ta), top: obj.getCenterPoint().y + Math.sin(ta)});
-//         }
-//       } 
-//     });
-//   }
 
 // Functions + Events to draw a line between objects by 'adding a child' to a clicked object
 ['object:moving'].forEach(addChildMoveLine);
@@ -237,12 +291,12 @@ window.addChild = function () {
 }
 
 // If Shift key down and mouse over object, user prompted to set parameters for said object
-canvas.on('mouse:over', function(e){
-	if(isShiftDown){
-		var activeObject = e.target;
-		setParameters(activeObject);
-	}
-});
+// canvas.on('mouse:over', function(e){
+// 	if(isShiftDown){
+// 		var activeObject = e.target;
+// 		setParameters(activeObject);
+// 	}
+// });
 
 function setParameters(obj) {
 	var key = '' + window.prompt("What parameter would you like to set?", "freq");
@@ -272,8 +326,29 @@ document.onkeyup = function(e) {
 	switch (e.keyCode) {
 		case 16: //Shift key released
 		  isShiftDown = false;
+          canvas.hoverCursor = 'pointer';
 		  break;
 	}
+}
+
+//Window resize triggers resizing of canvas
+window.addEventListener('resize', function(){
+    canvas.setHeight(window.innerHeight - 150);
+    canvas.setWidth(window.innerWidth*0.80 - 20);
+})
+
+
+//Adding double click event listener (not supported by fabric.js)
+window.addEventListener('dblclick', function (e, self) {
+    var target = canvas.findTarget(e);
+    if (target) {
+       console.log('dblclick inside ' + target.type);
+    }   
+});
+
+function canvasCleared(){
+    ac.close();
+    ac = new AudioContext();
 }
 
 function resetCanvas(){
@@ -283,91 +358,4 @@ function resetCanvas(){
 function canvasState(){
     var state = JSON.parse(JSON.stringify(canvas));
     console.log(state);
-}
-
-
-//Code to generate the web audio api code
-function play(){
-	
-	var state = JSON.stringify(canvas);
-	var stateObj = JSON.parse(state);
-	
-	console.log(stateObj.objects[0]);
-		
-	var i, nbr; 
-	for (i = 0, nbr = stateObj.objects.length; i<nbr; i++){
-		console.log(stateObj.objects[i].type);
-		if (stateObj.objects[i].type === 'oscillator'){
-			var osc = ac.createOscillator();
-			osc.type = stateObj.objects[i].wave;
-			osc.frequency = stateObj.objects[i].freq;
-			osc.connect(ac.destination);
-			osc.start(ac.currentTime);
-			osc.stop(ac.currentTime + stateObj.objects[i].duration);
-		} else if (stateObj.objects[i].type === 'buffer'){
-			console.log(stateObj.objects[i].url);
-			startb(stateObj.objects[i].url, stateObj.objects[i].loop);
-		}
-	}
-}
-
-function getData(url, loop) {
-			  source = ac.createBufferSource();
-			  var request = new XMLHttpRequest();
-
-			  request.open('GET', url, true);
-
-			  request.responseType = 'arraybuffer';
-
-
-			  request.onload = function() {
-			    var audioData = request.response;
-
-			    ac.decodeAudioData(audioData, function(buffer) {
-			        source.buffer = buffer;
-
-			        source.connect(ac.destination);
-			        source.loop = loop;
-			      },
-
-			      function(e){"Error with decoding audio data" + e.err});
-
-			  }
-
-			  request.send();
-}
-
-function startb(url, loop){
-	getData(url, loop);
-	source.start(0);
-}
-
-var dialog, form;
-var note = $( "#note" );
-var duration = $( "#duration" );
-var allFields = $( [] ).add( note ).add( duration );
-
-dialog = $( "#dialog-form" ).dialog({
-    autoOpen: false,
-    height: 300,
-    width: 350,
-    modal: false,
-    buttons: {
-        "Apply": console.log('applied'),
-        Cancel: function() {
-          dialog.dialog( "close" );
-          console.log('closed');
-        }
-    },
-    close: function() {
-        form[ 0 ].reset();
-        allFields.removeClass( "ui-state-error" );
-    }
-});
-
-form = dialog.find( "form" ).on( "submit", function( event ) {
-      event.preventDefault(); 
-    });
-function openDialog(){
-    dialog.dialog( "open" );
 }
