@@ -8,6 +8,34 @@ function guid() {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
 
+document.onkeydown = function(e) {
+    switch (e.keyCode) {
+        case 16:  // Shift key down
+            isShiftDown = true;
+            console.log(isShiftDown);
+            break;
+        case 67: //C key down
+            canvas.clear().renderAll();
+            TempoNode();
+            break;
+        case 83: 
+            canvas.forEachObject(function(obj){
+                obj.set({selectable: true});
+            });
+            break;
+      }
+}
+
+document.onkeyup = function(e) {
+    switch (e.keyCode) {
+        case 16: //Shift key released
+          isShiftDown = false;
+          console.log(isShiftDown);
+          canvas.hoverCursor = 'pointer';
+          break;
+    }
+}
+
 //Setting properties for all objects
 fabric.Object.prototype.set({
     hasControls: false, hasBorders: false, selectable: true
@@ -30,21 +58,13 @@ fabric.Object.prototype.toObject = (function (toObject){
     };
 })(fabric.Object.prototype.toObject);
 
-
-
-//fabric.Object.prototype.toObject([this.height, this.ID, this.left, this.text, this.top, this.type, this.width]);
-
 //Canvas Initialisation 
 var canvas = new fabric.Canvas('canvas');
 canvas.setHeight(window.innerHeight -150);
 canvas.setWidth(window.innerWidth*0.80 -20);
 canvas.selection = false;
 canvas.hoverCursor = canvas.moveCursor ='pointer';
-// canvas.on({
-//     'object:added': canvasChange,
-//     'object:removed': canvasChange,
-//     'canvas:cleared' : canvasCleared
-// });
+
 
 canvas.on('object:selected', function(e){
     var activeObjectType = e.target.type;
@@ -55,14 +75,11 @@ canvas.on('object:selected', function(e){
     }
    
 });
-var pointer, oX, oY, tX, tY;
+
 $('canvas').mousedown(function() {
+    if (isShiftDown){
         pointer = canvas.getPointer(event.e);
         isMouseDown = true;
-        //var pointer = canvas.getPointer(event.e);
-        //oX = pointer.x;
-        //oY = pointer.y; 
-        console.log('we are down');
         var line = makeLine([pointer.x, pointer.y, pointer.x, pointer.y]);
         canvas.add(line);
         $('canvas').mousemove(function(){
@@ -70,41 +87,43 @@ $('canvas').mousedown(function() {
                 var pm = canvas.getPointer(event.e);
                 line.set({'x2': pm.x, 'y2': pm.y});
                 canvas.renderAll();
-                console.log("we are moving");
             }
         });
 
         $('canvas').mouseup(function() {
-        isMouseDown = false;
-        var pf = canvas.getPointer(event.e);
-        console.log('we are up');
-        canvas.off('mouse:move');
-        canvas.remove(line);
-        var finalLine = makeLine([pointer.x, pointer.y, pf.x, pf.y]);
-        canvas.add(finalLine);
-        canvas.renderAll();
-        console.log('stop');
-        // var line = makeLine([oX, oY, tX, tY]);
-        // canvas.add(line);
-    });
-    });
+            if (isShiftDown){
+                var pf = canvas.getPointer(event.e);
+            canvas.off('mouse:move');
+            canvas.off('mousedown');
+            canvas.remove(line);
+            var finalLine = makeLine([pointer.x, pointer.y, pf.x, pf.y]);
+            canvas.add(finalLine);
+            canvas.renderAll();
+            }
+            
+        });
 
-canvas.on('mouse:over', function(e){
-    var activeObject= e.target;
-    var activeWidth = activeObject.getWidth();
-    var activeHeight = activeObject.getHeight();
-    var activeCentre = activeObject.getCenterPoint();
-    var pointer = canvas.getPointer(event.e);
-    var posX = pointer.x;
-    var posY = pointer.y;
-    if (isShiftDown) 
-    {   canvas.hoverCursor = 'crosshair';
-        if(activeCentre.x+activeWidth/4 < posX < activeCentre.x+activeWidth/2 && activeCentre.y-activeHeight/8 < posY < activeCentre.y+activeHeight/8){
-            activeObject.selectable = false;
-            $('canvas').mousedown(function(){
-                 console.log("we're down");
-            })
-        }
+    }
+});
+
+
+
+// canvas.on('mouse:over', function(e){
+//     var activeObject= e.target;
+//     var activeWidth = activeObject.getWidth();
+//     var activeHeight = activeObject.getHeight();
+//     var activeCentre = activeObject.getCenterPoint();
+//     var pointer = canvas.getPointer(event.e);
+//     var posX = pointer.x;
+//     var posY = pointer.y;
+//     if (isShiftDown) 
+//     {   canvas.hoverCursor = 'crosshair';
+//         if(activeCentre.x+activeWidth/4 < posX < activeCentre.x+activeWidth/2 && activeCentre.y-activeHeight/8 < posY < activeCentre.y+activeHeight/8){
+//             activeObject.selectable = false;
+//             $('canvas').mousedown(function(){
+//                  console.log("we're down");
+//             })
+//         }
 
         // if(isMouseDown){
         //     console.log("we're down");
@@ -116,9 +135,9 @@ canvas.on('mouse:over', function(e){
         //         makeline([activeCentre.x - activeWidth/2, activeCentre.y, posX, posY]);
         //     }
         // }
-    }
+//     }
     
-});
+// });
 
 // function canvasChange(){
 //     var state = JSON.parse(JSON.stringify(canvas));
@@ -305,31 +324,7 @@ function setParameters(obj) {
 }
 
 //Functions to link keydown events to various functions 
-document.onkeydown = function(e) {
-    switch (e.keyCode) {
-        case 16:  // Shift key down
-            isShiftDown = true;
-            break;
-        case 67: //C key down
-            canvas.clear().renderAll();
-            TempoNode();
-            break;
-        case 83: 
-        	canvas.forEachObject(function(obj){
-        		obj.set({selectable: true});
-        	});
-            break;
-      }
-}
 
-document.onkeyup = function(e) {
-	switch (e.keyCode) {
-		case 16: //Shift key released
-		  isShiftDown = false;
-          canvas.hoverCursor = 'pointer';
-		  break;
-	}
-}
 
 //Window resize triggers resizing of canvas
 window.addEventListener('resize', function(){
