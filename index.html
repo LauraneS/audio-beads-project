@@ -7,9 +7,92 @@
 <title>Beads</title>
 <body>
 
-<canvas id="canvas">
+  
+  <div id="mainbar">
+    <canvas id="canvas">
         This text is displayed if your browser does not support HTML5 Canvas.
-</canvas>
+  </canvas>
+  </div>
+  <div id="sidebar">
+  	<div id="node-name">Click an object!</div>
+
+  	<div id="play-info" style="display:none">
+      <form>
+        Wave form:
+        <select id="wave-type">
+          <option value="sawtooth">Sawtooth</option>
+          <option value="sine">Sine</option>
+          <option value="square">Square</option>
+          <option value="triangle">Triangle</option>
+        </select> <br>
+        Note: <input type="text" id="noteInput" value="60", onchange=" document.getElementById('note').value=this.value;", style="width: 20px; text-align: center"><br>
+        <input type="range" id="note" min="0" max="127", step="1", value= "60" onchange=" document.getElementById('noteInput').value=this.value;"> <br>                                                   
+        Attack:<input type="text" id="attackInput" value="1" onchange=" document.getElementById('attack').value=this.value;" style="width: 20px; text-align: center"><br>
+        <input type="range" id="attack" min="0" max="10", onchange=" document.getElementById('attackInput').value=this.value;", value="1"> <br>
+        Release:<input type="text" id="releaseInput" value="1" onchange=" document.getElementById('release').value=this.value;", style="width: 20px; text-align: center"><br>
+        <input type="range" id="release" min="0" max="10", value="1", onchange=" document.getElementById('releaseInput').value=this.value;" >
+      </form>
+  	</div>
+
+  	<div id="effect-info" style="display:none">
+      <form>
+      Effect: 
+      <select id="effect-name">
+        <option value="echo">Echo</option>
+        <option value="reverb">Reverb</option>
+        <option value="distortion">Distortion</option>
+        <option value="pingpong">Pingpong</option>
+      </select>
+    </form>
+
+    <form id='effect-echo', style="display:none">
+    </form>
+
+    <form id='effect-reverb', style="display:none">
+      Room Size: <input type="text" id="roomInput" value="0.7" onchange=" document.getElementById('roomSize').value=this.value;" style="width: 20px; text-align: center"><br>
+        <input type="range" id="roomSize" min="0" max="1", onchange=" document.getElementById('roomInput').value=this.value;", value="0.7"> <br>
+      Dampening: <input type="text" id="dampInput" value="3000" onchange="document.getElementById('dampening').value=this.value;" style="width: 20px; text-align: center"><br>
+        <input type="range" id="dampening" min="0" max="5000", onchange=" document.getElementById('dampInput').value=this.value;", value="3000"> <br>
+    </form>
+
+    <form id='effect-distortion', style="display:none">
+      Distortion: <input type="text" id="distInput" value="0.4" onchange=" document.getElementById('distortion').value=this.value;" style="width: 20px; text-align: center"><br>
+        <input type="range" id="distortion" min="0" max="1", onchange=" document.getElementById('distInput').value=this.value;", value="0.4"> <br>
+      Oversample: <br>
+      <form id="oversample">
+        <input type="radio" name='sample' value="none" checked> None<br>
+        <input type="radio" name='sample' value="2x"> 2x<br>
+        <input type="radio" name='sample' value="4x"> 4x
+      </form>
+    </form>
+
+    <form id='effect-pingpong', style="display:none">
+      Room Size: <input type="text" id="delayInput" value="0.25" onchange=" document.getElementById('delay').value=this.value;" style="width: 20px; text-align: center"><br>
+        <input type="range" id="delay" min="0" max="1", onchange=" document.getElementById('delayInput').value=this.value;", value="0.25"> <br>
+    </form>
+
+  	</div>
+
+  	<div id="sample-info" style="display:none">
+      <form>
+          Sample: 
+        <select id="sample">
+          <option value="bass">Bass</option>
+          <option value="beat">Beat</option>
+          <option value="drum-kick">Drum kick</option>
+          <option value="high-hat">High-hat</option>
+          <option value="snare">Snare</option>
+          <option value="sci-fi">Sci-fi</option>
+        </select> <br>
+        Loop
+        <input type="checkbox" name="loop" value="Loop">
+      </form>
+  	</div>
+
+  	<div id="sleep-info" style="display:none">
+  	</div>
+  </div>
+
 
 <div id="menu">
 	<ul id="drag-elements">
@@ -22,34 +105,26 @@
 		<li onClick="canvasState()">What's on the canvas?</li>
 	</ul>
 </div>
-<div id="dialog-form" title="Set parameters">
-  <form>
-    <fieldset>
-      <label for="note">Note</label>
-      <input type="text" name="note" id="note" value="440" class="text ui-widget-content ui-corner-all">
-      <label for="duration">Duration</label>
-      <input type="text" name="duration" id="duration" value="2" class="text ui-widget-content ui-corner-all">
-      <!-- Allow form submission with keyboard without duplicating the dialog button -->
-      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-    </fieldset>
-  </form>
-</div>
+
 </body>
 
-<button onclick="play()">Play</button>
 <button onClick="addChild()">Add Child</button>
 
+<!-- File Structure -->
 <script src="fabric.js/dist/fabric.js"></script>
 <script type="text/javascript" src="http://cdn.tonejs.org/latest/Tone.min.js"></script>
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
-<script src="js/BufferNode.js"></script>
+<script src="js/Display.js"></script>
 <script src="js/EffectNode.js"></script>
-<script src="js/OscNode.js"></script>
+<script src="js/Interpreter.js"></script>
 <script src="js/LoopNode.js"></script>
+<script src="js/Parser.js"></script>
 <script src="js/PlayNode.js"></script>
 <script src="js/SampleNode.js"></script>
+<script src="js/SleepNode.js"></script>
+<script src="js/StartNode.js"></script>
 <script src ="js/TempoNode.js"></script>
 
 
