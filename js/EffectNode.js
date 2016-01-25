@@ -12,13 +12,31 @@ function EffectNode(){
 	});
 
 	var fxGroup = new fabric.Group([fx, hand1, hand2],{
-		left: Math.floor((Math.random() * canvas.getWidth()) + 1), 
-		top: Math.floor((Math.random() * canvas.getHeight()) + 1),
+		left: fabric.util.getRandomInt(0, canvas.getWidth() + 1), 
+		top: fabric.util.getRandomInt(0, canvas.getHeight() + 1),
 		type: 'effectNode',
+		effect: ['echo', 'reverb', 'distortion', 'pingpong'][fabric.util.getRandomInt(0,4)],
 		ID: guid(),
 		parentNode: [],
 		children: []
 	})
+
+	switch (fxGroup.effect) {
+		case 'echo': 
+			break;
+		case 'reverb':
+			//larger roomSize = a longer decay, [0,1]
+			fxGroup.set({roomSize: 0.7, dampening: 3000});
+			break;
+		case 'distortion':
+			//distortion: [0,1], oversample ['none, '2x', '4x']
+			fxGroup.set({distortion: 0.4, oversample: 'none'});
+			break;
+		case 'pingpong':
+			//delay = delay between consecutive echos, [0,1]
+			fxGroup.set({delay: 0.25});
+			break;
+	}
 	fabric.Image.fromURL('/png/fx.png', function(oImg){
 		oImg.scale(0.32);
 		fxGroup.add(oImg.set({left: -oImg.getWidth()/2, top:-oImg.getHeight()/2}));
@@ -26,6 +44,5 @@ function EffectNode(){
 	})
 	
 	canvas.add(fxGroup); 
-	console.log(fxGroup.ID);
 
 }

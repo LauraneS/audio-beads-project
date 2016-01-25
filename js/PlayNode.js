@@ -12,14 +12,18 @@ function PlayNode(){
 	});
 
 	var playGroup = new fabric.Group([play, hand1, hand2],{
-		left: Math.floor((Math.random() * canvas.getWidth()) + 1), 
-		top: Math.floor((Math.random() * canvas.getHeight()) + 1),
+		left: fabric.util.getRandomInt(0, canvas.getWidth() + 1),
+		top:fabric.util.getRandomInt(0, canvas.getHeight() + 1),
 		type: 'playNode',
 		ID: guid(),
 		parentNode: [],
 		children: [],
-		frequency: Math.floor(Math.random() * (800-50)+50),
-		duration: Math.floor(Math.random()*(10-1)+1) 
+		note: 440,
+		duration: 1, 
+		wave: 'sine',
+		attack: 0.5,
+		release: 0.5
+
 	})
 	fabric.Image.fromURL('/png/playnote.png', function(oImg){
 		oImg.scale(0.35);

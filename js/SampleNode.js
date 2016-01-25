@@ -19,7 +19,8 @@ function SampleNode(){
 		ID: guid(),
 		parentNode: [],
 		children: [],
-		sample: whichSample(Math.floor(Math.random()*2 + 1))
+		sample: whichSample(Math.floor(Math.random()*2 + 1)), 
+		loop: false
 	})
 	fabric.Image.fromURL('/png/file.png', function(oImg){
 		oImg.scale(0.30);

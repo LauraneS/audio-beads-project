@@ -3,13 +3,10 @@ function LoopNode(){
   function createOrbit() {
     orbit = new fabric.Circle({
       radius: 100,
-      left: Math.floor((Math.random() * canvas.getWidth()) - 99), 
-      top: Math.floor((Math.random() * canvas.getHeight()) -99),
+      left: fabric.util.getRandomInt(0, canvas.getWidth() -99), 
+      top: fabric.util.getRandomInt(0, canvas.getHeight() -99),
       fill: '',
       stroke: 'black',
-      hasBorders: false,
-      hasControls: false,
-      selectable: true,
       type: 'loop'
     });
     canvas.add(orbit);
@@ -23,8 +20,6 @@ function LoopNode(){
       top: oCoords.y - orbit.radius - 5,
       fill:'black',
       stroke:'black',
-      hasBorders: false,
-      hasControls: false,
       lockMovementX: true,
       lockMovementY: true,
     });
