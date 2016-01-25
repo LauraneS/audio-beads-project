@@ -1,6 +1,8 @@
+
 var ac = new AudioContext(), buf, source;
 var line, isMouseDown, isMouseOver, isShiftDown, center;
 
+//Generate UID for each node
 function guid() {
     function s4() {
         return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -8,15 +10,14 @@ function guid() {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
 }
 
+//Functions to link keydown events to various functions 
 document.onkeydown = function(e) {
     switch (e.keyCode) {
         case 16:  // Shift key down
             isShiftDown = true;
-            console.log(isShiftDown);
             break;
         case 67: //C key down
             canvas.clear().renderAll();
-            TempoNode();
             break;
         case 83: 
             canvas.forEachObject(function(obj){
@@ -25,12 +26,10 @@ document.onkeydown = function(e) {
             break;
       }
 }
-
 document.onkeyup = function(e) {
     switch (e.keyCode) {
         case 16: //Shift key released
           isShiftDown = false;
-          console.log(isShiftDown);
           canvas.hoverCursor = 'pointer';
           break;
     }
@@ -41,33 +40,80 @@ fabric.Object.prototype.set({
     hasControls: false, hasBorders: false, selectable: true
 });
 
+//Adding custom parameters to the JSON serialisation of the canvas 
 fabric.Object.prototype.toObject = (function (toObject){
     return function(){
         return fabric.util.object.extend(toObject.call(this), {
-            ID: this.ID,
-            children: this.children,
-            parentNode: this.parentNode,
-            note: this.note,
-            duration: this.duration,
-            sample: this.sample,
-            wave: this.wave,
             attack: this.attack,
-            release: this.release
-
+            children: this.children,
+            duration: this.duration,
+            effect: this.effect,
+            ID: this.ID,
+            loop: this.loop,
+            note: this.note,
+            parentNode: this.parentNode,
+            release: this.release, 
+            sample: this.sample,
+            wave: this.wave
         });
     };
 })(fabric.Object.prototype.toObject);
 
 //Canvas Initialisation 
-var canvas = new fabric.Canvas('canvas');
-canvas.setHeight(window.innerHeight -150);
-canvas.setWidth(window.innerWidth*0.80 -20);
-canvas.selection = false;
-canvas.hoverCursor = canvas.moveCursor ='pointer';
-
+    var canvas = this.__canvas = new fabric.Canvas('canvas');
+    canvas.setHeight(window.innerHeight -150);
+    canvas.setWidth(window.innerWidth*0.80 -20);
+    canvas.selection = false;
+    canvas.hoverCursor = canvas.moveCursor ='pointer';
+    StartNode();
 
 canvas.on('object:selected', function(e){
     var activeObjectType = e.target.type;
+    var elements = ['play-info', 'effect-info', 'sample-info', 'sleep-info'], i;
+            
+    switch (activeObjectType){
+        case 'playNode':
+            for (i = 0; i < elements.length; i++){
+                if (elements[i] === 'play-info'){
+                    document.getElementById(elements[i]).style.display = 'block';
+                } else {
+                    document.getElementById(elements[i]).style.display = 'none';
+                }
+            }
+            break;
+        case 'effectNode':
+            for (i = 0; i < elements.length; i++){
+                if (elements[i] === 'effect-info'){
+                    document.getElementById(elements[i]).style.display = 'block';
+                } else {
+                    document.getElementById(elements[i]).style.display = 'none';
+                }
+            }
+            break;
+        case 'sampleNode':
+            for (i = 0; i < elements.length; i++){
+                if (elements[i] === 'sample-info'){
+                    document.getElementById(elements[i]).style.display = 'block';
+                } else {
+                    document.getElementById(elements[i]).style.display = 'none';
+                }
+            }
+            break;
+        case 'sleepNode':
+            for (i = 0; i < elements.length; i++){
+                if (elements[i] === 'sleep-info'){
+                    document.getElementById(elements[i]).style.display = 'block';
+                } else {
+                    document.getElementById(elements[i]).style.display = 'none';
+                }
+            }
+            break;
+        case 'loop':
+            for (i = 0; i < elements.length; i++){
+                document.getElementById(elements[i]).style.display = 'none'; 
+            }
+    }
+
     if (activeObjectType === 'effectNode'){
          document.getElementById('node-name').innerHTML = "This is an "+ activeObjectType;
     } else {
@@ -76,115 +122,80 @@ canvas.on('object:selected', function(e){
    
 });
 
-$('canvas').mousedown(function() {
-    if (isShiftDown){
-        pointer = canvas.getPointer(event.e);
-        isMouseDown = true;
-        var line = makeLine([pointer.x, pointer.y, pointer.x, pointer.y]);
-        canvas.add(line);
-        $('canvas').mousemove(function(){
-            if (isMouseDown){
-                var pm = canvas.getPointer(event.e);
-                line.set({'x2': pm.x, 'y2': pm.y});
-                canvas.renderAll();
-            }
-        });
-
-        $('canvas').mouseup(function() {
-            if (isShiftDown){
-                var pf = canvas.getPointer(event.e);
-            canvas.off('mouse:move');
-            canvas.off('mousedown');
-            canvas.remove(line);
-            var finalLine = makeLine([pointer.x, pointer.y, pf.x, pf.y]);
-            canvas.add(finalLine);
-            canvas.renderAll();
-            }
-            
-        });
-
+canvas.on('mouse:down', function(){
+    if (!isMouseOver) {
+        document.getElementById('node-name').innerHTML = "No node selected"
     }
 });
-
-
-
-// canvas.on('mouse:over', function(e){
-//     var activeObject= e.target;
-//     var activeWidth = activeObject.getWidth();
-//     var activeHeight = activeObject.getHeight();
-//     var activeCentre = activeObject.getCenterPoint();
-//     var pointer = canvas.getPointer(event.e);
-//     var posX = pointer.x;
-//     var posY = pointer.y;
-//     if (isShiftDown) 
-//     {   canvas.hoverCursor = 'crosshair';
-//         if(activeCentre.x+activeWidth/4 < posX < activeCentre.x+activeWidth/2 && activeCentre.y-activeHeight/8 < posY < activeCentre.y+activeHeight/8){
-//             activeObject.selectable = false;
-//             $('canvas').mousedown(function(){
-//                  console.log("we're down");
-//             })
-//         }
-
-        // if(isMouseDown){
-        //     console.log("we're down");
-        //     activeObject.selectable = false;
-        //     if(activeCentre.x+activeWidth/4 < posX < activeCentre.x+activeWidth/2 && activeCentre.y-activeHeight/8 < posY < activeCentre.y+activeHeight/8){
-        //         //Draw line from right triangle
-        //         makeline([activeCentre.x +activeWidth/2, activeCentre.y, posX, posY]);
-        //     } else if (activeCentre.x-activeWidth/2 < posX < activeCentre.x-activeWidth/4 && activeCentre.y-activeHeight/8 < posY < activeCentre.y+activeHeight/8) {
-        //         makeline([activeCentre.x - activeWidth/2, activeCentre.y, posX, posY]);
-        //     }
-        // }
-//     }
     
-// });
 
-// function canvasChange(){
-//     var state = JSON.parse(JSON.stringify(canvas));
+//Adding a line with mouse drag when shift is pressed 
+canvas.on('mouse:over', function(e){
+    isMouseOver = true;
+    var activeObject= e.target;
+    if (isShiftDown) {
+        activeObject.lockMovementX = activeObject.lockMovementY = true; 
+        canvas.hoverCursor = 'crosshair';
+        drawLine(activeObject);
+    }   
+});
 
-//     var i, nbr; 
-//     for (i = 0, nbr = state.objects.length; i<nbr; i++){
-//         console.log(state.objects[i].type);
-//         if (state.objects[i].type === 'playNode'){
-//             var osc = ac.createOscillator();
-//             osc.frequency = state.objects[i].frequency;
-//             osc.connect(ac.destination);
-//             osc.start(ac.currentTime);
-//             osc.stop(ac.currentTime + state.objects[i].duration);
-//         } else if (state.objects[i].type === 'sampleNode'){
-//             source = ac.createBufferSource();
-//             var request = new XMLHttpRequest();
+canvas.on('mouse:out', function(e){
+    isMouseOver = false;
+});
 
-//             request.open('GET', state.objects[i].sample, true);
-            
+function drawLine(object){
+    var activeObject = object;
+    var activeWidth = activeObject.getWidth();
+    var activeHeight = activeObject.getHeight();
+    var activeCentre = activeObject.getCenterPoint();
+    var isLeft;
+    if (!isShiftDown) return;
+        canvas.on('mouse:down', function(o) {
+            isMouseDown = true;
+            if (isShiftDown){
+                var pointerO = canvas.getPointer(o.e);
+                if (activeCentre.x+15<pointerO.x<(activeCentre.x+25) && activeCentre.y-(activeHeight/8)< pointerO.y<activeCentre.y+(activeHeight/8)){
+                    line = makeLine([activeCentre.x +activeWidth/2, activeCentre.y, activeCentre.x +activeWidth/2, activeCentre.y]);
+                    canvas.add(line);
+                    isLeft = false;
+                } else if ((activeCentre.x-25)< pointerO.x < (activeCentre.x-15) && (activeCentre.y-activeHeight/8) < pointerO.y < (activeCentre.y+activeHeight/8)){
+                    line = makeLine([activeCentre.x -activeWidth/2, activeCentre.y, activeCentre.x -activeWidth/2, activeCentre.y]);
+                    canvas.add(line);
+                    isLeft = true;
+                }
+            }
+        });
+        canvas.on('mouse:move', function(o){
+            if (!isMouseDown) return;
+            var pointer = canvas.getPointer(o.e);
+            line.set({'x2': pointer.x, 'y2': pointer.y});
+            canvas.renderAll();
+        });
+        canvas.on('mouse:up', function(o) {
+                isMouseDown = false;
+                if (isShiftDown){
+                    var pf = canvas.getPointer(o.e);
+                    canvas.remove(line);
+                    if (isLeft){
+                        var finalLine = makeLine([activeCentre.x -activeWidth/2, activeCentre.y, pf.x, pf.y]);
+                        canvas.add(finalLine);
+                        canvas.renderAll();
+                    } else {
+                        var finalLine = makeLine([activeCentre.x +activeWidth/2, activeCentre.y, pf.x, pf.y]);
+                        canvas.add(finalLine);
+                        canvas.renderAll(); 
+                    } 
+                    if (activeObject.type === 'startNode') return;
+                    activeObject.lockMovementX = false;
+                    activeObject.lockMovementY = false;
+                 }  
+        });
+}
 
-//             request.responseType = 'arraybuffer';
-
-
-//             request.onload = function() {
-//                 var audioData = request.response;
-
-//                 ac.decodeAudioData(audioData, function(buffer) {
-//                     source.buffer = buffer;
-
-//                     source.connect(ac.destination);
-//                     source.loop = true;              
-//                 },
-
-//                 function(e){"Error with decoding audio data" + e.err});
-
-//             }
-//             console.log(state.objects[i].sample);
-//             request.send();
-//             source.start(0);
-//         }
-//     }
-
-// }
 
 function canvasCleared(){
-    ac.close();
-    ac = new AudioContext();
+    StartNode();
 }
 
 window.addEventListener('resize', function(){
@@ -309,22 +320,6 @@ window.addChild = function () {
     canvas.on('object:selected', addChildLine);
 }
 
-// If Shift key down and mouse over object, user prompted to set parameters for said object
-// canvas.on('mouse:over', function(e){
-// 	if(isShiftDown){
-// 		var activeObject = e.target;
-// 		setParameters(activeObject);
-// 	}
-// });
-
-function setParameters(obj) {
-	var key = '' + window.prompt("What parameter would you like to set?", "freq");
-	var value = window.prompt("Set a value for that parameter");
-	obj.set(key,value);
-}
-
-//Functions to link keydown events to various functions 
-
 
 //Window resize triggers resizing of canvas
 window.addEventListener('resize', function(){
@@ -348,6 +343,7 @@ function canvasCleared(){
 
 function resetCanvas(){
     canvas.clear();
+    StartNode();
 }
 
 function canvasState(){
