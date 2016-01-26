@@ -8,8 +8,8 @@
 <body>
 
   
-  <div id="mainbar">
-    <canvas id="canvas">
+  <div id="mainbar" ondragenter="return dragEnter(event)" ondrop="return dragDrop(event)" ondragover="return dragOver(event)">
+    <canvas id="canvas" >
         This text is displayed if your browser does not support HTML5 Canvas.
   </canvas>
   </div>
@@ -96,13 +96,13 @@
 
 <div id="menu">
 	<ul id="drag-elements">
-		<li onclick="createNode('play')">Play Node</li>
-		<li onclick="createNode('loop')">Loop Node</li>
-		<li onclick="createNode('fx')"> Effect Node</li>
+		<li draggable="true" id="playNode"  ondragstart="return dragStart(event)">Play Node</li>
+		<li draggable="true" id="loop"  ondragstart="return dragStart(event)">Loop Node</li>
+		<li draggable="true" id="effectNode"  ondragstart="return dragStart(event)"> Effect Node</li>
 		<!-- <li onClick="animateBead(bead, 60000/parseInt(canvas.item(1).getText()))">Animate Bead</li> -->
-		<li onclick="createNode('sample')"> SampleNode</li>
-		<li onClick="resetCanvas()">Clear Canvas</li>
-		<li onClick="canvasState()">What's on the canvas?</li>
+		<li draggable="true" id="sampleNode"  ondragstart="return dragStart(event)"> SampleNode</li>
+		<li draggable="true"  ondragstart="return dragStart(event)" onClick="resetCanvas()">Clear Canvas</li>
+		<li draggable="true"  ondragstart="return dragStart(event)" onClick="canvasState()">What's on the canvas?</li>
 	</ul>
 </div>
 

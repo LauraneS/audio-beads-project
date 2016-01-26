@@ -116,7 +116,9 @@ canvas.on('object:selected', function(e){
 
     if (activeObjectType === 'effectNode'){
          document.getElementById('node-name').innerHTML = "This is an "+ activeObjectType;
-    } else {
+    } else if (activeObjectType === 'startNode'){
+        document.getElementById('node-name').innerHTML = "This is the "+ activeObjectType + ". <br><br> Connect other nodes to it to start playing.";
+    }else {
          document.getElementById('node-name').innerHTML = "This is a "+ activeObjectType;
     }
    
@@ -195,7 +197,6 @@ function drawLine(object){
 
 
 function canvasCleared(){
-    StartNode();
 }
 
 window.addEventListener('resize', function(){
@@ -211,27 +212,6 @@ window.addEventListener('dblclick', function (e, self) {
        console.log('dblclick inside ' + target.type);
     }   
 });
-
-
-function createNode(arg){
-    switch(arg){
-        case 'play':
-            PlayNode();
-            break;
-        case 'loop':
-            LoopNode();
-            break;
-        case 'fx':
-            EffectNode();
-            break;
-        case 'sample':
-            SampleNode();
-            break;
-        case 'sleep':
-            SleepNode();
-            break;
-    }
-}
 
 //Function to draw a line
 function makeLine(coords) {
