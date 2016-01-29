@@ -18,7 +18,7 @@ function SleepNode(){
 		ID: guid(),
 		parentNode: [],
 		children: [],
-		duration: 1
+		duration: document.getElementById("sleep").value
 	})
 
 //TODO: add relevant immage here 

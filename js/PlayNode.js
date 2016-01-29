@@ -18,11 +18,11 @@ function PlayNode(){
 		ID: guid(),
 		parentNode: [],
 		children: [],
-		note: 440,
-		duration: 1, 
-		wave: 'sine',
-		attack: 0.5,
-		release: 0.5
+		note: document.getElementById("note").value,
+		duration: document.getElementById("duration").value,
+		wave: document.getElementById("wave-type").value,
+		attack: document.getElementById("attack").value,
+		release: document.getElementById("release").value,
 
 	})
 	fabric.Image.fromURL('/png/playnote.png', function(oImg){

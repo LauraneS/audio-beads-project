@@ -26,15 +26,15 @@ function EffectNode(){
 			break;
 		case 'reverb':
 			//larger roomSize = a longer decay, [0,1]
-			fxGroup.set({roomSize: 0.7, dampening: 3000});
+			fxGroup.set({roomSize: document.getElementById("roomSize").value, dampening: document.getElementById("dampening").value});
 			break;
 		case 'distortion':
 			//distortion: [0,1], oversample ['none, '2x', '4x']
-			fxGroup.set({distortion: 0.4, oversample: 'none'});
+			fxGroup.set({distortion: document.getElementById("distortion").value, oversample: document.getElementById("oversample").value});
 			break;
 		case 'pingpong':
 			//delay = delay between consecutive echos, [0,1]
-			fxGroup.set({delay: 0.25});
+			fxGroup.set({delay: document.getElementById("delay").value});
 			break;
 	}
 	fabric.Image.fromURL('/png/fx.png', function(oImg){

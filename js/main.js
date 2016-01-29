@@ -1,5 +1,3 @@
-
-var ac = new AudioContext(), buf, source;
 var line, isMouseDown, isMouseOver, isShiftDown, center;
 
 //Generate UID for each node
@@ -68,65 +66,22 @@ fabric.Object.prototype.toObject = (function (toObject){
     StartNode();
 
 canvas.on('object:selected', function(e){
+    var activeObject = e.target;
     var activeObjectType = e.target.type;
-    var elements = ['play-info', 'effect-info', 'sample-info', 'sleep-info'], i;
-            
-    switch (activeObjectType){
-        case 'playNode':
-            for (i = 0; i < elements.length; i++){
-                if (elements[i] === 'play-info'){
-                    document.getElementById(elements[i]).style.display = 'block';
-                } else {
-                    document.getElementById(elements[i]).style.display = 'none';
-                }
-            }
-            break;
-        case 'effectNode':
-            for (i = 0; i < elements.length; i++){
-                if (elements[i] === 'effect-info'){
-                    document.getElementById(elements[i]).style.display = 'block';
-                } else {
-                    document.getElementById(elements[i]).style.display = 'none';
-                }
-            }
-            break;
-        case 'sampleNode':
-            for (i = 0; i < elements.length; i++){
-                if (elements[i] === 'sample-info'){
-                    document.getElementById(elements[i]).style.display = 'block';
-                } else {
-                    document.getElementById(elements[i]).style.display = 'none';
-                }
-            }
-            break;
-        case 'sleepNode':
-            for (i = 0; i < elements.length; i++){
-                if (elements[i] === 'sleep-info'){
-                    document.getElementById(elements[i]).style.display = 'block';
-                } else {
-                    document.getElementById(elements[i]).style.display = 'none';
-                }
-            }
-            break;
-        case 'loop':
-            for (i = 0; i < elements.length; i++){
-                document.getElementById(elements[i]).style.display = 'none'; 
-            }
-    }
-
-    if (activeObjectType === 'effectNode'){
-         document.getElementById('node-name').innerHTML = "This is an "+ activeObjectType;
-    } else if (activeObjectType === 'startNode'){
-        document.getElementById('node-name').innerHTML = "This is the "+ activeObjectType + ". <br><br> Connect other nodes to it to start playing.";
-    }else {
-         document.getElementById('node-name').innerHTML = "This is a "+ activeObjectType;
-    }
+    displayParam(activeObject, activeObjectType, 'selected');
    
 });
 
+canvas.on('object:added', function(e){
+    displayParam(e.target, e.target.type, 'added');
+});
 canvas.on('mouse:down', function(){
     if (!isMouseOver) {
-        document.getElementById('node-name').innerHTML = "No node selected"
+        document.getElementById('node-name').innerHTML = "No node selected";
+        var elements = ['play-info', 'effect-info', 'sample-info', 'sleep-info'], i;
+        for (i = 0; i < elements.length; i++){
+            document.getElementById(elements[i]).style.display = 'none';
+        }
     }
 });
     
@@ -199,20 +154,6 @@ function drawLine(object){
 function canvasCleared(){
 }
 
-window.addEventListener('resize', function(){
-	canvas.setHeight(window.innerHeight - 150);
-	canvas.setWidth(window.innerWidth*0.80 - 20);
-})
-
-
-//Adding double click event listener (not supported by fabric.js)
-window.addEventListener('dblclick', function (e, self) {
-    var target = canvas.findTarget(e);
-    if (target) {
-       console.log('dblclick inside ' + target.type);
-    }   
-});
-
 //Function to draw a line
 function makeLine(coords) {
     return new fabric.Line(coords, {
@@ -230,6 +171,10 @@ function addChildLine(options) {
     // add the line
     var fromObject = canvas.addChild.start;
     var toObject = options.target;
+    if (toObject.type === 'startNode') {
+        document.getElementById('node-name').innerHTML = "You cannot add this line.";
+        return;
+    }
     var from = fromObject.getCenterPoint()
     var to = toObject.getCenterPoint();
     var coords = [from.x + fromObject.getWidth()/2, from.y, to.x - toObject.getWidth()/2, to.y];
@@ -300,22 +245,6 @@ window.addChild = function () {
     canvas.on('object:selected', addChildLine);
 }
 
-
-//Window resize triggers resizing of canvas
-window.addEventListener('resize', function(){
-    canvas.setHeight(window.innerHeight - 150);
-    canvas.setWidth(window.innerWidth*0.80 - 20);
-})
-
-
-//Adding double click event listener (not supported by fabric.js)
-window.addEventListener('dblclick', function (e, self) {
-    var target = canvas.findTarget(e);
-    if (target) {
-       console.log('dblclick inside ' + target.type);
-    }   
-});
-
 function canvasCleared(){
     ac.close();
     ac = new AudioContext();
@@ -324,6 +253,7 @@ function canvasCleared(){
 function resetCanvas(){
     canvas.clear();
     StartNode();
+    document.getElementById('node-name').innerHTML = "Click an object to get started!";
 }
 
 function canvasState(){
