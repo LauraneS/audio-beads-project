@@ -22,7 +22,8 @@ function StartNode(){
 		ID: guid(),
 		children: [],
 		lockMovementX: true,
-		lockMovementY: true
+		lockMovementY: true, 
+		parentNode: [0]
 	})
 
 	canvas.add(startGroup); 

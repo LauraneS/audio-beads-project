@@ -180,7 +180,7 @@ function addChildLine(options) {
     var coords = [from.x + fromObject.getWidth()/2, from.y, to.x - toObject.getWidth()/2, to.y];
     var line = makeLine(coords);
     canvas.add(line);
-    fromObject.children.push(toObject.ID);
+    //fromObject.children.push(toObject.ID);
     toObject.parentNode.push(fromObject.ID);
     
     // so that the line is behind the connected shapes
@@ -257,6 +257,11 @@ function resetCanvas(){
 }
 
 function canvasState(){
-    var state = JSON.parse(JSON.stringify(canvas));
-    console.log(state);
+    var state = (JSON.stringify(canvas));
+    var stateArray = $.parseJSON(state.substring(11, state.length - 17));
+    //var stateArray = eval('(' + state + ')');
+    //console.log(stateArray);
+
+    parse(unflatten(stateArray));
+    //console.log(JSON.stringify(tree, null, " "));
 }

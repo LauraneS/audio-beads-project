@@ -7,7 +7,10 @@ function LoopNode(){
       top: fabric.util.getRandomInt(0, canvas.getHeight() -99),
       fill: '',
       stroke: 'black',
-      type: 'loop'
+      type: 'loop',
+      ID: guid(),
+      parent: [],
+      children:[]
     });
     canvas.add(orbit);
   }

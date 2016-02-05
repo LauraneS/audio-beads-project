@@ -32,3 +32,4 @@ function PlayNode(){
 	})
 	canvas.add(playGroup); 
 }
+
