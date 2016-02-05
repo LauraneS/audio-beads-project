@@ -14,7 +14,7 @@ function SleepNode(){
 	var sleepGroup = new (fabric.Group)([sleep, hand1, hand2],{
 		left: fabric.util.getRandomInt(0, canvas.getWidth() + 1), 
 		top: fabric.util.getRandomInt(0, canvas.getHeight() + 1),
-		type:  'sleepNode',
+		type:'sleepNode',
 		ID: guid(),
 		parentNode: [],
 		children: [],
@@ -22,10 +22,10 @@ function SleepNode(){
 	})
 
 //TODO: add relevant immage here 
-	fabric.Image.fromURL('', function(oImg){
-		oImg.scale(0.35);
-	 sleepGroup.add(oImg.set({left: -oImg.getWidth()/2, top:-oImg.getHeight()/2}));
-		canvas.renderAll();
-	})
+	// fabric.Image.fromURL('', function(oImg){
+	// 	oImg.scale(0.35);
+	//  sleepGroup.add(oImg.set({left: -oImg.getWidth()/2, top:-oImg.getHeight()/2}));
+	// 	canvas.renderAll();
+	// })
 	canvas.add(sleepGroup); 
 }

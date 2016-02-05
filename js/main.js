@@ -1,5 +1,6 @@
 var line, isMouseDown, isMouseOver, isShiftDown, center;
-
+var playing = true;
+var ac = new AudioContext();
 //Generate UID for each node
 function guid() {
     function s4() {
@@ -13,7 +14,7 @@ document.onkeydown = function(e) {
     switch (e.keyCode) {
         case 16:  // Shift key down
             isShiftDown = true;
-            break;
+            break;        
         case 67: //C key down
             canvas.clear().renderAll();
             break;
@@ -30,6 +31,14 @@ document.onkeyup = function(e) {
           isShiftDown = false;
           canvas.hoverCursor = 'pointer';
           break;
+        case 32: //spacebar
+            if (playing){
+                ac.suspend();
+                playing = false;
+            } else{
+                ac.resume();
+                playing = true;
+            }
     }
 }
 
@@ -239,7 +248,6 @@ window.addChild = function () {
     canvas.addChild = {
         start: canvas.getActiveObject()
     }
-
     // for when addChild is clicked twice
     canvas.off('object:selected', addChildLine);
     canvas.on('object:selected', addChildLine);
@@ -248,20 +256,26 @@ window.addChild = function () {
 function canvasCleared(){
     ac.close();
     ac = new AudioContext();
+    playing = true;
 }
 
 function resetCanvas(){
     canvas.clear();
+    ac.suspend();
+    ac.close();
+    playing = true;
     StartNode();
     document.getElementById('node-name').innerHTML = "Click an object to get started!";
 }
 
 function canvasState(){
+    canvasCleared();
     var state = (JSON.stringify(canvas));
     var stateArray = $.parseJSON(state.substring(11, state.length - 17));
     //var stateArray = eval('(' + state + ')');
     //console.log(stateArray);
 
-    parse(unflatten(stateArray));
+    var tree = unflatten(stateArray);
+    parse(tree);
     //console.log(JSON.stringify(tree, null, " "));
 }
