@@ -1,22 +1,38 @@
 var orbit, bead, dur = 1000, oCoords;
-function LoopNode(){
+function LoopNode(coords){
   function createOrbit() {
     orbit = new fabric.Circle({
       radius: 100,
-      left: fabric.util.getRandomInt(0, canvas.getWidth() -99), 
-      top: fabric.util.getRandomInt(0, canvas.getHeight() -99),
+      //left: coords.x, 
+      //top: coords.y,
       fill: '',
       stroke: 'black',
-      type: 'loop',
-      ID: guid(),
-      parent: [],
-      children:[]
+      // type: 'loop',
+      // ID: guid(),
+      // parent: [],
+      // children:[]
     });
-    canvas.add(orbit);
-  }
+    oCoords = orbit.getCenterPoint();
+    var hand1 = new fabric.Triangle({
+      width: 5, height: 5, top:-5, left: oCoords.x - 2.5, fill:'', stroke:'black'
+    });
+    var hand2 = new fabric.Triangle({
+      width: 5, height: 5,  angle: -180, top: 206, left: oCoords.x + 2.5, fill:'', stroke:'black'
+    });
+    var loopGroup = new fabric.Group([orbit, hand1, hand2],{
+      left: coords.x, 
+      top: coords.y,
+      ID: guid(),
+      type: 'loop',
+      parentNode: [],
+      parentType: '',
+      children: []
+    });
+    canvas.add(loopGroup);
+    canvas.sendToBack(loopGroup);
+  } 
 
   function createBead(){
-    oCoords = orbit.getCenterPoint();
     bead = new fabric.Circle({
       radius: 5,
       left: oCoords.x - 5,

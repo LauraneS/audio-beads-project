@@ -1,5 +1,6 @@
 <!doctype html>
 <head>
+<meta http-equiv="Access-Control-Allow-Origin" content="*"/>
 <meta charset=utf8>
 <meta name=viewport content="width=device-width, initial-scale=1">
 <link rel="stylesheet" type="text/css" href="style.css">
@@ -10,7 +11,23 @@
   <div id="mainbar" ondragenter="return dragEnter(event)" ondrop="return dragDrop(event)" ondragover="return dragOver(event)">
     <canvas id="canvas" >
         This text is displayed if your browser does not support HTML5 Canvas.
-  </canvas>
+    </canvas>
+    <div id="menu">
+      <ul id="drag-elements">
+        
+        <li onClick="addChild()">Draw Line</li>
+        <li draggable="true" id="playNode"  ondragstart="return dragStart(event)">Note</li>
+        <li draggable="true" id="sleepNode"  ondragstart="return dragStart(event)">Sleep</li>
+        <li draggable="true" id="loop"  ondragstart="return dragStart(event)">Loop</li>
+        <li draggable="true" id="effectNode"  ondragstart="return dragStart(event)">Effect</li>
+        <!-- <li onClick="animateBead(bead, 60000/parseInt(canvas.item(1).getText()))">Animate Bead</li> -->
+        <li draggable="true" id="sampleNode"  ondragstart="return dragStart(event)">Sample</li>
+        <li onclick="resetCanvas()">Clear Canvas</li>
+        <li class="play" onclick="canvasState()">Play</li>
+        <li class="pause" onclick="pauseSound()">Pause</li>
+        <li classe="stop" onclick="stopSound()">Stop</li>
+      </ul>
+    </div>
   </div>
   <div id="sidebar">
   	<div id="node-name">Click an object to get started!</div>
@@ -26,12 +43,12 @@
         </select> <br>
         Note: <input type="text" id="noteInput" value="60", onchange=" document.getElementById('note').value=this.value;", style="width: 20px; text-align: center"><br>
         <input type="range" id="note" min="0" max="127", step="1", value= "60" onchange=" document.getElementById('noteInput').value=this.value;"> <br>                                                   
-        Duration: <input type="text" id="durationInput" value="60", onchange=" document.getElementById('duration').value=this.value;", style="width: 20px; text-align: center"><br>
-        <input type="range" id="duration" min="0" max="127", step="1", value= "60" onchange=" document.getElementById('durationInput').value=this.value;"> <br> 
-        Attack:<input type="text" id="attackInput" value="1" onchange=" document.getElementById('attack').value=this.value;" style="width: 20px; text-align: center"><br>
+        Duration: <input type="text" id="durationInput" min="0" max = "10" step= "1" value="2", onchange=" document.getElementById('duration').value=this.value;", style="width: 20px; text-align: center"><br>
+        <input type="range" id="duration" min="0" max = "10" step= "1" value="2" onchange=" document.getElementById('durationInput').value=this.value;"> <br> 
+        <!-- Attack:<input type="text" id="attackInput" value="1" onchange=" document.getElementById('attack').value=this.value;" style="width: 20px; text-align: center"><br>
         <input type="range" id="attack" min="0" max="10", onchange=" document.getElementById('attackInput').value=this.value;", value="1"> <br>
         Release:<input type="text" id="releaseInput" value="1" onchange=" document.getElementById('release').value=this.value;", style="width: 20px; text-align: center"><br>
-        <input type="range" id="release" min="0" max="10", value="1", onchange=" document.getElementById('releaseInput').value=this.value;" >
+        <input type="range" id="release" min="0" max="10", value="1", onchange=" document.getElementById('releaseInput').value=this.value;" > -->
       </form>
   	</div>
 
@@ -39,37 +56,37 @@
       <form onSubmit="return false;">
       Effect: 
       <select id="effect-name">
-        <option value="echo">Echo</option>
-        <option value="reverb">Reverb</option>
-        <option value="distortion">Distortion</option>
+        <option value="wahwah" >Wah-Wah</option>
+        <option value="tremolo" >Tremolo</option>
+        <option value="chorus">Chorus</option>
         <option value="pingpong">Pingpong</option>
       </select>
     </form>
 
-    <form  onSubmit="return false;" id='effect-echo', style="display:none">
+    <form  onSubmit="return false;" id='effect-wah', style="display:none">
+      Octaves: <input type="text" id="octInput" value="2" onchange=" document.getElementById('octave').value=this.value;" style="width: 20px; text-align: center"><br>
+        <input type="range" id="octave" min="1" max="6" onchange=" document.getElementById('octInput').value=this.value;", value="2"> <br>
+      Resonance: <input type="text" id="resInput" value="10" style="width: 20px; text-align: center"><br>
+        <input type="range" id="resonance" min="1" max="100" step = 1 onchange=" document.getElementById('resInput').value=this.value;" value="10"> <br>
     </form>
 
-    <form onSubmit="return false;" id='effect-reverb', style="display:none">
-      Room Size: <input type="text" id="roomInput" value="0.7" onchange=" document.getElementById('roomSize').value=this.value;" style="width: 20px; text-align: center"><br>
-        <input type="range" id="roomSize" min="0" max="1", onchange=" document.getElementById('roomInput').value=this.value;", value="0.7"> <br>
-      Dampening: <input type="text" id="dampInput" value="3000" onchange="document.getElementById('dampening').value=this.value;" style="width: 20px; text-align: center"><br>
-        <input type="range" id="dampening" min="0" max="5000" onchange=" document.getElementById('dampInput').value=this.value;" value="3000"> <br>
+    <form onSubmit="return false;" id='effect-tremolo', style="display:none">
+      Intensity: <input type="text" id="intensityInput" value="0.3" onchange=" document.getElementById('intensity').value=this.value;" style="width: 20px; text-align: center"><br>
+        <input type="range" id="intensity" min="0" max="1" step = "0.1" onchange=" document.getElementById('intensityInput').value=this.value;", value="0.3"> <br>
+      Rate: <input type="text" id="rateInput" value="4" style="width: 20px; text-align: center"><br>
+        <input type="range" id="rate" min="0" max="8" onchange=" document.getElementById('rateInput').value=this.value;" value="4"> <br>
     </form>
 
-    <form onSubmit="return false;" id='effect-distortion' style="display:none">
-      Distortion: <input type="text" id="distInput" value="0.4" onchange=" document.getElementById('distortion').value=this.value;" style="width: 20px; text-align: center"><br>
-        <input type="range" id="distortion" min="0" max="1" onchange=" document.getElementById('distInput').value=this.value;" value="0.4"> <br>
-      Oversample: <br>
-      <form id="oversample">
-        <input type="radio" name='sample' value="none" checked> None<br>
-        <input type="radio" name='sample' value="2x"> 2x<br>
-        <input type="radio" name='sample' value="4x"> 4x
-      </form>
+    <form onSubmit="return false;" id='effect-chorus' style="display:none">
+      Rate: <input type="text" id="rateChoInput" value="1.5" onchange=" document.getElementById('rateCho').value=this.value;" style="width: 20px; text-align: center"><br>
+        <input type="range" id="rateCho" min="0" max="8" step="0.1" onchange="document.getElementById('rateChoInput').value=this.value;" value="1.5"> <br>
+      Delay: <input type="text" id="delayChoInput" value="0.1" onchange=" document.getElementById('delayCho').value=this.value;" style="width: 20px; text-align: center"><br>
+        <input type="range" id="delayCho" min="0" max="1" step="0.01" onchange="document.getElementById('delayChoInput').value=this.value;" value="0.01"> <br>
     </form>
 
     <form onSubmit="return false;" id='effect-pingpong' style="display:none">
-      Room Size: <input type="text" id="delayInput" value="0.25" onchange=" document.getElementById('delay').value=this.value;" style="width: 20px; text-align: center"><br>
-        <input type="range" id="delay" min="0" max="1" onchange=" document.getElementById('delayInput').value=this.value;" value="0.25"> <br>
+      Room Size: <input type="text" id="delayInput" value="1.5" onchange=" document.getElementById('delay').value=this.value;" style="width: 20px; text-align: center"><br>
+        <input type="range" id="delay" min="0" max="10" step="0.1" onchange=" document.getElementById('delayInput').value=this.value;" value="1.5"> <br>
     </form>
 
   	</div>
@@ -77,19 +94,18 @@
   	<div id="sample-info" style="display:none">
       <form onSubmit="return false;">
           Sample: 
-        <select id="sample" value="Bass">
-          <option value="bass">Bass</option>
-          <option value="beat">Beat</option>
+        <select id="sample">
+          <option value="hihat" selected>High-hat</option>
           <option value="drum-kick">Drum kick</option>
-          <option value="high-hat">High-hat</option>
-          <option value="snare">Snare</option>
-          <option value="sci-fi">Sci-fi</option>
+          <option value="alien">Alien</option>
+          <option value="beat">Beat</option>
+          <option value="bass">Bass</option>
+          <option value="flute">Flute</option>
         </select> <br>
         Loop
         <input type="checkbox" id="loop" value="Loop">
       </form>
   	</div>
-
   	<div id="sleep-info" style="display:none">
       <form onSubmit="return false;">
       Duration: <input type="text" id="sleepInput" value="1" onchange="document.getElementById('sleep').value=this.value;" style="width: 20px; text-align: center"><br>
@@ -99,29 +115,20 @@
   </div>
 
 
-<div id="menu">
-	<ul id="drag-elements">
-		<li draggable="true" id="playNode"  ondragstart="return dragStart(event)">Note</li>
-    <li draggable="true" id="sleepNode"  ondragstart="return dragStart(event)">Sleep</li>
-		<li draggable="true" id="loop"  ondragstart="return dragStart(event)">Loop</li>
-		<li draggable="true" id="effectNode"  ondragstart="return dragStart(event)">Effect</li>
-		<!-- <li onClick="animateBead(bead, 60000/parseInt(canvas.item(1).getText()))">Animate Bead</li> -->
-		<li draggable="true" id="sampleNode"  ondragstart="return dragStart(event)">Sample</li>
-		<li onClick="resetCanvas()">Clear Canvas</li>
-		<li onClick="canvasState()">What's on the canvas?</li>
-	</ul>
-</div>
+
+<!-- <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a>             is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0">CC BY 3.0</a>
+</div> --> 
 
 </body>
 
-<button onClick="addChild()">Add Child</button>
 
 <!-- File Structure -->
 <script src="fabric.js/dist/fabric.js"></script>
-<script type="text/javascript" src="http://cdn.tonejs.org/latest/Tone.min.js"></script>
+<script src="node_modules/tunajs/tuna.js"></script>
 <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
+<script src="js/BufferLoader.js"></script>
 <script src="js/Display.js"></script>
 <script src="js/EffectNode.js"></script>
 <script src="js/Interpreter.js"></script>

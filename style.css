@@ -6,20 +6,21 @@ html *
 }
 
 #canvas {
-
+	min-height: 480px;
+	border: 2px solid black;
 }
 div#mainbar{
 	float: left;
     width: 80%;
     margin-right: 8px;
-    border: 2px solid black;
+    /*border: 2px solid black;*/
 }
 
 div#sidebar{
 	margin-left: 81%;
 	min-width: 140px;
     border: 2px solid black;
-    height:515px;
+    min-height: 532px;
 }
 
 div#node-name{
@@ -39,3 +40,20 @@ div#menu {
 	border-radius: 3px;
 }
 
+.play {
+	background-image: url('png/arrow551.png');
+    background-repeat: no-repeat;
+    background-position: 50% 10px;
+}
+
+.pause {
+	background-image: url('png/pause19.png');
+    background-repeat: no-repeat;
+    background-position: 50% 10px;
+}
+
+.stop {
+	background-image: url('png/square82.png');
+    background-repeat: no-repeat;
+    background-position: 50% 10px;
+}

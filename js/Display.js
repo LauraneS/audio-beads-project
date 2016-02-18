@@ -15,25 +15,28 @@ function dragOver(ev) {
 }
          
 function dragDrop(ev) {
+    var pointer = canvas.getPointer(ev.e)
     var src = ev.dataTransfer.getData("Text");
     switch (src){
         case 'playNode':
-            PlayNode();
+            PlayNode(pointer);
             break;
         case 'loop':
-            LoopNode();
+            LoopNode(pointer);
             break;
         case 'effectNode':
-            EffectNode();
+            EffectNode(pointer);
             break;
         case 'sampleNode':
-            SampleNode();
+            SampleNode(pointer);
             break;
         case 'sleepNode':
-            SleepNode();
-            //document.getElementById("sleep-info").style.display = 'block';
+            SleepNode(pointer);
             break;
     }
+    var lastObject = lastAdded[lastAdded.length - 1];
+    canvas.setActiveObject(lastObject);
+    //console.log(canvas.getActiveObject);
     ev.stopPropagation();
     return false;
 }
@@ -48,8 +51,8 @@ function displayParam(node, nodeType, evt){
                     document.getElementById("note").value = document.getElementById("noteInput").value = node.note;
                     document.getElementById("wave-type").value = node.wave;
                     document.getElementById("duration").value = document.getElementById("durationInput").value = node.duration;
-                    document.getElementById("attack").value = document.getElementById("attackInput").value = node.attack;
-                    document.getElementById("release").value = document.getElementById("releaseInput").value = node.release;
+                    //document.getElementById("attack").value = document.getElementById("attackInput").value = node.attack;
+                    //document.getElementById("release").value = document.getElementById("releaseInput").value = node.release;
                     document.getElementById(elements[i]).style.display = 'block';
 
                 } else {
@@ -61,6 +64,7 @@ function displayParam(node, nodeType, evt){
             for (i = 0; i < elements.length; i++){
                 if (elements[i] === 'effect-info'){
                     document.getElementById(elements[i]).style.display = 'block';
+
                 } else {
                     document.getElementById(elements[i]).style.display = 'none';
                 }
@@ -112,36 +116,46 @@ function displayParam(node, nodeType, evt){
         if (evt === 'selected'){
             document.getElementById('node-name').innerHTML = "This is a "+ nodeType;
         } else {
-            document.getElementById('node-name').innerHTML = "You added a "+ nodeType;
+            if (nodeType === 'line'){
+                console.log('line');
+            } else {
+                document.getElementById('node-name').innerHTML = "You added a "+ nodeType;
+            }
         }
     }
 }
 //Display the correct parameters depending on effect chosen
 document.getElementById("effect-name").oninput = function(){
 	var value = document.getElementById("effect-name").value;
-	var elements = ["effect-echo", "effect-reverb", "effect-distortion", "effect-pingpong"];
+	var elements = ["effect-wah", "effect-tremolo", "effect-chorus", "effect-pingpong"];
 	switch (value){
-		case 'echo':
+		case 'wahwah':
 		for (i = 0; i < elements.length; i++){
-                if (elements[i] === 'effect-echo'){
+                if (elements[i] === 'effect-wah'){
+                    document.getElementById("octave").value = document.getElementById("octInput").value = canvas.getActiveObject().octave;
+                    document.getElementById("resonance").value = document.getElementById("resInput").value = canvas.getActiveObject().resonance;
                     document.getElementById(elements[i]).style.display = 'block';
                 } else {
                     document.getElementById(elements[i]).style.display = 'none';
                 }
             }
             break;
-		case 'reverb':
+		case 'tremolo':
 		for (i = 0; i < elements.length; i++){
-                if (elements[i] === 'effect-reverb'){
+                if (elements[i] === 'effect-tremolo'){
+                    document.getElementById("intensity").value = document.getElementById("intensityInput").value = canvas.getActiveObject().intensity;
+                    document.getElementById("rate").value = document.getElementById("rateInput").value = canvas.getActiveObject().rate;
                     document.getElementById(elements[i]).style.display = 'block';
                 } else {
                     document.getElementById(elements[i]).style.display = 'none';
                 }
             }
             break;
-		case 'distortion':
+		case 'chorus':
 		for (i = 0; i < elements.length; i++){
-                if (elements[i] === 'effect-distortion'){
+                if (elements[i] === 'effect-chorus'){
+                    document.getElementById("rateCho").value = document.getElementById("rateChoInput").value = canvas.getActiveObject().rateCho;
+                    document.getElementById("delayCho").value = document.getElementById("delayChoInput").value = canvas.getActiveObject().delayCho;
                     document.getElementById(elements[i]).style.display = 'block';
                 } else {
                     document.getElementById(elements[i]).style.display = 'none';
@@ -150,7 +164,8 @@ document.getElementById("effect-name").oninput = function(){
             break;
 		case 'pingpong':
 		for (i = 0; i < elements.length; i++){
-                if (elements[i] === 'effect-distortion'){
+                if (elements[i] === 'effect-pingpong'){
+                    document.getElementById("delay").value = document.getElementById("delayInput").value = canvas.getActiveObject().delay;
                     document.getElementById(elements[i]).style.display = 'block';
                 } else {
                     document.getElementById(elements[i]).style.display = 'none';
@@ -170,39 +185,43 @@ document.getElementById("duration").oninput = document.getElementById("durationI
 document.getElementById("wave-type").oninput = function(){
     canvas.getActiveObject().wave = this.value;
 };
-document.getElementById("attack").oninput = document.getElementById("attackInput").oninput = function(){
-    canvas.getActiveObject().attack = this.value;
+// document.getElementById("attack").oninput = document.getElementById("attackInput").oninput = function(){
+//     canvas.getActiveObject().attack = this.value;
+// };
+// document.getElementById("release").oninput = document.getElementById("releaseInput").oninput = function(){
+//     canvas.getActiveObject().release = this.value;
+// };
+document.getElementById("effect-name").onchange = function(){
+    canvas.getActiveObject().effect = this.options[this.selectedIndex].value;
 };
-document.getElementById("release").oninput = document.getElementById("releaseInput").oninput = function(){
-    canvas.getActiveObject().release = this.value;
+document.getElementById("octave").oninput = function(){
+    canvas.getActiveObject().octave = this.value;
 };
-// document.getElementById("effect-name").oninput = function(){
-//     canvas.getActiveObject().effect = this.value;
-// };
-// document.getElementById("roomSize").oninput = function(){
-//     canvas.getActiveObject().roomSize = this.value;
-// };
-// document.getElementById("dampening").oninput = function(){
-//     canvas.getActiveObject().dampening = this.value;
-// };
-// document.getElementById("distortion").oninput = function(){
-//     canvas.getActiveObject().distortion = this.value;
-// };
+document.getElementById("resonance").oninput = function(){
+    canvas.getActiveObject().resonance = this.value;
+};
+document.getElementById("intensity").oninput = function(){
+    canvas.getActiveObject().intensity = this.value;
+};
+document.getElementById("rate").oninput = function(){
+    canvas.getActiveObject().rate = this.value;
+};
+document.getElementById("rateCho").oninput = function(){
+    canvas.getActiveObject().rateCho = this.value;
+};
+document.getElementById("delayCho").oninput = function(){
+    canvas.getActiveObject().delayCho = this.value;
+};
 
-// // $(document).ready(function(){
-// //         $('#oversample input[type=radio]').click(function(){
-// //             alert(this.value);
-// //         });
-// //     });
-
-// document.getElementById("delay").oninput = function(){
-//     canvas.getActiveObject().delay = this.value;
-// };
-document.getElementById("sample").oninput = function(){
-    canvas.getActiveObject().sample = this.value;
+document.getElementById("delay").oninput = function(){
+    canvas.getActiveObject().delay = this.value;
 };
-document.getElementById("loop").onclick = function(){
+document.getElementById("sample").onchange = function(){
+    canvas.getActiveObject().sample=this.options[this.selectedIndex].value;
+};
+document.getElementById("loop").oninput = function(){
     canvas.getActiveObject().loop = this.checked;
+    console.log(canvas.getActiveObject().loop );
 };
 document.getElementById("sleep").oninput = document.getElementById("sleepInput").oninput= function(){
     canvas.getActiveObject().duration = this.value;
@@ -213,7 +232,6 @@ window.addEventListener('resize', function(){
     canvas.setHeight(window.innerHeight - 150);
     canvas.setWidth(window.innerWidth*0.80 - 20);
 })
-
 
 //Adding double click event listener (not supported by fabric.js)
 window.addEventListener('dblclick', function (e, self) {
