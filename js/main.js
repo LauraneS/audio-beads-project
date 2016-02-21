@@ -12,19 +12,22 @@ var lastAdded= window._lastAdded = [];
     canvas.hoverCursor = canvas.moveCursor ='pointer';
     StartNode();
 
+    fabric.util.addListener(document.getElementById('wrapper'), 'scroll', function () {
+    console.log('scroll');
+    canvas.calcOffset();
+});
+
 function init(){
     //Loading samples 
     bufferLoader = new BufferLoader(
     ac,
     [
-
         '/samples/hihat-plain.wav',
         '/samples/kick-big.wav',
         '/samples/alien.mp3',
         '/samples/beat.mp3',
         '/samples/bass.mp3',
         '/samples/flute.wav'
-
     ],
     finishedLoading
     );
@@ -33,7 +36,7 @@ function init(){
 }
 
 function finishedLoading(bufferList){
-    bList =bufferList;
+    bList = bufferList;
 }
 
 //Generate UID for each node
@@ -136,6 +139,10 @@ canvas.on({'object:moving':onObjectMoving});
 function onObjectMoving(e){
     var activeObject = e.target;
     activeObject.setCoords();
+    var currentWidth = canvas.getWidth();
+    var currentHeight = canvas.getHeight();
+
+    
     canvas.forEachObject(function(obj) {
       if (obj === activeObject) return;
         if (activeObject.intersectsWithObject(obj)){
@@ -153,7 +160,19 @@ function onObjectMoving(e){
             activeObject.intersected = false;
         }
     });
+
+    if(activeObject.getLeft()+activeObject.getWidth() > currentWidth){
+        canvas.setWidth(currentWidth+50);
+        $("#wrapper").scrollLeft(activeObject.getLeft());
+        $("#wrapper").on('scroll', canvas.calcOffset.bind(canvas));
+    } 
+    if (activeObject.getTop()+activeObject.getHeight() > currentHeight){
+        canvas.setHeight(currentHeight+50);
+        $("#wrapper").scrollTop(activeObject.getTop());
+        $("#wrapper").on('scroll', canvas.calcOffset.bind(canvas));
+    }
 }
+
 // canvas.on('mouse:down', function(){
 //     if (!isMouseOver) {
 //         document.getElementById('node-name').innerHTML = "No node selected";

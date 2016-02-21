@@ -8,20 +8,43 @@
 <body>
 
   
-  <div id="mainbar" ondragenter="return dragEnter(event)" ondrop="return dragDrop(event)" ondragover="return dragOver(event)">
+  <div id="mainbar">
+    <div id = "sidebar-left">
+      Elements
+      <div draggable="true" id="playIcon" ondragstart="return dragStart(event)"> Note
+        <img src="png/PlayNode.png" alt="PlayNode" id="playImg">
+      </div> 
+      <br>
+      <div draggable="true" id="sleepIcon" ondragstart="return dragStart(event)"> Sleep
+        <img src="png/SleepNode.png" alt="SleepNode" id="sleepImg">
+      </div> 
+      <br>
+      <div draggable="true" id="SampleIcon" ondragstart="return dragStart(event)"> Sample
+        <img src="png/SampleNode.png" alt="SampleNode" id="sampleImg">
+      </div> 
+      <div draggable="true" id="effectIcon" ondragstart="return dragStart(event)"> Effect
+        <img src="png/EffectNod.png" alt="EffectNode" id="effectImg">
+      </div> 
+      <div draggable="true" id="loopIcon" ondragstart="return dragStart(event)"> Loop
+        <img src="png/Loop.png" alt="Loop" id="loopImg">
+      </div> 
+    </div>
+    <div id="wrapper" ondragenter="return dragEnter(event)" ondrop="return dragDrop(event)" ondragover="return dragOver(event)"> 
     <canvas id="canvas" >
         This text is displayed if your browser does not support HTML5 Canvas.
     </canvas>
+    </div>
+
     <div id="menu">
       <ul id="drag-elements">
         
         <li onClick="addChild()">Draw Line</li>
-        <li draggable="true" id="playNode"  ondragstart="return dragStart(event)">Note</li>
-        <li draggable="true" id="sleepNode"  ondragstart="return dragStart(event)">Sleep</li>
-        <li draggable="true" id="loop"  ondragstart="return dragStart(event)">Loop</li>
-        <li draggable="true" id="effectNode"  ondragstart="return dragStart(event)">Effect</li>
+       <!--  <li draggable="true" id="playNode"  ondragstart="return dragStart(event)">Note</li> -->
+        <!-- <li draggable="true" id="sleepNode"  ondragstart="return dragStart(event)">Sleep</li> -->
+        <!-- <li draggable="true" id="loop"  ondragstart="return dragStart(event)">Loop</li> -->
+      <!--   <li draggable="true" id="effectNode"  ondragstart="return dragStart(event)">Effect</li> -->
         <!-- <li onClick="animateBead(bead, 60000/parseInt(canvas.item(1).getText()))">Animate Bead</li> -->
-        <li draggable="true" id="sampleNode"  ondragstart="return dragStart(event)">Sample</li>
+        <!-- <li draggable="true" id="sampleNode"  ondragstart="return dragStart(event)">Sample</li> -->
         <li onclick="resetCanvas()">Clear Canvas</li>
         <li class="play" onclick="canvasState()">Play</li>
         <li class="pause" onclick="pauseSound()">Pause</li>
@@ -29,7 +52,7 @@
       </ul>
     </div>
   </div>
-  <div id="sidebar">
+  <div id="sidebar-right">
   	<div id="node-name">Click an object to get started!</div>
 
   	<div id="play-info" style="display:none">

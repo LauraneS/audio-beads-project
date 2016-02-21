@@ -1,7 +1,8 @@
+var isDClicked = false;
 //Drag and drop to create a new node
 function dragStart(ev) {
     ev.dataTransfer.effectAllowed='move';
-    ev.dataTransfer.setData("Text", ev.target.getAttribute('id'));
+    ev.dataTransfer.setData("text", ev.target.getAttribute('id'));
     ev.dataTransfer.setDragImage(ev.target,0,0);
     return true;
 }
@@ -16,21 +17,27 @@ function dragOver(ev) {
          
 function dragDrop(ev) {
     var pointer = canvas.getPointer(ev.e)
-    var src = ev.dataTransfer.getData("Text");
+    var src = ev.dataTransfer.getData("text");
     switch (src){
-        case 'playNode':
+        case 'playImg':
             PlayNode(pointer);
             break;
-        case 'loop':
+        case 'loopImg':
             LoopNode(pointer);
             break;
-        case 'effectNode':
-            EffectNode(pointer);
+        case 'effectImg':
+            //EffectNode(pointer);
+            //TO DO!!
+            canvas.forEachObject(function(obj){
+                if (pointer.intersectsWithObject(obj)){
+                    console.log("contained");
+                }
+            });
             break;
-        case 'sampleNode':
+        case 'sampleImg':
             SampleNode(pointer);
             break;
-        case 'sleepNode':
+        case 'sleepImg':
             SleepNode(pointer);
             break;
     }
@@ -238,5 +245,12 @@ window.addEventListener('dblclick', function (e, self) {
     var target = canvas.findTarget(e);
     if (target) {
        console.log('dblclick inside ' + target.type);
-    }   
+    }  else if (!isDClicked) {
+        canvas.setZoom(3);
+        isDClicked = true;
+    } else {
+        console.log(canvas.getZoom());
+        canvas.setZoom(1);
+        isDClicked = false;
+    }
 });

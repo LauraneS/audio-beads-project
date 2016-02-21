@@ -5,22 +5,73 @@ html *
    font-family: Trebuchet MS !important;
 }
 
-#canvas {
-	min-height: 480px;
-	border: 2px solid black;
+img{
+	max-width: 100%;
+	max-height:100%;
 }
 div#mainbar{
-	float: left;
-    width: 80%;
-    margin-right: 8px;
+	/*float: left;*/
+    width: 70%;
+    height: 100%;
+    margin-right: 4px;
     /*border: 2px solid black;*/
 }
 
-div#sidebar{
-	margin-left: 81%;
+div#sidebar-left{
+	padding: 0.5em 0.5em;
+	margin: 0 0.5em 0.5em 0;
+	position: absolute;
+	float: left;
+	border: 2px solid black;
+	width: 70px;
+	min-height: 600px;
+}
+
+div#playIcon{
+	padding-top: 0.5;
+	padding: 0.5em 0.5em;
+	height:60px;
+	width: 60px;
+}
+div#sleepIcon {
+	padding-left: 0.5em;
+	height:60px;
+	width: 60px;
+}
+div#sampleIcon {
+	padding: 0.5em 0.5em;
+	height:60px;
+	width: 60px;
+}
+div#effectIcon {
+	padding: 0.5em 0.5em;
+	height:60px;
+	width: 60px;
+}
+div#loopIcon {
+	padding: 0.5em 0.5em;
+	height:60px;
+	width: 60px;
+}
+
+div#wrapper {
+	position: absolute;
+	margin-left: 80px;
+    overflow: auto;
+    min-height: 500px;
+    max-height: 600px;
+	border: 2px solid black;
+    height: 90%;
+}
+
+div#sidebar-right{
+
+	float:right;
+	position: absolute;
+	margin-left: 85%;
 	min-width: 140px;
     border: 2px solid black;
-    min-height: 532px;
+    height: 600px;
 }
 
 div#node-name{
@@ -28,6 +79,8 @@ div#node-name{
 }
 
 div#menu {
+	position: absolute;
+	top: 650px;
 	width:80%;
 }
 
