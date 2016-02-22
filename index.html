@@ -31,7 +31,15 @@
     <canvas id="canvas" >
         This text is displayed if your browser does not support HTML5 Canvas.
     </canvas>
+    <form>
+      <input class = "pointerx" type="text" id="pointerx">
+      <input class = "pointery" type="text" id="pointery">
+    </form>
+    <div id="delete" class="buttons" onclick="resetCanvas()">
+        <img src="png/bin.png" alt="Clear Canvas" id="deleteBtn">
     </div>
+    </div>
+
 
     <div id="menu">
       <div id="play" class="buttons" onclick="canvasState()">
@@ -42,9 +50,6 @@
       </div>
       <div id="stop" class="buttons" onclick="stopSound()">
         <img src="png/stopBtn.png" alt="Stop" id="stopBtn">
-      </div>
-      <div id="delete" class="buttons" onclick="resetCanvas()">
-        <img src="png/bin.png" alt="Clear Canvas" id="deleteBtn">
       </div>
       <div id="draw" class="buttons" onclick="addChild()">
         <img src="png/connector.png" alt="Draw Line" id="drawBtn">

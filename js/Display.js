@@ -245,7 +245,7 @@ document.getElementById("sleep").oninput = document.getElementById("sleepInput")
     canvas.getActiveObject().duration = this.value;
 };
 
-
+//On window resize
 window.addEventListener('resize', function(){
     canvas.setHeight(window.innerHeight - 150);
     canvas.setWidth(window.innerWidth*0.80 - 20);
@@ -265,3 +265,9 @@ window.addEventListener('dblclick', function (e, self) {
         isDClicked = false;
     }
 });
+
+//Deleting objects
+document.getElementById('delete').addEventListener('onmouseover', function(){
+    //
+})
+

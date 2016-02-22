@@ -1,6 +1,6 @@
 window.onload = init;
 
-var line, isMouseDown, isMouseOver, isShiftDown, isSdown, center, playing = true;
+var line, isMouseDown, isMouseOver, isShiftDown, isSdown, center, playing=true;
 var canvas, bufferLoader, bList, ac = new AudioContext(), tuna = new Tuna(ac);
 var lastAdded= window._lastAdded = [];
 
@@ -121,7 +121,13 @@ fabric.Object.prototype.toObject = (function (toObject){
     };
 })(fabric.Object.prototype.toObject);
 
-  
+//Tracking pointer
+canvas.on('mouse:move', function(e){
+    var pointer = canvas.getPointer(e.e);
+    document.getElementById('pointerx').value = "x: " + pointer.x;
+    document.getElementById('pointery').value = "y: " + pointer.y;
+});
+
 canvas.on('object:selected', function(e){
     var activeObject = e.target;
     var activeObjectType = e.target.type;
