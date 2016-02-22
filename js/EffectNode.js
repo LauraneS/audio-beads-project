@@ -1,5 +1,5 @@
 function EffectNode(coords){
-	var fx = new fabric.Circle({radius: 20, left:0, stroke:'blue', fill:''});
+	var fx = new fabric.Circle({radius: 30, left:0, stroke:'blue', fill:''});
 	
 	fxCenter = fx.getCenterPoint();
 	
@@ -8,7 +8,7 @@ function EffectNode(coords){
 	});
 
 	var hand2 = new fabric.Triangle({
-		width: 5, height: 5,  angle: -180, top: 46, left: fxCenter.x + 2.5, fill:'', stroke:'black'
+		width: 5, height: 5,  angle: -180, top: 66, left: fxCenter.x + 2.5, fill:'', stroke:'black'
 	});
 	var fxname = document.getElementById('effect-name');
 	var fxGroup = new fabric.Group([fx, hand1, hand2],{
@@ -47,8 +47,8 @@ function EffectNode(coords){
 	// 		fxGroup.set({delay: document.getElementById("delay").value});
 	// 		break;
 	// }
-	fabric.Image.fromURL('/png/fx.png', function(oImg){
-		oImg.scale(0.32);
+	fabric.Image.fromURL('/png/magic-wand.png', function(oImg){
+		oImg.scale(0.6);
 		fxGroup.add(oImg.set({left: -oImg.getWidth()/2, top:-oImg.getHeight()/2}));
 		canvas.renderAll();
 	})

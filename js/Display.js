@@ -17,6 +17,7 @@ function dragOver(ev) {
          
 function dragDrop(ev) {
     var pointer = canvas.getPointer(ev.e)
+    console.log(pointer);
     var src = ev.dataTransfer.getData("text");
     switch (src){
         case 'playImg':
@@ -26,11 +27,21 @@ function dragDrop(ev) {
             LoopNode(pointer);
             break;
         case 'effectImg':
-            //EffectNode(pointer);
-            //TO DO!!
+            // EffectNode(pointer);
             canvas.forEachObject(function(obj){
-                if (pointer.intersectsWithObject(obj)){
-                    console.log("contained");
+                debugger
+                var left = obj.getLeft();
+                var top = obj.getTop();
+                var width = obj.getWidth();
+                var height = obj.getHeight();
+                var center = obj.getCenterPoint();
+                console.log(obj.getLeft() < pointer.x < obj.getLeft()+obj.getWidth());
+                if ((obj.getLeft() < pointer.x < obj.getLeft()+obj.getWidth())){
+                    if(obj.getTop()<pointer.y<obj.getTop()+obj.getHeight()){
+                        if (obj.type ==='playNode' || obj.type === 'sampleNode'){
+                        obj.item(0).setStroke('blue');
+                        }  
+                    }
                 }
             });
             break;

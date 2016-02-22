@@ -1,5 +1,5 @@
 function SampleNode(coords){
-	var sample = new fabric.Circle({radius: 20, left:0, stroke:'green', fill:''});
+	var sample = new fabric.Circle({radius: 30, left:0, stroke:'black', fill:''});
 	
 	sampleCenter = sample.getCenterPoint();
 	
@@ -8,7 +8,7 @@ function SampleNode(coords){
 	});
 
 	var hand2 = new fabric.Triangle({
-		width: 5, height: 5, angle: -180, top: 46, left: sampleCenter.x + 2.5, fill:'', stroke:'black'
+		width: 5, height: 5, angle: -180, top: 66, left: sampleCenter.x + 2.5, fill:'', stroke:'black'
 	});
 
 	var samp = document.getElementById('sample');
@@ -24,9 +24,9 @@ function SampleNode(coords){
 		sample: samp.options[samp.selectedIndex].value, 
 		loop: document.getElementById("loop").checked
 	})
-	fabric.Image.fromURL('/png/trumpet11.png', function(oImg){
-		oImg.scale(0.50);
-		sampleGroup.add(oImg.set({left: -oImg.getWidth()/2 - 5, top: -oImg.getHeight()/2 + 5, angle:-20}));
+	fabric.Image.fromURL('/png/file.png', function(oImg){
+		oImg.scale(0.7);
+		sampleGroup.add(oImg.set({left: -oImg.getWidth()/2, top: -oImg.getHeight()/2}));
 		canvas.renderAll();
 	})
 	canvas.add(sampleGroup); 

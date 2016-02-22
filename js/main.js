@@ -151,7 +151,8 @@ function onObjectMoving(e){
                     activeObject.intersected = true;
                     activeObject.parentNode.push(obj.ID);       
                 }
-                console.log(activeObject.parentNode);
+            } else if(activeObject.type === 'effectNode' && (obj.type === 'playNode'||obj.type==='sampleNode')){
+                obj.item(0).setStroke('blue');
             }
             //console.log(activeObject.parentNode);
         } else if (isSdown && activeObject.intersected){
