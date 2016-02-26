@@ -1,12 +1,10 @@
-function StartNode(){
-	var start = new fabric.Circle({radius: 20, originX: 'center',
-		originY: 'center', stroke:'black', fill:''});
+function StartNode(coords){
 	
-	startCenter = start.getCenterPoint();
-	
-	var hand1 = new fabric.Triangle({
-		width: 5, height: 5, angle: -180, top: 26, left: startCenter.x + 2.5, fill:'', stroke:'black'
-	});
+	var startGroup = Node('startNode', coords, false, true);
+	startGroup.item(0).set({stroke:'black'});
+	startGroup.lockMovementX = true;
+	startGroup.lockMovementY = true;
+	startGroup.parentNode = [0];
 
 	var startText = new fabric.Text('START', {
 		fontSize: 10, 
@@ -15,16 +13,19 @@ function StartNode(){
 		originY: 'center'
 	})
 
-	var startGroup = new fabric.Group([start, hand1, startText],{
-		top: 15,
-		left: canvas.getWidth()/2 - 10,
-		type: 'startNode',
-		ID: guid(),
-		children: [],
-		lockMovementX: true,
-		lockMovementY: true, 
-		parentNode: [0]
-	})
+	startGroup.add(startText);
+
+
+	// var startGroup = new fabric.Group([start, hand1, startText],{
+	// 	top: 15,
+	// 	left: canvas.getWidth()/2 - 15,
+	// 	type: 'startNode',
+	// 	ID: guid(),
+	// 	children: [],
+	// 	lockMovementX: true,
+	// 	lockMovementY: true, 
+	// 	parentNode: [0]
+	// })
 
 	canvas.add(startGroup); 
 }

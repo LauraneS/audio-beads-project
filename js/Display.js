@@ -23,6 +23,7 @@ function dragOver(ev) {
 }
          
 function dragDrop(ev) {
+    //debugger
     var pointer = canvas.getPointer(ev.e)
     console.log(pointer);
     var src = ev.dataTransfer.getData("text");

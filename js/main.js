@@ -4,13 +4,17 @@ var line, isMouseDown, isMouseOver, isShiftDown, isSdown, center, playing;
 var canvas, bufferLoader, bList, ac = new AudioContext(), tuna = new Tuna(ac);
 var lastAdded= window._lastAdded = [];
 
+var sourceMouseDownID, line;
+
+
 //Canvas Initialisation 
     canvas = this.__canvas = new fabric.Canvas('canvas');
     canvas.setHeight(window.innerHeight*0.80);
     canvas.setWidth(window.innerWidth*0.80 -20);
     //canvas.selection = false;
     canvas.hoverCursor = canvas.moveCursor ='pointer';
-    StartNode();
+    StartNode({x:canvas.getWidth()/2 - 15, y: 15});
+    canvas.calcOffset() 
 
     fabric.util.addListener(document.getElementById('wrapper'), 'scroll', function () {
     console.log('scroll');
@@ -52,15 +56,16 @@ document.onkeydown = function(e) {
     switch (e.keyCode) {
         case 16:  // Shift key down
             isShiftDown = true;
+            canvas.hoverCursor = 'crosshair';
             break;        
         case 67: //C key down
             canvas.clear().renderAll();
             break;
         case 83: 
             isSdown = true;
-            // canvas.forEachObject(function(obj){
-            //     obj.set({selectable: true});
-            // });
+            canvas.forEachObject(function(obj){
+                obj.set({selectable: true});
+            });
             break;
       }
 }
@@ -81,9 +86,9 @@ document.onkeyup = function(e) {
             break;
          case 83: 
             isSdown = false;
-            // canvas.forEachObject(function(obj){
-            //     obj.set({selectable: true});
-            // });
+            canvas.forEachObject(function(obj){
+                obj.set({selectable: false});
+            });
             break;
     }
 }
@@ -126,7 +131,41 @@ canvas.on('mouse:move', function(e){
     var pointer = canvas.getPointer(e.e);
     document.getElementById('pointerx').value = "x: " + pointer.x;
     document.getElementById('pointery').value = "y: " + pointer.y;
+
+    //change coords of line for end to be pointer coords 
+    
 });
+
+canvas.on('mouse:down', function(e){
+    var pointer = canvas.getPointer(e.e);
+    canvas.forEachObject(function(obj) {
+        //debugger
+        obj.contains(pointer);
+        obj.containsTopArrow(pointer);
+        obj.containsBottomArrow(pointer);
+        //Never mousedown on toparrow
+        //When containsbottomarrow = true 
+        // update sourcereference = obj.ID;
+        // line = canvas.newline()
+    });
+});
+
+
+
+function isContainedWithinHigherCo(obj, point){
+    var x = point.x;
+    var y = point.y;
+    var center_x = obj.getCenterPoint().x;
+    var center_y = obj.getCenterPoint().y;
+    if( (center_x - 10 < x) && (x < center_x + 10) && (obj.getTop()< y) && (y < obj.getTop()-10)){
+        return true;
+    }
+}
+
+function isContainedWithinLowerCo(obj, point){
+    var x = point.x;
+    var y = point.y;
+}
 
 canvas.on('object:selected', function(e){
     var activeObject = e.target;
@@ -189,69 +228,79 @@ function onObjectMoving(e){
 // });
     
 
-// //Adding a line with mouse drag when shift is pressed 
-// canvas.on('mouse:over', function(e){
-//     isMouseOver = true;
-//     var activeObject= e.target;
-//     if (isShiftDown) {
-//         activeObject.lockMovementX = activeObject.lockMovementY = true; 
-//         canvas.hoverCursor = 'crosshair';
-//         drawLine(activeObject);
-//     }   
-// });
+// Adding a line with mouse drag when shift is pressed 
+canvas.on('mouse:over', function(e){
+    isMouseOver = true;
+    var activeObject= e.target;
+    if (isShiftDown) {
+        activeObject.lockMovementX = activeObject.lockMovementY = true; 
+        canvas.hoverCursor = 'crosshair';
+        drawLine(activeObject);
+    }   
+});
 
-// canvas.on('mouse:out', function(e){
-//     isMouseOver = false;
-// });
+canvas.on('mouse:out', function(e){
+    isMouseOver = false;
+});
 
-// function drawLine(object){
-//     var activeObject = object;
-//     var activeWidth = activeObject.getWidth();
-//     var activeHeight = activeObject.getHeight();
-//     var activeCentre = activeObject.getCenterPoint();
-//     var isLeft;
-//     if (!isShiftDown) return;
-//         canvas.on('mouse:down', function(o) {
-//             isMouseDown = true;
-//             if (isShiftDown){
-//                 var pointerO = canvas.getPointer(o.e);
-//                 if (activeCentre.x+15<pointerO.x<(activeCentre.x+25) && activeCentre.y-(activeHeight/8)< pointerO.y<activeCentre.y+(activeHeight/8)){
-//                     line = makeLine([activeCentre.x +activeWidth/2, activeCentre.y, activeCentre.x +activeWidth/2, activeCentre.y]);
-//                     canvas.add(line);
-//                     isLeft = false;
-//                 } else if ((activeCentre.x-25)< pointerO.x < (activeCentre.x-15) && (activeCentre.y-activeHeight/8) < pointerO.y < (activeCentre.y+activeHeight/8)){
-//                     line = makeLine([activeCentre.x -activeWidth/2, activeCentre.y, activeCentre.x -activeWidth/2, activeCentre.y]);
-//                     canvas.add(line);
-//                     isLeft = true;
-//                 }
-//             }
-//         });
-//         canvas.on('mouse:move', function(o){
-//             if (!isMouseDown) return;
-//             var pointer = canvas.getPointer(o.e);
-//             line.set({'x2': pointer.x, 'y2': pointer.y});
-//             canvas.renderAll();
-//         });
-//         canvas.on('mouse:up', function(o) {
-//                 isMouseDown = false;
-//                 if (isShiftDown){
-//                     var pf = canvas.getPointer(o.e);
-//                     canvas.remove(line);
-//                     if (isLeft){
-//                         var finalLine = makeLine([activeCentre.x -activeWidth/2, activeCentre.y, pf.x, pf.y]);
-//                         canvas.add(finalLine);
-//                         canvas.renderAll();
-//                     } else {
-//                         var finalLine = makeLine([activeCentre.x +activeWidth/2, activeCentre.y, pf.x, pf.y]);
-//                         canvas.add(finalLine);
-//                         canvas.renderAll(); 
-//                     } 
-//                     if (activeObject.type === 'startNode') return;
-//                     activeObject.lockMovementX = false;
-//                     activeObject.lockMovementY = false;
-//                  }  
-//         });
-// }
+var pointerStart, pointerEnd;
+canvas.on('mouse:down', function(e){
+    if (isShiftDown){
+        pointerStart = canvas.getPointer(e.e);
+    } 
+})
+
+canvas.on('mouse:up', function(e){
+    //check whether pointer coords are within an object 
+    // set source id = undefined
+    if (isShiftDown){
+        pointerEnd = canvas.getPointer(e.e);
+        canvas.add(makeLine([pointerStart.x, pointerStart.y, pointerEnd.x, pointerEnd.y]));
+        pointerStart = pointerEnd = undefined;
+    }
+    
+})
+
+function drawLine(object){
+    var activeWidth = object.getWidth();
+    var activeHeight = object.getHeight();
+    var activeCentre = object.getCenterPoint();
+    var drawing;
+    if (!isShiftDown) return;
+    var line;
+        canvas.on('mouse:down', function(o) {
+            isMouseDown = true;
+            if (isShiftDown){
+                var pointer = canvas.getPointer(o.e);
+                if (isContained(object, pointer)){
+                    line = makeLine([activeCentre.x, activeCentre.y + activeHeight/2, activeCentre.x, activeCentre.y+activeHeight/2]);
+                    canvas.add(line);
+                    drawing = true;
+                }
+            }
+            canvas.on('mouse:move', function(o){
+                if (!isMouseDown) return;
+                else if (drawing){
+                    var pointer = canvas.getPointer(o.e);
+                    line.set({'x2': pointer.x, 'y2': pointer.y});
+                    canvas.renderAll();
+                } 
+            });
+            canvas.on('mouse:up', function(o) {
+                isMouseDown = false;
+                if (isShiftDown && drawing){
+                    var pf = canvas.getPointer(o.e);
+                    canvas.remove(line);
+                    var finalLine = makeLine([activeCentre.x, activeCentre.y + activeHeight/2, pf.x, pf.y])
+                    canvas.add(finalLine);
+                    canvas.renderAll();
+                    drawing = false;
+                 }  
+            });
+        });    
+}
+
+
 
 
 function canvasCleared(){
@@ -411,7 +460,7 @@ function resetCanvas(){
     ac.close();
     playing = undefined;
     document.getElementById("playBtn").src="/png/playBtn.png";
-    StartNode();
+    StartNode({x:canvas.getWidth()/2 - 15, y: 15});
     document.getElementById('node-name').innerHTML = "Click an object to get started!";
     ac = new AudioContext();
 }
