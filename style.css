@@ -47,8 +47,8 @@ div#wrapper {
 }
 div#delete {
 	position: absolute;
-    bottom: 0%;
-    right: 0%;
+    bottom: 0.5%;
+    right: 0.5%;
 }
 
 div#sidebar-right{
