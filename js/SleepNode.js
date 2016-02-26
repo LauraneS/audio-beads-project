@@ -1,18 +1,7 @@
 function SleepNode(coords){
 
-	// var sleepGroup = new (fabric.Group)([sleep, hand1, hand2],{
-	// 	left: coords.x, 
-	// 	top: coords.y,
-	// 	type:'sleepNode',
-	// 	ID: guid(),
-	// 	parentNode: [],
-	// 	parentType: '',
-	// 	intersected: false,
-	// 	children: [],
-	// 	duration: document.getElementById("sleep").value
-	// })
-
 	var sleepGroup = Node('sleepNode', coords, true, true);
+	sleepGroup.item(0).set({stroke:'grey'});
 	sleepGroup.duration = document.getElementById("sleep").value;
 	
 	fabric.Image.fromURL('/png/sleep.png', function(oImg){
