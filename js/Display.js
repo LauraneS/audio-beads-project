@@ -1,4 +1,11 @@
 var isDClicked = false;
+
+$(document).ready(function(){
+  $('.buttons').dblclick(function(e){
+    e.preventDefault();
+  });
+});
+
 //Drag and drop to create a new node
 function dragStart(ev) {
     ev.dataTransfer.effectAllowed='move';
@@ -252,19 +259,19 @@ window.addEventListener('resize', function(){
 })
 
 //Adding double click event listener (not supported by fabric.js)
-window.addEventListener('dblclick', function (e, self) {
-    var target = canvas.findTarget(e);
-    if (target) {
-       console.log('dblclick inside ' + target.type);
-    }  else if (!isDClicked) {
-        canvas.setZoom(3);
-        isDClicked = true;
-    } else {
-        console.log(canvas.getZoom());
-        canvas.setZoom(1);
-        isDClicked = false;
-    }
-});
+// window.addEventListener('dblclick', function (e, self) {
+//     var target = canvas.findTarget(e);
+//     if (target) {
+//        console.log('dblclick inside ' + target.type);
+//     }  else if (!isDClicked) {
+//         canvas.setZoom(3);
+//         isDClicked = true;
+//     } else {
+//         console.log(canvas.getZoom());
+//         canvas.setZoom(1);
+//         isDClicked = false;
+//     }
+// });
 
 //Deleting objects
 document.getElementById('delete').addEventListener('onmouseover', function(){

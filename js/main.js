@@ -1,6 +1,6 @@
 window.onload = init;
 
-var line, isMouseDown, isMouseOver, isShiftDown, isSdown, center, playing=true;
+var line, isMouseDown, isMouseOver, isShiftDown, isSdown, center, playing;
 var canvas, bufferLoader, bList, ac = new AudioContext(), tuna = new Tuna(ac);
 var lastAdded= window._lastAdded = [];
 
@@ -136,6 +136,7 @@ canvas.on('object:selected', function(e){
 });
 
 canvas.on('object:added', function(e){
+    playing = undefined;
     lastAdded.push(e.target);
     displayParam(e.target, e.target.type, 'added');
 });
@@ -403,51 +404,54 @@ window.addChild = function () {
 function canvasCleared(){
     ac.close();
     ac = new AudioContext();
-    playing = true;
+    playing = undefined;
+    document.getElementById("playBtn").src="/png/playBtn.png";
 }
 
 function resetCanvas(){
     canvas.clear();
     ac.suspend();
     ac.close();
-    playing = true;
+    playing = undefined;
+    document.getElementById("playBtn").src="/png/playBtn.png";
     StartNode();
     document.getElementById('node-name').innerHTML = "Click an object to get started!";
     ac = new AudioContext();
 }
 
+
 function canvasState(){
-    console.log('on');
-    if (!playing){
+    if (playing === undefined){
+        var state = (JSON.stringify(canvas));
+        var stateArray = $.parseJSON(state.substring(11, state.length - 17));
+        var tree = unflatten(stateArray);
+        parse(tree);
+        playing = true;
+        document.getElementById("playBtn").src="/png/pauseBtn.png";
+    } else if (playing){
+        try{
+            ac.suspend();
+            playing = false;
+            document.getElementById("playBtn").src="/png/playBtn.png";
+            console.log("Paused");
+        }
+        catch(err){
+            console.log("There is nothing to pause.");
+        }
+    } else if (!playing){
         ac.resume();
         playing = true;
         console.log("Playing after pause");
+        document.getElementById("playBtn").src="/png/pauseBtn.png";
     }
-    //canvasCleared();
-    var state = (JSON.stringify(canvas));
-    var stateArray = $.parseJSON(state.substring(11, state.length - 17));
-    //var stateArray = eval('(' + state + ')');
-    //console.log(stateArray);
-
-    var tree = unflatten(stateArray);
-    parse(tree);
-    //console.log(JSON.stringify(tree, null, " "));
+    
 }
 
-function pauseSound(){
-    try{
-        ac.suspend();
-        playing=false;
-        console.log("Paused");
-    }
-    catch(err){
-        console.log("There is nothing to pause.");
-    }
-}
 
 function stopSound(){
     try{
         ac.close();
+        playing = undefined;
     } catch(err){
         console.log("There is nothing to stop");
     }

@@ -90,14 +90,14 @@ div#menu {
 div#play {
 	left:100px;
 }
-div#pause {
+/*div#pause {
 	left:200px;
-}
+}*/
 div#stop {
-	left: 300px;
+	left: 200px;
 }
 div#draw {
-	left: 400px;
+	left: 300px;
 }
 
 .pointerx{
