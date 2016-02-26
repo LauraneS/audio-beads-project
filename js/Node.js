@@ -20,7 +20,7 @@ function Node(type, coords, topArrow, bottomArrow){
 			ID: guid(),
 			parentNode: [],
 			children: [],
-			intersected: false
+			intersected: false, 
 	});
 	if (!topArrow){
 		group = new fabric.Group([c, hand2],{
@@ -47,29 +47,23 @@ function Node(type, coords, topArrow, bottomArrow){
 	}
 	group.containsTopArrow = function(point){
 		if (!topArrow) return;
-		
 	    var x = point.x;
 	    var y = point.y;
-	    var test = hand1.getCenterPoint();
-	    var local = toLocalPoint(test,'left' , 'top');
-	    console.log(local);
-	    // var center_x = hand1.getCenterPoint().x;
-	    // var center_y = hand1.getCenterPoint().y;
-	    // var left = hand1.getLeft();
-	    // var top = hand1.getTop();
-	    // var width = hand1.getWidth();
-	    // var height = hand1.getHeight();
-	    // var tv = {x: center_x, y:center_y+height/2};
-	    // var lv = {x: center_x - width/2, y:center_y-height/2};
-	    // var rv = {x: center_x + width/2, y:center_y-height/2};
-	    
-	    // var b1 = (x - lv.x) * (tv.y - lv.y) - (tv.x - lv.x) * (y - lv.y) < 0.0;
-	    // var b2 = (x - rv.x) * (lv.y - rv.y) - (lv.x - rv.x) * (y - rv.y) < 0.0;
-	    // var b3 = (x - tv.x) * (rv.y - tv.y) - (rv.x - tv.x) * (y - tv.y) < 0.0;
-	    // if ((b1 == b2) && (b2 == b3)){
-	    // 	console.log('Top arrow: true');
-	    // 	return true;
-	    // }
+	    var absCenterX = hand1.group.getCenterPoint().x + hand1.getCenterPoint().x;
+	    var absCenterY = hand1.group.getCenterPoint().y + hand1.getCenterPoint().y;
+	    var width = hand1.getWidth();
+	    var height = hand1.getHeight();
+	    var bv = {x: absCenterX, y:absCenterY+height/2};
+	    var lv = {x: absCenterX - width/2, y:absCenterY-height/2};
+	    var rv = {x: absCenterX + width/2, y:absCenterY-height/2};
+
+	    var b1 = (x - lv.x) * (bv.y - lv.y) - (bv.x - lv.x) * (y - lv.y) < 0.0;
+	    var b2 = (x - rv.x) * (lv.y - rv.y) - (lv.x - rv.x) * (y - rv.y) < 0.0;
+	    var b3 = (x - bv.x) * (rv.y - bv.y) - (rv.x - bv.x) * (y - bv.y) < 0.0;
+	    if ((b1 == b2) && (b2 == b3)){
+	    	console.log('Top arrow: true');
+	    	return true;
+	    }
 	    return false;
 	}
 
@@ -77,11 +71,21 @@ function Node(type, coords, topArrow, bottomArrow){
 		if (!bottomArrow) return;
 	    var x = point.x;
 	    var y = point.y;
-	    var box = hand2.getBoundingRect();
-	    if( box.left < x && x < box.left + box.width && box.top < y && y < box.top+box.height){
-	    	console.log("Bottom Arrow: true");
+		var absCenterX = hand2.group.getCenterPoint().x + hand2.getCenterPoint().x;
+	    var absCenterY = hand2.group.getCenterPoint().y + hand2.getCenterPoint().y;
+	    var width = hand2.getWidth();
+	    var height = hand2.getHeight();
+	    var bv = {x: absCenterX, y:absCenterY+height/2};
+	    var lv = {x: absCenterX - width/2, y:absCenterY-height/2};
+	    var rv = {x: absCenterX + width/2, y:absCenterY-height/2};
+	    
+	    var b1 = (x - lv.x) * (bv.y - lv.y) - (bv.x - lv.x) * (y - lv.y) < 0.0;
+	    var b2 = (x - rv.x) * (lv.y - rv.y) - (lv.x - rv.x) * (y - rv.y) < 0.0;
+	    var b3 = (x - bv.x) * (rv.y - bv.y) - (rv.x - bv.x) * (y - bv.y) < 0.0;
+	    if ((b1 == b2) && (b2 == b3)){
+	    	console.log('Bottom arrow: true');
 	    	return true;
-	    } 
+	    }
 	    return false;
 	}
 	return group;
