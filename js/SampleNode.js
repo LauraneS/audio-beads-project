@@ -4,11 +4,11 @@ function SampleNode(coords){
 	sampleCenter = sample.getCenterPoint();
 	
 	var hand1 = new fabric.Triangle({
-		width: 5, height: 5, top:-5, angle: -180, left: sampleCenter.x + 2.5, top: 0.9, fill:'', stroke:'black'
+		width: 10, height: 10, angle: -180, left: sampleCenter.x + 5, fill:'', stroke:'black'
 	});
 
 	var hand2 = new fabric.Triangle({
-		width: 5, height: 5, angle: -180, top: 66, left: sampleCenter.x + 2.5, fill:'', stroke:'black'
+		width: 10, height: 10, angle: -180, top: 71, left: sampleCenter.x + 5, fill:'', stroke:'black'
 	});
 
 	var samp = document.getElementById('sample');

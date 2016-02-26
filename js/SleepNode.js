@@ -4,11 +4,11 @@ function SleepNode(coords){
 	sleepCenter = sleep.getCenterPoint();
 	
 	var hand1 = new fabric.Triangle({
-		width: 5, height: 5, top:-5, angle: -180, left: sleepCenter.x + 2.5, top: 0.9, fill:'', stroke:'black'
+		width: 10, height: 10, angle: -180, left: sleepCenter.x + 5, fill:'', stroke:'black'
 	});
 
 	var hand2 = new fabric.Triangle({
-		width: 5, height: 5,  angle: -180, top: 66, left: sleepCenter.x + 2.5, fill:'', stroke:'black'
+		width: 10, height: 10,  angle: -180, top: 71, left: sleepCenter.x + 5, fill:'', stroke:'black'
 	});
 
 	var sleepGroup = new (fabric.Group)([sleep, hand1, hand2],{

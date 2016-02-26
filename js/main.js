@@ -158,10 +158,7 @@ function onObjectMoving(e){
                     activeObject.intersected = true;
                     activeObject.parentNode.push(obj.ID);       
                 }
-            } else if(activeObject.type === 'effectNode' && (obj.type === 'playNode'||obj.type==='sampleNode')){
-                obj.item(0).setStroke('blue');
-            }
-            //console.log(activeObject.parentNode);
+            } 
         } else if (isSdown && activeObject.intersected){
             activeObject.parentNode.pop();
             console.log(activeObject.parentNode);
@@ -169,16 +166,16 @@ function onObjectMoving(e){
         }
     });
 
-    if(activeObject.getLeft()+activeObject.getWidth() > currentWidth){
-        canvas.setWidth(currentWidth+50);
-        $("#wrapper").scrollLeft(activeObject.getLeft());
-        $("#wrapper").on('scroll', canvas.calcOffset.bind(canvas));
-    } 
-    if (activeObject.getTop()+activeObject.getHeight() > currentHeight){
-        canvas.setHeight(currentHeight+50);
-        $("#wrapper").scrollTop(activeObject.getTop());
-        $("#wrapper").on('scroll', canvas.calcOffset.bind(canvas));
-    }
+    // if(activeObject.getLeft()+activeObject.getWidth() > currentWidth){
+    //     canvas.setWidth(currentWidth+50);
+    //     $("#wrapper").scrollLeft(activeObject.getLeft());
+    //     $("#wrapper").on('scroll', canvas.calcOffset.bind(canvas));
+    // } 
+    // if (activeObject.getTop()+activeObject.getHeight() > currentHeight){
+    //     canvas.setHeight(currentHeight+50);
+    //     $("#wrapper").scrollTop(activeObject.getTop());
+    //     $("#wrapper").on('scroll', canvas.calcOffset.bind(canvas));
+    // }
 }
 
 // canvas.on('mouse:down', function(){
@@ -447,7 +444,6 @@ function canvasState(){
     
 }
 
-
 function stopSound(){
     try{
         ac.close();
@@ -456,3 +452,5 @@ function stopSound(){
         console.log("There is nothing to stop");
     }
 }
+
+

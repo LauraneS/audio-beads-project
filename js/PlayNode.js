@@ -4,11 +4,10 @@ function PlayNode(coords){
 	playCenter = play.getCenterPoint();
 	
 	var hand1 = new fabric.Triangle({
-		width: 15, height: 15, top:-5, angle: -180, left: playCenter.x + 7.5, top: 0.9, fill:'', stroke:'black'
+		width: 10, height: 10, angle: -180, left: playCenter.x + 5, fill:'', stroke:'black'
 	});
-
 	var hand2 = new fabric.Triangle({
-		width: 15, height: 15, angle: -180, top: 66, left: playCenter.x + 7.5, fill:'', stroke:'black'
+		width: 10, height: 10, angle: -180, top: 71, left: playCenter.x + 5, fill:'', stroke:'black'
 	});
 
 	var playGroup = new fabric.Group([play, hand1, hand2],{

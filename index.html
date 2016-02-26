@@ -20,10 +20,10 @@
       <div class="icon" draggable="true" id="SampleIcon" ondragstart="return dragStart(event)"> Sample
         <img src="png/SampleNode.png" alt="SampleNode" id="sampleImg">
       </div> 
-      <div class="icon" draggable="true" id="effectIcon" ondragstart="return dragStart(event)"> Effect
+      <!-- <div class="icon" draggable="true" id="effectIcon" ondragstart="return dragStart(event)"> Effect
         <img src="png/EffectNode.png" alt="EffectNode" id="effectImg">
       </div> 
-      <div class="icon" draggable="true" id="loopIcon" ondragstart="return dragStart(event)"> Loop
+ -->      <div class="icon" draggable="true" id="loopIcon" ondragstart="return dragStart(event)"> Loop
         <img src="png/Loop.png" alt="Loop" id="loopImg">
       </div> 
     </div>
@@ -34,8 +34,9 @@
     <form>
       <input class = "pointerx" type="text" id="pointerx">
       <input class = "pointery" type="text" id="pointery">
+      <input class = "info" type="text" id="info">
     </form>
-    <div id="delete" class="buttons" onclick="resetCanvas()">
+    <div id="delete" class="buttons">
         <img src="png/bin.png" alt="Clear Canvas" id="deleteBtn">
     </div>
     </div>
@@ -175,6 +176,7 @@
 <script src="js/EffectNode.js"></script>
 <script src="js/Interpreter.js"></script>
 <script src="js/LoopNode.js"></script>
+<script src="js/Connector.js"></script>
 <script src="js/Parser.js"></script>
 <script src="js/PlayNode.js"></script>
 <script src="js/SampleNode.js"></script>

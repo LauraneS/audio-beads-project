@@ -111,3 +111,9 @@ div#draw {
     left: 1%;
     bottom: 0%;
 }
+
+.info{
+	position: absolute;
+	left: 18%;
+	bottom: 0%;
+}

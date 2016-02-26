@@ -274,7 +274,16 @@ window.addEventListener('resize', function(){
 // });
 
 //Deleting objects
-document.getElementById('delete').addEventListener('onmouseover', function(){
-    //
-})
+document.getElementById('delete').onmouseup = function(){
+    var actObject = canvas.getActiveObject();
+    canvas.remove(actObject);
+    canvas.renderAll();
+    document.getElementById('info').value = "on trash";
+}
+
+document.getElementById('delete').onmouseout = function(){
+    document.getElementById('info').value = "";
+}
+
+    
 

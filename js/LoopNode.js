@@ -14,10 +14,10 @@ function LoopNode(coords){
     });
     oCoords = orbit.getCenterPoint();
     var hand1 = new fabric.Triangle({
-      width: 5, height: 5, top:-5, angle: -180, left: oCoords.x + 2.5, top: 0.9, fill:'', stroke:'black'
+      width: 10, height: 10, angle: -180, left: oCoords.x + 5, fill:'', stroke:'black'
     });
     var hand2 = new fabric.Triangle({
-      width: 5, height: 5,  angle: -180, top: 206, left: oCoords.x + 2.5, fill:'', stroke:'black'
+      width: 10, height: 10,  angle: -180, top: 211, left: oCoords.x + 5, fill:'', stroke:'black'
     });
     var loopGroup = new fabric.Group([orbit, hand1, hand2],{
       left: coords.x, 
