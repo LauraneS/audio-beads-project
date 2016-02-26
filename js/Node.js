@@ -40,7 +40,7 @@ function Node(type, coords, topArrow, bottomArrow){
 	    var y = point.y;
 	    var center_x = group.getCenterPoint().x;
 	    var center_y = group.getCenterPoint().y;
-	    if ( Math.pow(x-center_x,2) + Math.pow(y-center_y,2) < 900){
+	    if (Math.pow(x-center_x,2) + Math.pow(y-center_y,2) < 900){
 	    	console.log("Inside circle");
 	        return true;
 	    }
@@ -88,5 +88,14 @@ function Node(type, coords, topArrow, bottomArrow){
 	    }
 	    return false;
 	}
+
+	group.getBottomArrowCenter = function(){
+		return {x:hand2.group.getCenterPoint().x + hand2.getCenterPoint().x, y:hand2.group.getCenterPoint().y + hand2.getCenterPoint().y};
+	}
+
+	group.getTopArrowCenter = function(){
+		return {x:hand1.group.getCenterPoint().x + hand1.getCenterPoint().x, y:hand1.group.getCenterPoint().y + hand1.getCenterPoint().y};
+	}
+
 	return group;
 }

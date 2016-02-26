@@ -4,7 +4,7 @@ var line, isMouseDown, isMouseOver, isShiftDown, isSdown, center, playing;
 var canvas, bufferLoader, bList, ac = new AudioContext(), tuna = new Tuna(ac);
 var lastAdded= window._lastAdded = [];
 
-var sourceMouseDownID, line;
+var sourceMouseDown, line;
 
 
 //Canvas Initialisation 
@@ -131,41 +131,26 @@ canvas.on('mouse:move', function(e){
     var pointer = canvas.getPointer(e.e);
     document.getElementById('pointerx').value = "x: " + pointer.x;
     document.getElementById('pointery').value = "y: " + pointer.y;
-
-    //change coords of line for end to be pointer coords 
-    
-});
-
-canvas.on('mouse:down', function(e){
-    var pointer = canvas.getPointer(e.e);
-    canvas.forEachObject(function(obj) {
-        //debugger
-        obj.contains(pointer);
-        obj.containsTopArrow(pointer);
-        obj.containsBottomArrow(pointer);
-        //Never mousedown on toparrow
-        //When containsbottomarrow = true 
-        // update sourcereference = obj.ID;
-        // line = canvas.newline()
-    });
-});
-
-
-
-function isContainedWithinHigherCo(obj, point){
-    var x = point.x;
-    var y = point.y;
-    var center_x = obj.getCenterPoint().x;
-    var center_y = obj.getCenterPoint().y;
-    if( (center_x - 10 < x) && (x < center_x + 10) && (obj.getTop()< y) && (y < obj.getTop()-10)){
-        return true;
+    if (line !== undefined){
+        line.set({x2: pointer.x, y2: pointer.y});
+        canvas.renderAll();
     }
-}
+});
 
-function isContainedWithinLowerCo(obj, point){
-    var x = point.x;
-    var y = point.y;
-}
+// canvas.on('mouse:down', function(e){
+//     var pointer = canvas.getPointer(e.e);
+//     canvas.forEachObject(function(obj) {
+//         //debugger
+//         obj.contains(pointer);
+//         obj.containsTopArrow(pointer);
+//         obj.containsBottomArrow(pointer);
+//         //Never mousedown on toparrow
+//         //When containsbottomarrow = true 
+//         // update sourcereference = obj.ID;
+//         // line = canvas.newline()
+//     });
+// });
+
 
 canvas.on('object:selected', function(e){
     var activeObject = e.target;
@@ -217,91 +202,40 @@ function onObjectMoving(e){
     // }
 }
 
-// canvas.on('mouse:down', function(){
-//     if (!isMouseOver) {
-//         document.getElementById('node-name').innerHTML = "No node selected";
-//         var elements = ['play-info', 'effect-info', 'sample-info', 'sleep-info'], i;
-//         for (i = 0; i < elements.length; i++){
-//             document.getElementById(elements[i]).style.display = 'none';
-//         }
-//     }
-// });
-    
 
-// Adding a line with mouse drag when shift is pressed 
-canvas.on('mouse:over', function(e){
-    isMouseOver = true;
-    var activeObject= e.target;
-    if (isShiftDown) {
-        activeObject.lockMovementX = activeObject.lockMovementY = true; 
-        canvas.hoverCursor = 'crosshair';
-        drawLine(activeObject);
-    }   
-});
 
-canvas.on('mouse:out', function(e){
-    isMouseOver = false;
-});
 
-var pointerStart, pointerEnd;
 canvas.on('mouse:down', function(e){
-    if (isShiftDown){
-        pointerStart = canvas.getPointer(e.e);
-    } 
+    var pointerDown = canvas.getPointer(e.e);
+    canvas.forEachObject(function(obj){
+        if(obj.type !== 'line'){
+            if(obj.containsBottomArrow(pointerDown)){
+                sourceMouseDown = obj;
+                sourceMouseDown.set({lockMovementX: true, lockMovementY: true});
+                line = makeLine([obj.getBottomArrowCenter().x, obj.getBottomArrowCenter().y, obj.getBottomArrowCenter().x, obj.getBottomArrowCenter().y]);
+                canvas.add(line);
+                line.sendToBack();
+            }
+        }   
+    })
 })
 
 canvas.on('mouse:up', function(e){
-    //check whether pointer coords are within an object 
-    // set source id = undefined
-    if (isShiftDown){
-        pointerEnd = canvas.getPointer(e.e);
-        canvas.add(makeLine([pointerStart.x, pointerStart.y, pointerEnd.x, pointerEnd.y]));
-        pointerStart = pointerEnd = undefined;
-    }
-    
-})
-
-function drawLine(object){
-    var activeWidth = object.getWidth();
-    var activeHeight = object.getHeight();
-    var activeCentre = object.getCenterPoint();
-    var drawing;
-    if (!isShiftDown) return;
-    var line;
-        canvas.on('mouse:down', function(o) {
-            isMouseDown = true;
-            if (isShiftDown){
-                var pointer = canvas.getPointer(o.e);
-                if (isContained(object, pointer)){
-                    line = makeLine([activeCentre.x, activeCentre.y + activeHeight/2, activeCentre.x, activeCentre.y+activeHeight/2]);
-                    canvas.add(line);
-                    drawing = true;
+    var pointerUp = canvas.getPointer(e.e);
+    if(line !== undefined){
+        canvas.forEachObject(function(obj){
+            if (obj.type !== 'startNode' && obj.type !== 'line'){
+                if(obj.containsTopArrow(pointerUp)){
+                    line.set({x2:obj.getTopArrowCenter().x, y2:obj.getTopArrowCenter().y});
+                    addChildLine(sourceMouseDown, obj);
                 }
+                sourceMouseDown.set({lockMovementX: false, lockMovementY: false});
+                sourceMouseDown = undefined;
+                line = undefined;
             }
-            canvas.on('mouse:move', function(o){
-                if (!isMouseDown) return;
-                else if (drawing){
-                    var pointer = canvas.getPointer(o.e);
-                    line.set({'x2': pointer.x, 'y2': pointer.y});
-                    canvas.renderAll();
-                } 
-            });
-            canvas.on('mouse:up', function(o) {
-                isMouseDown = false;
-                if (isShiftDown && drawing){
-                    var pf = canvas.getPointer(o.e);
-                    canvas.remove(line);
-                    var finalLine = makeLine([activeCentre.x, activeCentre.y + activeHeight/2, pf.x, pf.y])
-                    canvas.add(finalLine);
-                    canvas.renderAll();
-                    drawing = false;
-                 }  
-            });
-        });    
-}
-
-
-
+        })
+    } 
+})
 
 function canvasCleared(){
 }
@@ -314,80 +248,10 @@ function makeLine(coords) {
     });
 };
 
-// function angleVal(coords) {
-//     var angle = 0,
-//         x, y;
-
-//     x = (coords[2] - coords[0]);
-//     y = (coords[3] - coords[1]);
-
-//     if (x === 0){
-//         if (y < 0){
-//             angle = -180;
-//         } else {
-//             angle = 0;
-//         }
-//     } else if (y === 0){
-//         if (x < 0){
-//             angle = -45;
-//         } else {
-//             angle = 45;
-//         }
-//     } else {
-//         angle = y/x;
-//     }
-
-//     // if (x === 0) {
-//     //     angle = (y === 0) ? 0 : (y > 0) ? Math.PI / 2 : Math.PI * 3 / 2;
-//     // } else if (y === 0) {
-//     //     //angle = (x > 0) ? 0 : Math.PI;
-//     //     angle = 180;
-//     // } else {
-//     //     angle = (x < 0) ? Math.atan(y / x) + Math.PI : (y < 0) ? Math.atan(y / x) + (2 * Math.PI) : Math.atan(y / x);
-//     // }
-
-//     // return (angle * 180 / Math.PI);
-// }
-
-
-// function makeArrow(coords) {
-//     return new fabric.Triangle({
-//             left: 50,
-//             top: 50,
-//             angle: angleVal(coords),
-//             originX: 'center',
-//             originY: 'center',
-//             width: 10,
-//             height: 8.7,
-//             fill: '#000'
-//     });
-// }
-
 // Functions + Events to draw a line between objects by 'adding a child' to a clicked object
 ['object:moving'].forEach(addChildMoveLine);
 
-function addChildLine(options) {
-    canvas.off('object:selected', addChildLine);
-
-    // add the line
-    var fromObject = canvas.addChild.start;
-    var toObject = options.target;
-    if (toObject.type === 'startNode') {
-        document.getElementById('node-name').innerHTML = "You cannot add this line.";
-        return;
-    }
-    var from = fromObject.getCenterPoint()
-    var to = toObject.getCenterPoint();
-    var coords = [from.x, from.y + fromObject.getHeight()/2 - 1, to.x, to.y- toObject.getHeight()/2];
-    var line = makeLine(coords);
-    //var arrow = makeArrow(coords);
-    canvas.add(line);
-    //fromObject.children.push(toObject.ID);
-    toObject.parentNode.push(fromObject.ID);
-    toObject.parentType = fromObject.type;
-    
-    // so that the line is behind the connected shapes
-    line.sendToBack();
+function addChildLine(fromObject, toObject) {
 
     // add a reference to the line to each object
     fromObject.addChild = {
@@ -420,17 +284,16 @@ function addChildLine(options) {
 
 function addChildMoveLine(event) {
     canvas.on(event, function (options) {
-        var object = options.target;
-        var objectCenter = object.getCenterPoint();
+        var obj = options.target;
         // udpate lines (if any)
-        if (object.addChild) {
-            if (object.addChild.from)
-                object.addChild.from.forEach(function (line) {
-                    line.set({ 'x1': objectCenter.x, 'y1': objectCenter.y + object.getHeight()/2 });
+        if (obj.addChild) {
+            if (obj.addChild.from)
+                obj.addChild.from.forEach(function (line) {
+                    line.set({ 'x1': obj.getBottomArrowCenter().x, 'y1': obj.getBottomArrowCenter().y});
                 })
-            if (object.addChild.to)
-                object.addChild.to.forEach(function (line) {
-                    line.set({ 'x2': objectCenter.x, 'y2': objectCenter.y - object.getHeight()/2 });
+            if (obj.addChild.to)
+                obj.addChild.to.forEach(function (line) {
+                    line.set({ 'x2':obj.getTopArrowCenter().x, 'y2':obj.getTopArrowCenter().y});
                 })
         }
 
@@ -439,12 +302,10 @@ function addChildMoveLine(event) {
 }
 
 window.addChild = function () {
+    debugger
     canvas.addChild = {
-        start: canvas.getActiveObject()
+        start: sourceMouseDown
     }
-    // for when addChild is clicked twice
-    canvas.off('object:selected', addChildLine);
-    canvas.on('object:selected', addChildLine);
 }
 
 function canvasCleared(){
