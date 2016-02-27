@@ -11,7 +11,7 @@ var sourceMouseDown, line;
     canvas = this.__canvas = new fabric.Canvas('canvas');
     canvas.setHeight(window.innerHeight*0.80);
     canvas.setWidth(window.innerWidth*0.80 -20);
-    canvas.selection = false;
+    //canvas.selection = false;
     canvas.hoverCursor = canvas.moveCursor ='pointer';
     StartNode({x:canvas.getWidth()/2 - 15, y: 15});
     canvas.calcOffset() 
@@ -105,6 +105,12 @@ fabric.Object.prototype.toObject = (function (toObject){
         });
     };
 })(fabric.Object.prototype.toObject);
+
+canvas.on('mouse:over', function(e){
+    // if (e.target.type === 'line'){
+        console.log("hovering");
+    // }
+})
 
 //Tracking pointer
 canvas.on('mouse:move', function(e){
@@ -212,7 +218,8 @@ function canvasCleared(){
 function makeLine(coords) {
     return new fabric.Line(coords, {
         stroke: 'black',
-        selectable: false
+        selectable: true,
+        padding: 10
     });
 };
 
@@ -220,6 +227,9 @@ function makeLine(coords) {
 ['object:moving'].forEach(addChildMoveLine);
 
 function addChildLine(fromObject, toObject) {
+    toObject.parentNode.push(fromObject.ID);
+    toObject.parentType = fromObject.type;
+
 
     // add a reference to the line to each object
     fromObject.addChild = {
@@ -227,6 +237,7 @@ function addChildLine(fromObject, toObject) {
         from: (fromObject.addChild && fromObject.addChild.from) || [],
         to: (fromObject.addChild && fromObject.addChild.to)
     }
+    console.log(fromObject.addChild);
     fromObject.addChild.from.push(line);
     toObject.addChild = {
         from: (toObject.addChild && toObject.addChild.from),
@@ -267,13 +278,6 @@ function addChildMoveLine(event) {
 
         canvas.renderAll();
     });
-}
-
-window.addChild = function () {
-    debugger
-    canvas.addChild = {
-        start: sourceMouseDown
-    }
 }
 
 function canvasCleared(){

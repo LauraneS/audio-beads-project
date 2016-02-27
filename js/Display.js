@@ -1,4 +1,4 @@
-var isDClicked = false;
+//var isDClicked = false;
 
 $(document).ready(function(){
   $('.buttons').dblclick(function(e){
@@ -128,7 +128,6 @@ function displayParam(node, nodeType, evt){
             }
             break;
     }
-
     if (nodeType === 'effectNode'){
         if (evt === 'selected'){
             document.getElementById('node-name').innerHTML = "This is an "+ nodeType;
@@ -138,15 +137,19 @@ function displayParam(node, nodeType, evt){
          
     } else if (nodeType === 'startNode'){
         document.getElementById('node-name').innerHTML = "This is the "+ nodeType + ". <br><br> Connect other nodes to it to start playing.";
-    }else {
+    } else {
         if (evt === 'selected'){
+            if (nodeType === 'line'){
+                document.getElementById('node-name').innerHTML = "This is a "+ nodeType;
+                console.log(node.addChild.from);
+            }
             document.getElementById('node-name').innerHTML = "This is a "+ nodeType;
         } else {
             if (nodeType === 'line'){
                 console.log('line');
-            } else {
-                document.getElementById('node-name').innerHTML = "You added a "+ nodeType;
-            }
+                return
+            } 
+            document.getElementById('node-name').innerHTML = "You added a "+ nodeType;
         }
     }
 }
@@ -277,6 +280,23 @@ window.addEventListener('resize', function(){
 //Deleting objects
 document.getElementById('delete').onmouseup = function(){
     var actObject = canvas.getActiveObject();
+
+    //Deleting lines (if any) connected to the node
+    if (actObject.addChild) {
+        if (actObject.addChild.from)
+            // step backwards since we are deleting
+            for (var i = actObject.addChild.from.length - 1; i >= 0; i--) {
+                var line = actObject.addChild.from[i];
+                line.addChildRemove();
+                canvas.remove(line);
+            }
+        if (actObject.addChild.to)
+            for (var i = actObject.addChild.to.length - 1; i >= 0; i--) {
+                var line = actObject.addChild.to[i];
+                line.addChildRemove();
+                canvas.remove(line);
+            }
+    }
     canvas.remove(actObject);
     canvas.renderAll();
     document.getElementById('info').value = "on trash";

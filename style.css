@@ -96,10 +96,6 @@ div#play {
 div#stop {
 	left: 200px;
 }
-div#draw {
-	left: 300px;
-}
-
 .pointerx{
 	position: absolute;
     left: 1%;
