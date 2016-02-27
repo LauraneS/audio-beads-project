@@ -1,6 +1,6 @@
 window.onload = init;
 
-var line, isMouseDown, isMouseOver, isShiftDown, isSdown, center, playing;
+var line, isSdown, center, playing;
 var canvas, bufferLoader, bList, ac = new AudioContext(), tuna = new Tuna(ac);
 var lastAdded= window._lastAdded = [];
 
@@ -11,7 +11,7 @@ var sourceMouseDown, line;
     canvas = this.__canvas = new fabric.Canvas('canvas');
     canvas.setHeight(window.innerHeight*0.80);
     canvas.setWidth(window.innerWidth*0.80 -20);
-    //canvas.selection = false;
+    canvas.selection = false;
     canvas.hoverCursor = canvas.moveCursor ='pointer';
     StartNode({x:canvas.getWidth()/2 - 15, y: 15});
     canvas.calcOffset() 
@@ -53,28 +53,14 @@ function guid() {
 
 //Functions to link keydown events to various functions 
 document.onkeydown = function(e) {
-    switch (e.keyCode) {
-        case 16:  // Shift key down
-            isShiftDown = true;
-            canvas.hoverCursor = 'crosshair';
-            break;        
+    switch (e.keyCode) { 
         case 67: //C key down
             canvas.clear().renderAll();
-            break;
-        case 83: 
-            isSdown = true;
-            canvas.forEachObject(function(obj){
-                obj.set({selectable: true});
-            });
             break;
       }
 }
 document.onkeyup = function(e) {
     switch (e.keyCode) {
-        case 16: //Shift key released
-          isShiftDown = false;
-          canvas.hoverCursor = 'pointer';
-          break;
         case 32: //spacebar
             if (playing){
                 ac.suspend();
@@ -83,12 +69,6 @@ document.onkeyup = function(e) {
                 ac.resume();
                 playing = true;
             }
-            break;
-         case 83: 
-            isSdown = false;
-            canvas.forEachObject(function(obj){
-                obj.set({selectable: false});
-            });
             break;
     }
 }
@@ -136,21 +116,6 @@ canvas.on('mouse:move', function(e){
         canvas.renderAll();
     }
 });
-
-// canvas.on('mouse:down', function(e){
-//     var pointer = canvas.getPointer(e.e);
-//     canvas.forEachObject(function(obj) {
-//         //debugger
-//         obj.contains(pointer);
-//         obj.containsTopArrow(pointer);
-//         obj.containsBottomArrow(pointer);
-//         //Never mousedown on toparrow
-//         //When containsbottomarrow = true 
-//         // update sourcereference = obj.ID;
-//         // line = canvas.newline()
-//     });
-// });
-
 
 canvas.on('object:selected', function(e){
     var activeObject = e.target;
@@ -203,8 +168,6 @@ function onObjectMoving(e){
 }
 
 
-
-
 canvas.on('mouse:down', function(e){
     var pointerDown = canvas.getPointer(e.e);
     canvas.forEachObject(function(obj){
@@ -228,10 +191,15 @@ canvas.on('mouse:up', function(e){
                 if(obj.containsTopArrow(pointerUp)){
                     line.set({x2:obj.getTopArrowCenter().x, y2:obj.getTopArrowCenter().y});
                     addChildLine(sourceMouseDown, obj);
+                } else {
+                    canvas.remove(line);
                 }
                 sourceMouseDown.set({lockMovementX: false, lockMovementY: false});
                 sourceMouseDown = undefined;
                 line = undefined;
+            } else {
+                    canvas.remove(line);
+                    line = undefined;
             }
         })
     } 
