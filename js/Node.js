@@ -90,11 +90,11 @@ function Node(type, coords, topArrow, bottomArrow){
 	}
 
 	group.getBottomArrowCenter = function(){
-		return {x:hand2.group.getCenterPoint().x + hand2.getCenterPoint().x, y:hand2.group.getCenterPoint().y + hand2.getCenterPoint().y};
+		return {x:hand2.group.getCenterPoint().x + hand2.getCenterPoint().x, y:hand2.group.getCenterPoint().y + hand2.getCenterPoint().y + hand2.getHeight()/2};
 	}
 
 	group.getTopArrowCenter = function(){
-		return {x:hand1.group.getCenterPoint().x + hand1.getCenterPoint().x, y:hand1.group.getCenterPoint().y + hand1.getCenterPoint().y};
+		return {x:hand1.group.getCenterPoint().x + hand1.getCenterPoint().x, y:hand1.group.getCenterPoint().y + hand1.getCenterPoint().y - hand1.getHeight()/2};
 	}
 
 	return group;
