@@ -60,6 +60,9 @@ div#sidebar-right{
     border: 2px solid black;
     height: 600px;
 }
+.param{
+	padding: 0.5em 0.5em;
+}
 
 div#node-name{
 	padding: 0.5em 0.5em;

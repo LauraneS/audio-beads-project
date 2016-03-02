@@ -107,9 +107,13 @@ fabric.Object.prototype.toObject = (function (toObject){
 })(fabric.Object.prototype.toObject);
 
 canvas.on('mouse:over', function(e){
-    // if (e.target.type === 'line'){
-        console.log("hovering");
-    // }
+    var pointer = canvas.getPointer(e.e);
+    if (e.target.type !== 'line' && e.target.containsBottomArrow(pointer)) {
+        canvas.hoverCursor = 'crosshair';
+    }
+    if(e.target.type !== 'line' && !e.target.containsBottomArrow(pointer)){
+        canvas.hoverCursor = 'pointer';
+    }
 })
 
 //Tracking pointer
@@ -132,7 +136,11 @@ canvas.on('object:selected', function(e){
 
 canvas.on('object:added', function(e){
     playing = undefined;
+    if (e.target.type === 'line'){
+        return
+    }
     lastAdded.push(e.target);
+    canvas.setActiveObject(lastAdded[lastAdded.length - 1]);
     displayParam(e.target, e.target.type, 'added');
 });
 
@@ -197,10 +205,15 @@ canvas.on('mouse:up', function(e){
                 if(obj.containsTopArrow(pointerUp)){
                     line.set({x2:obj.getTopArrowCenter().x, y2:obj.getTopArrowCenter().y});
                     addChildLine(sourceMouseDown, obj);
+                    sourceMouseDown.set({lockMovementX: false, lockMovementY: false});
+                    line.setCoords();
+                    lastAdded.push(line);
+                    canvas.setActiveObject(line);
+                    displayParam(line, 'line', 'added');
                 } else {
                     canvas.remove(line);
                 }
-                sourceMouseDown.set({lockMovementX: false, lockMovementY: false});
+                
                 sourceMouseDown = undefined;
                 line = undefined;
             } else {
@@ -219,7 +232,10 @@ function makeLine(coords) {
     return new fabric.Line(coords, {
         stroke: 'black',
         selectable: true,
-        padding: 10
+        originX: 'center',
+        originY: 'center',
+        lockMovementX: true,
+        lockMovementY: true
     });
 };
 
@@ -255,6 +271,8 @@ function addChildLine(fromObject, toObject) {
             if (e === line)
                 arr.splice(i, 1);
         });
+        //ONLY WORKS IF ALLOW ONLY ONE PARENT PER NODE 
+        toObject.parentNode = [];
     }
 
     // undefined instead of delete since we are anyway going to do this many times
@@ -269,13 +287,14 @@ function addChildMoveLine(event) {
             if (obj.addChild.from)
                 obj.addChild.from.forEach(function (line) {
                     line.set({ 'x1': obj.getBottomArrowCenter().x, 'y1': obj.getBottomArrowCenter().y});
+                    line.setCoords();
                 })
             if (obj.addChild.to)
                 obj.addChild.to.forEach(function (line) {
                     line.set({ 'x2':obj.getTopArrowCenter().x, 'y2':obj.getTopArrowCenter().y});
+                    line.setCoords();
                 })
         }
-
         canvas.renderAll();
     });
 }

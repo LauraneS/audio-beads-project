@@ -62,13 +62,13 @@ function dragDrop(ev) {
     }
     var lastObject = lastAdded[lastAdded.length - 1];
     canvas.setActiveObject(lastObject);
-    //console.log(canvas.getActiveObject);
+    console.log(canvas.getActiveObject);
     ev.stopPropagation();
     return false;
 }
 //Display relevant parameters
 function displayParam(node, nodeType, evt){
-    var elements = ['play-info', 'effect-info', 'sample-info', 'sleep-info'], i;
+    var elements = ['play-info', 'effect-info', 'sample-info', 'sleep-info', 'line-info'], i;
     switch (nodeType){
         case 'playNode':
             for (i = 0; i < elements.length; i++){
@@ -127,6 +127,16 @@ function displayParam(node, nodeType, evt){
                 document.getElementById(elements[i]).style.display = 'none'; 
             }
             break;
+        case 'line':
+            for (i = 0; i < elements.length; i++){
+                if (elements[i] === 'line-info'){
+                    document.getElementById(elements[i]).style.display = 'block';
+                    document.getElementById("delete-line").selectedIndex = 0;
+                } else {
+                    document.getElementById(elements[i]).style.display = 'none';
+                }
+            }
+            break;
     }
     if (nodeType === 'effectNode'){
         if (evt === 'selected'){
@@ -139,16 +149,8 @@ function displayParam(node, nodeType, evt){
         document.getElementById('node-name').innerHTML = "This is the "+ nodeType + ". <br><br> Connect other nodes to it to start playing.";
     } else {
         if (evt === 'selected'){
-            if (nodeType === 'line'){
-                document.getElementById('node-name').innerHTML = "This is a "+ nodeType;
-                console.log(node.addChild.from);
-            }
             document.getElementById('node-name').innerHTML = "This is a "+ nodeType;
         } else {
-            if (nodeType === 'line'){
-                console.log('line');
-                return
-            } 
             document.getElementById('node-name').innerHTML = "You added a "+ nodeType;
         }
     }
@@ -255,6 +257,15 @@ document.getElementById("loop").oninput = function(){
 document.getElementById("sleep").oninput = document.getElementById("sleepInput").oninput= function(){
     canvas.getActiveObject().duration = this.value;
 };
+
+document.getElementById("delete-line").onchange = function(){
+    if (this.options[this.selectedIndex].value === 'yes'){
+        canvas.getActiveObject().addChildRemove();
+        canvas.remove(canvas.getActiveObject());
+        document.getElementById("node-name").innerHTML = "The line has been deleted.";
+        document.getElementById('line-info').style.display = 'none';
+    }
+}
 
 //On window resize
 window.addEventListener('resize', function(){
