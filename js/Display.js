@@ -23,7 +23,6 @@ function dragOver(ev) {
 }
          
 function dragDrop(ev) {
-    //debugger
     var pointer = canvas.getPointer(ev.e)
     var src = ev.dataTransfer.getData("text");
     switch (src){
@@ -36,7 +35,6 @@ function dragDrop(ev) {
         case 'effectImg':
             // EffectNode(pointer);
             canvas.forEachObject(function(obj){
-                debugger
                 var left = obj.getLeft();
                 var top = obj.getTop();
                 var width = obj.getWidth();
@@ -65,7 +63,7 @@ function dragDrop(ev) {
 }
 //Display relevant parameters
 function displayParam(node, nodeType, evt){
-    var elements = ['play-info', 'effect-info', 'sample-info', 'sleep-info', 'line-info'], i;
+    var elements = ['play-info', 'sample-info', 'sleep-info', 'line-info'], i;
     switch (nodeType){
         case 'playNode':
             for (i = 0; i < elements.length; i++){
@@ -74,18 +72,13 @@ function displayParam(node, nodeType, evt){
                     document.getElementById("note").value = document.getElementById("noteInput").value = node.note;
                     document.getElementById("wave-type").value = node.wave;
                     document.getElementById("duration").value = document.getElementById("durationInput").value = node.duration;
-                    //document.getElementById("attack").value = document.getElementById("attackInput").value = node.attack;
-                    //document.getElementById("release").value = document.getElementById("releaseInput").value = node.release;
-                    document.getElementById(elements[i]).style.display = 'block';
-
-                } else {
-                    document.getElementById(elements[i]).style.display = 'none';
-                }
-            }
-            break;
-        case 'effectNode':
-            for (i = 0; i < elements.length; i++){
-                if (elements[i] === 'effect-info'){
+                    if (node.effects.length > -1){
+                        document.getElementById("effects").style.display ='block';
+                        $( "#effects" ).empty();
+                        for (var j = 0; j<node.effects.length; j++){
+                            addEffectValue(node.effects[j], j);
+                        }
+                    }
                     document.getElementById(elements[i]).style.display = 'block';
 
                 } else {
@@ -314,9 +307,9 @@ document.getElementById('delete').onmouseout = function(){
     document.getElementById('info').value = "";
 }
 
-var effectClicks=0;
-document.getElementById("effect-menu").onclick = function(){
-    
+var effectClicks;
+function addEffect(){
+    effectClicks = canvas.getActiveObject().effects.length;
     $('<p id="effect-'+effectClicks+'"><span id="effectvalue-'+effectClicks+'"> Effect ' +(effectClicks+1) +': </span> \
         <select id="effect-'+effectClicks+'-value">\
         <option value="wahwah" >Wah-Wah</option>\
@@ -326,7 +319,9 @@ document.getElementById("effect-menu").onclick = function(){
         </select><button id="buttonfx-'+effectClicks+'">Delete</button></p>').appendTo($('#effects'));
     
     var select_id = document.getElementById("effect-"+effectClicks+"-value");
+    
     canvas.getActiveObject().setEffect(effectClicks, select_id.options[select_id.selectedIndex].value);
+    
     select_id.onchange = function(){ 
         var value = $(this).val();
         canvas.getActiveObject().setEffect(parseInt(this.id.charAt(7)),value);
@@ -339,9 +334,43 @@ document.getElementById("effect-menu").onclick = function(){
     effectClicks++;
     return false;
 }
+function addEffectValue(val, nbr){
+    $('<p id="effect-'+nbr+'"><span id="effectvalue-'+nbr+'"> Effect ' +(nbr+1) +': </span> \
+        <select id="effect-'+nbr+'-value">\
+        <option value="wahwah" >Wah-Wah</option>\
+        <option value="tremolo" >Tremolo</option>\
+        <option value="chorus">Chorus</option>\
+        <option value="pingpong">Pingpong</option>\
+        </select><button id="buttonfx-'+nbr+'">Delete</button></p>').appendTo($('#effects'));
+    var select_id = document.getElementById("effect-"+nbr+"-value");
+        switch (val){
+            case 'wahwah':
+                select_id.selectedIndex = 0;
+                break;
+            case 'tremolo':
+                select_id.selectedIndex = 1;
+                break;
+            case 'chorus':
+                select_id.selectedIndex = 2;
+                break;
+            case 'pingpong':
+                select_id.selectedIndex = 3;
+                break;
+        } 
+        
+        select_id.onchange = function(){ 
+            var value = $(this).val();
+            canvas.getActiveObject().setEffect(parseInt(this.id.charAt(7)),value);
+        };
+        var button_id = document.getElementById("buttonfx-"+nbr);
+        button_id.onclick = function(){
+            var i = parseInt(this.id.charAt(9));
+            remEffect(i);
+        }
+}
 
 function remEffect(number){
-    debugger
+    effectClicks = canvas.getActiveObject().effects.length;
     var id = "effect-"+number;
     document.getElementById('effects').removeChild(document.getElementById(id));
     canvas.getActiveObject().delEffect(number);

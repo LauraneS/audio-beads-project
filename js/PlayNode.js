@@ -17,12 +17,11 @@ function PlayNode(coords){
 
 	playGroup.setEffect = function (number, value){
 		var fxLength = playGroup.effects.length;
-		if (number < (fxLength+1)){
+		if (number < fxLength){
 			playGroup.effects[number] = value;
 		} else {
 			playGroup.effects.push(value);
 		}
-		console.log(playGroup.effects);
 	}
 	playGroup.delEffect = function (number){
 		playGroup.effects.splice(number,1);
