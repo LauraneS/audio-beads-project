@@ -79,7 +79,9 @@
         Note: <input type="text" id="noteInput" value="60", onchange=" document.getElementById('note').value=this.value;", style="width: 20px; text-align: center"><br>
         <input type="range" id="note" min="0" max="127", step="1", value= "60" onchange=" document.getElementById('noteInput').value=this.value;"> <br>                                                   
         Duration: <input type="text" id="durationInput" min="0" max = "10" step= "1" value="2", onchange=" document.getElementById('duration').value=this.value;", style="width: 20px; text-align: center"><br>
-        <input type="range" id="duration" min="0" max = "10" step= "1" value="2" onchange=" document.getElementById('durationInput').value=this.value;"> <br> 
+        <input type="range" id="duration" min="0" max = "10" step= "1" value="2" onchange=" document.getElementById('durationInput').value=this.value;"> <br> <br>
+        Effects <input style="display:inline; position:absolute; right: 5%;" id="effect-menu" type="image" src="png/circle.png" onclick="addEffect()">
+        <div id="effects"></div>
         <!-- Attack:<input type="text" id="attackInput" value="1" onchange=" document.getElementById('attack').value=this.value;" style="width: 20px; text-align: center"><br>
         <input type="range" id="attack" min="0" max="10", onchange=" document.getElementById('attackInput').value=this.value;", value="1"> <br>
         Release:<input type="text" id="releaseInput" value="1" onchange=" document.getElementById('release').value=this.value;", style="width: 20px; text-align: center"><br>

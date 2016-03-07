@@ -95,6 +95,7 @@ fabric.Object.prototype.toObject = (function (toObject){
             release: this.release, 
             sample: this.sample,
             wave: this.wave,
+            effects: this.effects,
             intensity: this.intensity, 
             rate: this.rate,
             rateCho: this.rateCho, 

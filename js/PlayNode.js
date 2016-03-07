@@ -4,12 +4,27 @@ function PlayNode(coords){
 	playGroup.item(0).set({stroke:'red'});
 	playGroup.note = document.getElementById("note").value;
 	playGroup.duration = document.getElementById("duration").value;
-	playGroup.wave = 'sine';
+	var wave = document.getElementById('wave-type')
+	playGroup.wave = wave.options[wave.selectedIndex].value;
+	playGroup.effects = [];
 
 	fabric.Image.fromURL('/png/musical66.png', function(oImg){
 		oImg.scale(0.6);
 		playGroup.add(oImg.set({left: -oImg.getWidth()/2 + 2.5, top:-oImg.getHeight()/2}));
 		canvas.renderAll();
 	})
-	canvas.add(playGroup); 
+	canvas.add(playGroup);
+
+	playGroup.setEffect = function (number, value){
+		var fxLength = playGroup.effects.length;
+		if (number < (fxLength+1)){
+			playGroup.effects[number] = value;
+		} else {
+			playGroup.effects.push(value);
+		}
+		console.log(playGroup.effects);
+	}
+	playGroup.delEffect = function (number){
+		playGroup.effects.splice(number,1);
+	}
 }

@@ -25,7 +25,6 @@ function dragOver(ev) {
 function dragDrop(ev) {
     //debugger
     var pointer = canvas.getPointer(ev.e)
-    console.log(pointer);
     var src = ev.dataTransfer.getData("text");
     switch (src){
         case 'playImg':
@@ -43,7 +42,6 @@ function dragDrop(ev) {
                 var width = obj.getWidth();
                 var height = obj.getHeight();
                 var center = obj.getCenterPoint();
-                console.log(obj.getLeft() < pointer.x < obj.getLeft()+obj.getWidth());
                 if ((obj.getLeft() < pointer.x < obj.getLeft()+obj.getWidth())){
                     if(obj.getTop()<pointer.y<obj.getTop()+obj.getHeight()){
                         if (obj.type ==='playNode' || obj.type === 'sampleNode'){
@@ -62,7 +60,6 @@ function dragDrop(ev) {
     }
     var lastObject = lastAdded[lastAdded.length - 1];
     canvas.setActiveObject(lastObject);
-    console.log(canvas.getActiveObject);
     ev.stopPropagation();
     return false;
 }
@@ -315,6 +312,62 @@ document.getElementById('delete').onmouseup = function(){
 
 document.getElementById('delete').onmouseout = function(){
     document.getElementById('info').value = "";
+}
+
+var effectClicks=0;
+document.getElementById("effect-menu").onclick = function(){
+    
+    $('<p id="effect-'+effectClicks+'"><span id="effectvalue-'+effectClicks+'"> Effect ' +(effectClicks+1) +': </span> \
+        <select id="effect-'+effectClicks+'-value">\
+        <option value="wahwah" >Wah-Wah</option>\
+        <option value="tremolo" >Tremolo</option>\
+        <option value="chorus">Chorus</option>\
+        <option value="pingpong">Pingpong</option>\
+        </select><button id="buttonfx-'+effectClicks+'">Delete</button></p>').appendTo($('#effects'));
+    
+    var select_id = document.getElementById("effect-"+effectClicks+"-value");
+    canvas.getActiveObject().setEffect(effectClicks, select_id.options[select_id.selectedIndex].value);
+    select_id.onchange = function(){ 
+        var value = $(this).val();
+        canvas.getActiveObject().setEffect(parseInt(this.id.charAt(7)),value);
+    };
+    var button_id = document.getElementById("buttonfx-"+effectClicks);
+    button_id.onclick = function(){
+        var i = parseInt(this.id.charAt(9));
+        remEffect(i);
+    }
+    effectClicks++;
+    return false;
+}
+
+function remEffect(number){
+    debugger
+    var id = "effect-"+number;
+    document.getElementById('effects').removeChild(document.getElementById(id));
+    canvas.getActiveObject().delEffect(number);
+    if(number !== effectClicks){
+        var i;
+        for (i = number+1; i < effectClicks; i++){
+            id = "effect-"+i;
+            document.getElementById(id).id = "effect-"+(i-1);
+            //id = "effect-"+(i-1);
+
+            var val = "effectvalue-"+i;
+            document.getElementById("effectvalue-"+i).textContent = "Effect "+(i)+": ";
+            document.getElementById(val).id = "effectvalue-"+(i-1);
+
+            var button_id = "buttonfx-"+i;
+            document.getElementById(button_id).id = "buttonfx-"+(i-1);
+            button_id = "buttonfx-"+(i-1);
+
+            var select_id = "effect-"+i+"-value";
+            document.getElementById(select_id).id = "effect-"+(i-1)+"-value";
+            select_id = "effect-"+(i-1)+"-value";
+            canvas.getActiveObject().setEffect(number,document.getElementById(select_id).options[document.getElementById(select_id).selectedIndex].value);
+        }
+    }
+    effectClicks--;
+    
 }
 
     
