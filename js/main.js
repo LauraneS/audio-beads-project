@@ -117,17 +117,6 @@ canvas.on('mouse:over', function(e){
     }
 })
 
-//Tracking pointer
-canvas.on('mouse:move', function(e){
-    var pointer = canvas.getPointer(e.e);
-    document.getElementById('pointerx').value = "x: " + pointer.x;
-    document.getElementById('pointery').value = "y: " + pointer.y;
-    if (line !== undefined){
-        line.set({x2: pointer.x, y2: pointer.y});
-        canvas.renderAll();
-    }
-});
-
 canvas.on('object:selected', function(e){
     var activeObject = e.target;
     var activeObjectType = e.target.type;
@@ -200,29 +189,39 @@ canvas.on('mouse:down', function(e){
     })
 })
 
+//Tracking pointer
+canvas.on('mouse:move', function(e){
+    var pointer = canvas.getPointer(e.e);
+    document.getElementById('pointerx').value = "x: " + pointer.x;
+    document.getElementById('pointery').value = "y: " + pointer.y;
+    if (line !== undefined){
+        line.set({x2: pointer.x, y2: pointer.y});
+        canvas.renderAll();
+    }
+});
+
 canvas.on('mouse:up', function(e){
     var pointerUp = canvas.getPointer(e.e);
     if(line !== undefined){
         canvas.forEachObject(function(obj){
-            if (obj.type !== 'startNode' && obj.type !== 'line'){
-                if(obj.containsTopArrow(pointerUp)){
-                    line.set({x2:obj.getTopArrowCenter().x, y2:obj.getTopArrowCenter().y});
-                    addChildLine(sourceMouseDown, obj);
-                    sourceMouseDown.set({lockMovementX: false, lockMovementY: false});
-                    line.setCoords();
-                    lastAdded.push(line);
-                    canvas.setActiveObject(line);
-                    displayParam(line, 'line', 'added');
-                } else {
-                    canvas.remove(line);
-                }
-                
-                sourceMouseDown = undefined;
+            if (obj.type === 'startNode' || obj.type === 'line'){
+                canvas.remove(line);
                 line = undefined;
-            } else {
-                    canvas.remove(line);
-                    line = undefined;
+                return false;
             }
+            if(obj.containsTopArrow(pointerUp)){
+                line.set({x2:obj.getTopArrowCenter().x, y2:obj.getTopArrowCenter().y});
+                addChildLine(sourceMouseDown, obj);
+                sourceMouseDown.set({lockMovementX: false, lockMovementY: false});
+                line.setCoords();
+                lastAdded.push(line);
+                canvas.setActiveObject(line);
+                displayParam(line, 'line', 'added');
+            } else {
+                canvas.remove(line);
+            } 
+            sourceMouseDown = undefined;
+            line = undefined;
         })
     } 
 })
