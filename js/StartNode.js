@@ -1,6 +1,6 @@
 function StartNode(coords){
 	
-	var startGroup = Node('startNode', coords, false, true);
+	var startGroup = Node('startNode', coords, 30, false, true);
 	startGroup.lockMovementX = true;
 	startGroup.lockMovementY = true;
 	startGroup.parentNode = [0];

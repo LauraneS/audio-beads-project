@@ -1,6 +1,6 @@
 function PlayNode(coords){
 
-	var playGroup = Node('playNode', coords, true, true);
+	var playGroup = Node('playNode', coords, 30, true, true);
 	playGroup.item(0).set({stroke:'red'});
 	playGroup.note = document.getElementById("note").value;
 	playGroup.duration = document.getElementById("duration").value;

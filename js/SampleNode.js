@@ -1,6 +1,6 @@
 function SampleNode(coords){
 	var samp = document.getElementById('sample');
-	var sampleGroup = Node('sampleNode', coords, true, true);
+	var sampleGroup = Node('sampleNode', coords, 30, true, true);
 	sampleGroup.sample = samp.options[samp.selectedIndex].value;
 	sampleGroup.loop = document.getElementById("loop").checked;
 	sampleGroup.effects = []

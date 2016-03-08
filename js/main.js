@@ -10,8 +10,8 @@ var sourceMouseDown, line;
 //Canvas Initialisation 
     canvas = this.__canvas = new fabric.Canvas('canvas');
     canvas.setHeight(window.innerHeight*0.80);
-    canvas.setWidth(window.innerWidth*0.80 -20);
-    //canvas.selection = false;
+    canvas.setWidth(window.innerWidth*0.80);
+    canvas.selection = false;
     canvas.hoverCursor = canvas.moveCursor ='pointer';
     StartNode({x:canvas.getWidth()/2 - 15, y: 15});
     canvas.calcOffset() 
@@ -160,7 +160,10 @@ function onObjectMoving(e){
             if (obj.type === 'loop'){
                 if (activeObject.parentNode[activeObject.parentNode.length-1] !== obj.ID){
                     activeObject.intersected = true;
-                    activeObject.parentNode.push(obj.ID);       
+                    console.log(activeObject.type);
+                    activeObject.parentNode.push(obj.ID);
+                    obj.children.push(activeObject);
+                    console.log(obj.children);   
                 }
             } 
         } else if (isSdown && activeObject.intersected){

@@ -1,6 +1,6 @@
 function SleepNode(coords){
 
-	var sleepGroup = Node('sleepNode', coords, true, true);
+	var sleepGroup = Node('sleepNode', coords, 30, true, true);
 	sleepGroup.item(0).set({stroke:'grey'});
 	sleepGroup.duration = document.getElementById("sleep").value;
 	

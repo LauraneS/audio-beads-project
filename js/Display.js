@@ -32,23 +32,6 @@ function dragDrop(ev) {
         case 'loopImg':
             LoopNode(pointer);
             break;
-        case 'effectImg':
-            // EffectNode(pointer);
-            canvas.forEachObject(function(obj){
-                var left = obj.getLeft();
-                var top = obj.getTop();
-                var width = obj.getWidth();
-                var height = obj.getHeight();
-                var center = obj.getCenterPoint();
-                if ((obj.getLeft() < pointer.x < obj.getLeft()+obj.getWidth())){
-                    if(obj.getTop()<pointer.y<obj.getTop()+obj.getHeight()){
-                        if (obj.type ==='playNode' || obj.type === 'sampleNode'){
-                        obj.item(0).setStroke('blue');
-                        }  
-                    }
-                }
-            });
-            break;
         case 'sampleImg':
             SampleNode(pointer);
             break;

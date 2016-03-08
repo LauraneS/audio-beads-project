@@ -1,7 +1,7 @@
-function Node(type, coords, topArrow, bottomArrow){
+function Node(type, coords, radius, topArrow, bottomArrow){
 	this.type = type;
 
-	var c = new fabric.Circle({radius: 30, left:0, stroke:'black', fill:''});
+	var c = new fabric.Circle({radius: radius, left:0, stroke:'black', fill:''});
 	var cCenter = c.getCenterPoint();
 	var hand1, hand2;
 	
@@ -10,7 +10,7 @@ function Node(type, coords, topArrow, bottomArrow){
 		});
 
 		hand2 = new fabric.Triangle({
-			width: 10, height: 10, angle: -180, top: 71, left: cCenter.x + 5, fill:'', stroke:'black'
+			width: 10, height: 10, angle: -180, top: 2*radius+11, left: cCenter.x + 5, fill:'', stroke:'black'
 		});
 	var group = new fabric.Group([c, hand1, hand2],{
 			left: coords.x,
@@ -95,6 +95,13 @@ function Node(type, coords, topArrow, bottomArrow){
 
 	group.getTopArrowCenter = function(){
 		return {x:hand1.group.getCenterPoint().x + hand1.getCenterPoint().x, y:hand1.group.getCenterPoint().y + hand1.getCenterPoint().y - hand1.getHeight()/2};
+	}
+
+	group.deleteParent = function(parentID){
+		var index = group.parentNode.indexOf(parentID);
+		if (index > -1) {
+    		array.splice(index, 1);
+		}
 	}
 
 	return group;
