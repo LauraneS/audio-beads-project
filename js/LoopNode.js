@@ -2,6 +2,11 @@ var orbit, bead, dur = 1000, oCoords;
 function LoopNode(coords){
   var loopGroup = Node('loop', coords, 100, true, true);
   canvas.add(loopGroup);
+
+  loopGroup.sortChildren = function(){
+    //sort array of centerpoints
+    //use comparison function to order them clockwise starting from 12oclock
+  }
 }
 //   function createOrbit() {
 //     orbit = new fabric.Circle({

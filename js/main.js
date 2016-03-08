@@ -160,9 +160,8 @@ function onObjectMoving(e){
             if (obj.type === 'loop'){
                 if (activeObject.parentNode[activeObject.parentNode.length-1] !== obj.ID){
                     activeObject.intersected = true;
-                    console.log(activeObject.type);
                     activeObject.parentNode.push(obj.ID);
-                    obj.children.push(activeObject);
+                    obj.children.push(activeObject.getCenterPoint());
                     console.log(obj.children);   
                 }
             } 
