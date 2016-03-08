@@ -150,8 +150,8 @@ function onObjectMoving(e){
                 if (activeObject.parentNode[activeObject.parentNode.length-1] !== obj.ID){
                     activeObject.intersected = true;
                     activeObject.parentNode.push(obj.ID);
-                    obj.children.push(activeObject.getCenterPoint());
-                    console.log(obj.children);   
+                    obj.children.push({x:activeObject.getCenterPoint().x, y:activeObject.getCenterPoint().y, ID:activeObject.ID});
+                    obj.sortChildren(obj.children);   
                 }
             } 
         } else if (isSdown && activeObject.intersected){

@@ -3,9 +3,37 @@ function LoopNode(coords){
   var loopGroup = Node('loop', coords, 100, true, true);
   canvas.add(loopGroup);
 
-  loopGroup.sortChildren = function(){
-    //sort array of centerpoints
-    //use comparison function to order them clockwise starting from 12oclock
+  loopGroup.loopToPointAngle = function(point){
+    var loopCenter = loopGroup.getAbsCenter();
+    var loopTop = loopGroup.getCircleTopCenter();
+
+    var refVec = {x:loopCenter.x-loopTop.x ,y:loopCenter.y-loopTop.y}
+    var ptVec = {x:loopCenter.x-point.x ,y:loopCenter.y-point.y}
+
+    var dir = refVec.x*ptVec.y - refVec.y*ptVec.x
+    if (dir < 0){
+      return 360 - (Math.acos((refVec.x*ptVec.x + refVec.y*ptVec.y) / (Math.sqrt( (Math.pow(refVec.x,2) + Math.pow(refVec.y,2)) * (Math.pow(ptVec.x, 2)+ Math.pow(ptVec.y,2))))))*(180/Math.PI);
+    } else if (dir > 0){
+      return (Math.acos((refVec.x*ptVec.x + refVec.y*ptVec.y) / (Math.sqrt( (Math.pow(refVec.x,2) + Math.pow(refVec.y,2)) * (Math.pow(ptVec.x, 2)+ Math.pow(ptVec.y,2))))))*(180/Math.PI);
+    } 
+    return 0;
+    
+  }
+
+  loopGroup.sortChildren = function(array){
+    var i;
+    for (i = 0; i<array.length; i++){
+      array[i].angle = loopGroup.loopToPointAngle({x:array[i].x, y:array[i].y});
+    }
+    array.sort(function (a, b) {
+        if (a.angle > b.angle) {
+          return 1;
+        }
+        if (a.angle < b.angle) {
+          return -1;
+        }
+        return 0;
+      });
   }
 }
 //   function createOrbit() {

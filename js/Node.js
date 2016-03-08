@@ -35,6 +35,13 @@ function Node(type, coords, radius, topArrow, bottomArrow){
 		}); 
 	}
 
+	group.getAbsCenter = function(){
+		return group.getCenterPoint();
+	}
+	group.getCircleTopCenter = function(){
+		return {x:group.getAbsCenter().x, y:group.getAbsCenter().y-c.radius}
+	}
+
 	group.contains = function(point){
 	    var x = point.x;
 	    var y = point.y;
