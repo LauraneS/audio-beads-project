@@ -80,52 +80,9 @@
         <input type="range" id="note" min="0" max="127", step="1", value= "60" onchange=" document.getElementById('noteInput').value=this.value;"> <br>                                                   
         Duration: <input type="text" id="durationInput" min="0" max = "10" step= "1" value="2", onchange=" document.getElementById('duration').value=this.value;", style="width: 20px; text-align: center"><br>
         <input type="range" id="duration" min="0" max = "10" step= "1" value="2" onchange=" document.getElementById('durationInput').value=this.value;"> <br> <br>
-        Effects <input style="display:inline; position:absolute; right: 5%;" id="effect-menu" type="image" src="png/circle.png" onclick="addEffect()">
-        <div id="effects"></div>
-        <!-- Attack:<input type="text" id="attackInput" value="1" onchange=" document.getElementById('attack').value=this.value;" style="width: 20px; text-align: center"><br>
-        <input type="range" id="attack" min="0" max="10", onchange=" document.getElementById('attackInput').value=this.value;", value="1"> <br>
-        Release:<input type="text" id="releaseInput" value="1" onchange=" document.getElementById('release').value=this.value;", style="width: 20px; text-align: center"><br>
-        <input type="range" id="release" min="0" max="10", value="1", onchange=" document.getElementById('releaseInput').value=this.value;" > -->
+        Effects <input style="display:inline; position:absolute; right: 5%;" id="effect-menu" type="image" src="png/circle.png" onclick="addEffect('#play-effects')">
+        <div id="play-effects"></div>
       </form>
-    </div>
-
-    <div class = "param" id="effect-info" style="display:none">
-      <form onSubmit="return false;">
-      Effect: 
-      <select id="effect-name">
-        <option value="wahwah" >Wah-Wah</option>
-        <option value="tremolo" >Tremolo</option>
-        <option value="chorus">Chorus</option>
-        <option value="pingpong">Pingpong</option>
-      </select>
-    </form>
-
-    <form  onSubmit="return false;" id='effect-wah', style="display:none">
-      Octaves: <input type="text" id="octInput" value="2" onchange=" document.getElementById('octave').value=this.value;" style="width: 20px; text-align: center"><br>
-        <input type="range" id="octave" min="1" max="6" onchange=" document.getElementById('octInput').value=this.value;", value="2"> <br>
-      Resonance: <input type="text" id="resInput" value="10" style="width: 20px; text-align: center"><br>
-        <input type="range" id="resonance" min="1" max="100" step = 1 onchange=" document.getElementById('resInput').value=this.value;" value="10"> <br>
-    </form>
-
-    <form onSubmit="return false;" id='effect-tremolo', style="display:none">
-      Intensity: <input type="text" id="intensityInput" value="0.3" onchange=" document.getElementById('intensity').value=this.value;" style="width: 20px; text-align: center"><br>
-        <input type="range" id="intensity" min="0" max="1" step = "0.1" onchange=" document.getElementById('intensityInput').value=this.value;", value="0.3"> <br>
-      Rate: <input type="text" id="rateInput" value="4" style="width: 20px; text-align: center"><br>
-        <input type="range" id="rate" min="0" max="8" onchange=" document.getElementById('rateInput').value=this.value;" value="4"> <br>
-    </form>
-
-    <form onSubmit="return false;" id='effect-chorus' style="display:none">
-      Rate: <input type="text" id="rateChoInput" value="1.5" onchange=" document.getElementById('rateCho').value=this.value;" style="width: 20px; text-align: center"><br>
-        <input type="range" id="rateCho" min="0" max="8" step="0.1" onchange="document.getElementById('rateChoInput').value=this.value;" value="1.5"> <br>
-      Delay: <input type="text" id="delayChoInput" value="0.1" onchange=" document.getElementById('delayCho').value=this.value;" style="width: 20px; text-align: center"><br>
-        <input type="range" id="delayCho" min="0" max="1" step="0.01" onchange="document.getElementById('delayChoInput').value=this.value;" value="0.01"> <br>
-    </form>
-
-    <form onSubmit="return false;" id='effect-pingpong' style="display:none">
-      Room Size: <input type="text" id="delayInput" value="1.5" onchange=" document.getElementById('delay').value=this.value;" style="width: 20px; text-align: center"><br>
-        <input type="range" id="delay" min="0" max="10" step="0.1" onchange=" document.getElementById('delayInput').value=this.value;" value="1.5"> <br>
-    </form>
-
     </div>
 
     <div class = "param" id="sample-info" style="display:none">
@@ -140,7 +97,9 @@
           <option value="flute">Flute</option>
         </select> <br>
         Loop
-        <input type="checkbox" id="loop" value="Loop">
+        <input type="checkbox" id="loop" value="Loop"><br><br>
+        Effects <input style="display:inline; position:absolute; right: 5%;" id="effect-menu" type="image" src="png/circle.png" onclick="addEffect('#samp-effects')">
+        <div id="samp-effects"></div>
       </form>
     </div>
     <div class = "param" id="sleep-info" style="display:none">

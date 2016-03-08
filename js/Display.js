@@ -73,10 +73,10 @@ function displayParam(node, nodeType, evt){
                     document.getElementById("wave-type").value = node.wave;
                     document.getElementById("duration").value = document.getElementById("durationInput").value = node.duration;
                     if (node.effects.length > -1){
-                        document.getElementById("effects").style.display ='block';
-                        $( "#effects" ).empty();
+                        document.getElementById("play-effects").style.display ='block';
+                        $( "#play-effects" ).empty();
                         for (var j = 0; j<node.effects.length; j++){
-                            addEffectValue(node.effects[j], j);
+                            addEffectValue(node.effects[j], j, '#play-effects');
                         }
                     }
                     document.getElementById(elements[i]).style.display = 'block';
@@ -92,6 +92,13 @@ function displayParam(node, nodeType, evt){
                     document.getElementById(elements[i]).style.display = 'block';
                     document.getElementById("sample").value = node.sample;
                     document.getElementById("loop").checked= node.loop;
+                    if (node.effects.length > -1){
+                        document.getElementById("samp-effects").style.display ='block';
+                        $( "#samp-effects" ).empty();
+                        for (var j = 0; j<node.effects.length; j++){
+                            addEffectValue(node.effects[j], j, '#samp-effects');
+                        }
+                    }
                 } else {
                     document.getElementById(elements[i]).style.display = 'none';
                 }
@@ -128,14 +135,7 @@ function displayParam(node, nodeType, evt){
             }
             break;
     }
-    if (nodeType === 'effectNode'){
-        if (evt === 'selected'){
-            document.getElementById('node-name').innerHTML = "This is an "+ nodeType;
-        } else {
-            document.getElementById('node-name').innerHTML = "You added an "+ nodeType;
-        }
-         
-    } else if (nodeType === 'startNode'){
+    if (nodeType === 'startNode'){
         document.getElementById('node-name').innerHTML = "This is the "+ nodeType + ". <br><br> Connect other nodes to it to start playing.";
     } else {
         if (evt === 'selected'){
@@ -145,56 +145,6 @@ function displayParam(node, nodeType, evt){
         }
     }
 }
-//Display the correct parameters depending on effect chosen
-document.getElementById("effect-name").oninput = function(){
-	var value = document.getElementById("effect-name").value;
-	var elements = ["effect-wah", "effect-tremolo", "effect-chorus", "effect-pingpong"];
-	switch (value){
-		case 'wahwah':
-		for (i = 0; i < elements.length; i++){
-                if (elements[i] === 'effect-wah'){
-                    document.getElementById("octave").value = document.getElementById("octInput").value = canvas.getActiveObject().octave;
-                    document.getElementById("resonance").value = document.getElementById("resInput").value = canvas.getActiveObject().resonance;
-                    document.getElementById(elements[i]).style.display = 'block';
-                } else {
-                    document.getElementById(elements[i]).style.display = 'none';
-                }
-            }
-            break;
-		case 'tremolo':
-		for (i = 0; i < elements.length; i++){
-                if (elements[i] === 'effect-tremolo'){
-                    document.getElementById("intensity").value = document.getElementById("intensityInput").value = canvas.getActiveObject().intensity;
-                    document.getElementById("rate").value = document.getElementById("rateInput").value = canvas.getActiveObject().rate;
-                    document.getElementById(elements[i]).style.display = 'block';
-                } else {
-                    document.getElementById(elements[i]).style.display = 'none';
-                }
-            }
-            break;
-		case 'chorus':
-		for (i = 0; i < elements.length; i++){
-                if (elements[i] === 'effect-chorus'){
-                    document.getElementById("rateCho").value = document.getElementById("rateChoInput").value = canvas.getActiveObject().rateCho;
-                    document.getElementById("delayCho").value = document.getElementById("delayChoInput").value = canvas.getActiveObject().delayCho;
-                    document.getElementById(elements[i]).style.display = 'block';
-                } else {
-                    document.getElementById(elements[i]).style.display = 'none';
-                }
-            }
-            break;
-		case 'pingpong':
-		for (i = 0; i < elements.length; i++){
-                if (elements[i] === 'effect-pingpong'){
-                    document.getElementById("delay").value = document.getElementById("delayInput").value = canvas.getActiveObject().delay;
-                    document.getElementById(elements[i]).style.display = 'block';
-                } else {
-                    document.getElementById(elements[i]).style.display = 'none';
-                }
-            }
-            break;
-	}
-};
 
 //Event listeners for input changes on parameters
 document.getElementById("note").oninput = document.getElementById("noteInput").oninput = function(){
@@ -206,37 +156,7 @@ document.getElementById("duration").oninput = document.getElementById("durationI
 document.getElementById("wave-type").oninput = function(){
     canvas.getActiveObject().wave = this.value;
 };
-// document.getElementById("attack").oninput = document.getElementById("attackInput").oninput = function(){
-//     canvas.getActiveObject().attack = this.value;
-// };
-// document.getElementById("release").oninput = document.getElementById("releaseInput").oninput = function(){
-//     canvas.getActiveObject().release = this.value;
-// };
-document.getElementById("effect-name").onchange = function(){
-    canvas.getActiveObject().effect = this.options[this.selectedIndex].value;
-};
-document.getElementById("octave").oninput = function(){
-    canvas.getActiveObject().octave = this.value;
-};
-document.getElementById("resonance").oninput = function(){
-    canvas.getActiveObject().resonance = this.value;
-};
-document.getElementById("intensity").oninput = function(){
-    canvas.getActiveObject().intensity = this.value;
-};
-document.getElementById("rate").oninput = function(){
-    canvas.getActiveObject().rate = this.value;
-};
-document.getElementById("rateCho").oninput = function(){
-    canvas.getActiveObject().rateCho = this.value;
-};
-document.getElementById("delayCho").oninput = function(){
-    canvas.getActiveObject().delayCho = this.value;
-};
 
-document.getElementById("delay").oninput = function(){
-    canvas.getActiveObject().delay = this.value;
-};
 document.getElementById("sample").onchange = function(){
     canvas.getActiveObject().sample=this.options[this.selectedIndex].value;
 };
@@ -308,7 +228,7 @@ document.getElementById('delete').onmouseout = function(){
 }
 
 var effectClicks;
-function addEffect(){
+function addEffect(div){
     effectClicks = canvas.getActiveObject().effects.length;
     $('<p id="effect-'+effectClicks+'"><span id="effectvalue-'+effectClicks+'"> Effect ' +(effectClicks+1) +': </span> \
         <select id="effect-'+effectClicks+'-value">\
@@ -316,11 +236,12 @@ function addEffect(){
         <option value="tremolo" >Tremolo</option>\
         <option value="chorus">Chorus</option>\
         <option value="pingpong">Pingpong</option>\
-        </select><button id="buttonfx-'+effectClicks+'">Delete</button></p>').appendTo($('#effects'));
+        </select><button id="buttonfx-'+effectClicks+'">Delete</button></p>').appendTo($(div));
     
     var select_id = document.getElementById("effect-"+effectClicks+"-value");
     
     canvas.getActiveObject().setEffect(effectClicks, select_id.options[select_id.selectedIndex].value);
+
     
     select_id.onchange = function(){ 
         var value = $(this).val();
@@ -329,19 +250,20 @@ function addEffect(){
     var button_id = document.getElementById("buttonfx-"+effectClicks);
     button_id.onclick = function(){
         var i = parseInt(this.id.charAt(9));
-        remEffect(i);
+        var d = div.substr(1,div.length);
+        remEffect(i, d);
     }
     effectClicks++;
     return false;
 }
-function addEffectValue(val, nbr){
+function addEffectValue(val, nbr, div){
     $('<p id="effect-'+nbr+'"><span id="effectvalue-'+nbr+'"> Effect ' +(nbr+1) +': </span> \
         <select id="effect-'+nbr+'-value">\
         <option value="wahwah" >Wah-Wah</option>\
         <option value="tremolo" >Tremolo</option>\
         <option value="chorus">Chorus</option>\
         <option value="pingpong">Pingpong</option>\
-        </select><button id="buttonfx-'+nbr+'">Delete</button></p>').appendTo($('#effects'));
+        </select><button id="buttonfx-'+nbr+'">Delete</button></p>').appendTo($(div));
     var select_id = document.getElementById("effect-"+nbr+"-value");
         switch (val){
             case 'wahwah':
@@ -365,14 +287,15 @@ function addEffectValue(val, nbr){
         var button_id = document.getElementById("buttonfx-"+nbr);
         button_id.onclick = function(){
             var i = parseInt(this.id.charAt(9));
-            remEffect(i);
+            var d = div.substr(1,div.length);
+            remEffect(i, d);
         }
 }
 
-function remEffect(number){
+function remEffect(number, div){
     effectClicks = canvas.getActiveObject().effects.length;
     var id = "effect-"+number;
-    document.getElementById('effects').removeChild(document.getElementById(id));
+    document.getElementById(div).removeChild(document.getElementById(id));
     canvas.getActiveObject().delEffect(number);
     if(number !== effectClicks){
         var i;

@@ -22,8 +22,14 @@ function PlayNode(coords){
 		} else {
 			playGroup.effects.push(value);
 		}
+		canvas.getActiveObject().item(0).set({stroke:'blue'});
+    	canvas.renderAll();
 	}
 	playGroup.delEffect = function (number){
 		playGroup.effects.splice(number,1);
+		if (playGroup.effects === undefined || playGroup.effects.length === 0){
+			playGroup.item(0).set({stroke:'red'});
+			canvas.renderAll();
+		}
 	}
 }
