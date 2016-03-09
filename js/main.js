@@ -82,7 +82,6 @@ fabric.Object.prototype.set({
 fabric.Object.prototype.toObject = (function (toObject){
     return function(){
         return fabric.util.object.extend(toObject.call(this), {
-            attack: this.attack,
             children: this.children,
             duration: this.duration,
             effect: this.effect,
@@ -92,17 +91,9 @@ fabric.Object.prototype.toObject = (function (toObject){
             parentNode: this.parentNode,
             parentType: this.parentType,
             intersected: this.intersected,
-            release: this.release, 
             sample: this.sample,
             wave: this.wave,
             effects: this.effects,
-            intensity: this.intensity, 
-            rate: this.rate,
-            rateCho: this.rateCho, 
-            delayCho: this.delayCho,
-            delay: this.delay,
-            octave: this.octave,
-            resonance:this.resonance
         });
     };
 })(fabric.Object.prototype.toObject);
@@ -147,11 +138,22 @@ function onObjectMoving(e){
       if (obj === activeObject) return;
         if (activeObject.intersectsWithObject(obj)){
             if (obj.type === 'loop'){
+                debugger
+                var center = activeObject.getCenterPoint();
+                var newleft = obj.closestLoopPoint(center).x-activeObject.getWidth()/2;
+                var newtop = obj.closestLoopPoint(center).y-activeObject.getHeight()/2
+                activeObject.set({left:newleft, top: newtop}).setCoords();
+                canvas.renderAll();
                 if (activeObject.parentNode[activeObject.parentNode.length-1] !== obj.ID){
-                    activeObject.intersected = true;
-                    activeObject.parentNode.push(obj.ID);
-                    obj.children.push({x:activeObject.getCenterPoint().x, y:activeObject.getCenterPoint().y, ID:activeObject.ID});
-                    obj.sortChildren(obj.children);   
+                    
+                    // activeObject.intersected = true;
+                    
+                    // console.log(obj.closestLoopPoint(center));
+                    // console.log(center);
+                    // activeObject.parentNode.push(obj.ID);
+                    // obj.children.push({x:center.x, y:center.y, ID:activeObject.ID});
+                    // obj.sortChildren(obj.children);   
+                    console.log('intersected');
                 }
             } 
         } else if (isSdown && activeObject.intersected){
@@ -207,16 +209,18 @@ canvas.on('mouse:up', function(e){
             if (obj.type === 'startNode' || obj.type === 'line'){
                 canvas.remove(line);
                 line = undefined;
-                return false;
+                return 
             }
             if(obj.containsTopArrow(pointerUp)){
                 line.set({x2:obj.getTopArrowCenter().x, y2:obj.getTopArrowCenter().y});
                 addChildLine(sourceMouseDown, obj);
-                sourceMouseDown.set({lockMovementX: false, lockMovementY: false});
                 line.setCoords();
                 lastAdded.push(line);
                 canvas.setActiveObject(line);
                 displayParam(line, 'line', 'added');
+                if (sourceMouseDown.type !== 'startNode'){
+                    sourceMouseDown.set({lockMovementX: false, lockMovementY: false});
+                }
             } else {
                 canvas.remove(line);
             } 
@@ -225,9 +229,6 @@ canvas.on('mouse:up', function(e){
         })
     } 
 })
-
-function canvasCleared(){
-}
 
 //Function to draw a line
 function makeLine(coords) {
@@ -301,56 +302,49 @@ function addChildMoveLine(event) {
     });
 }
 
-function canvasCleared(){
-    ac.close();
-    ac = new AudioContext();
-    playing = undefined;
-    document.getElementById("playBtn").src="/png/playBtn.png";
+var playBtClicks = 0;
+ac.onstatechange = function(){
+    if (ac.state === 'suspended'){
+        document.getElementById("playBtn").src="/png/playBtn.png";
+    } else 
+    if (ac.state === 'closed'){
+        debugger
+        document.getElementById("playBtn").src="/png/playBtn.png";
+        playBtClicks = 0;
+    }
 }
-
-function resetCanvas(){
-    canvas.clear();
-    ac.suspend();
-    ac.close();
-    playing = undefined;
-    document.getElementById("playBtn").src="/png/playBtn.png";
-    StartNode({x:canvas.getWidth()/2 - 15, y: 15});
-    document.getElementById('node-name').innerHTML = "Click an object to get started!";
-    ac = new AudioContext();
-}
-
 
 function canvasState(){
-    if (playing === undefined){
+    if (ac.state === 'running' && playBtClicks === 0){
+        playBtClicks++;
+        document.getElementById("playBtn").src="/png/pauseBtn.png";
         var state = (JSON.stringify(canvas));
         var stateArray = $.parseJSON(state.substring(11, state.length - 17));
         var tree = unflatten(stateArray);
         parse(tree);
-        playing = true;
-        document.getElementById("playBtn").src="/png/pauseBtn.png";
-    } else if (playing){
+    } else if (ac.state === 'running' && playBtClicks === 1){
+        playBtClicks--;
         try{
             ac.suspend();
-            playing = false;
-            document.getElementById("playBtn").src="/png/playBtn.png";
             console.log("Paused");
         }
         catch(err){
             console.log("There is nothing to pause.");
         }
-    } else if (!playing){
-        ac.resume();
-        playing = true;
-        console.log("Playing after pause");
+    } else if (ac.state === 'suspended'){
         document.getElementById("playBtn").src="/png/pauseBtn.png";
+        ac.resume();
+        console.log("Playing after pause");
+        
     }
-    
 }
 
 function stopSound(){
     try{
         ac.close();
-        playing = undefined;
+        playBtClicks = 0;
+        document.getElementById("playBtn").src="/png/playBtn.png";
+        ac = new AudioContext();
     } catch(err){
         console.log("There is nothing to stop");
     }

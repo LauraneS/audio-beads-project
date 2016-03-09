@@ -164,6 +164,7 @@ document.getElementById("delete-line").onchange = function(){
 window.addEventListener('resize', function(){
     canvas.setHeight(window.innerHeight - 150);
     canvas.setWidth(window.innerWidth*0.80 - 20);
+    canvas.item(0).set({left:canvas.getWidth()/2 - 15, top: 15});
 })
 
 //Adding double click event listener (not supported by fabric.js)
