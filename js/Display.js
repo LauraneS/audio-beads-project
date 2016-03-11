@@ -130,9 +130,9 @@ function displayParam(node, nodeType, evt){
         document.getElementById('node-name').innerHTML = "This is the "+ nodeType + ". <br><br> Connect other nodes to it to start playing.";
     } else {
         if (evt === 'selected'){
-            document.getElementById('node-name').innerHTML = "This is a "+ nodeType;
+            document.getElementById('node-name').innerHTML = "This is a "+ nodeType + ".";
         } else {
-            document.getElementById('node-name').innerHTML = "You added a "+ nodeType;
+            document.getElementById('node-name').innerHTML = "You added a "+ nodeType + ".";
         }
     }
 }
@@ -151,9 +151,9 @@ document.getElementById("wave-type").oninput = function(){
 document.getElementById("sample").onchange = function(){
     canvas.getActiveObject().sample=this.options[this.selectedIndex].value;
 };
-document.getElementById("loop").oninput = function(){
+document.getElementById("loop").onchange = function(){
     canvas.getActiveObject().loop = this.checked;
-    console.log(canvas.getActiveObject().loop );
+    console.log(canvas.getActiveObject().loop);
 };
 document.getElementById("sleep").oninput = document.getElementById("sleepInput").oninput= function(){
     canvas.getActiveObject().duration = this.value;
