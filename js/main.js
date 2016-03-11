@@ -123,6 +123,23 @@ canvas.on('object:added', function(e){
     lastAdded.push(e.target);
     canvas.setActiveObject(lastAdded[lastAdded.length - 1]);
     displayParam(e.target, e.target.type, 'added');
+    canvas.forEachObject(function(obj) {
+      if (obj === e.target) return;
+        if (e.target.intersectsWithObject(obj) && obj.type === 'loop' && e.target.type !== 'loop'){
+            var center = e.target.getCenterPoint();
+            var newleft = obj.closestLoopPoint(center).x-e.target.getWidth()/2;
+            var newtop = obj.closestLoopPoint(center).y-e.target.getHeight()/2
+            e.target.set({left:newleft, top: newtop}).setCoords();
+            canvas.renderAll(); 
+            if (e.target.parentNode[e.target.parentNode.length-1] !== obj.ID){
+                e.target.intersected = true;
+                e.target.parentNode.push(obj.ID);
+                // obj.children.push({x:center.x, y:center.y, ID:activeObject.ID});
+                // obj.sortChildren(obj.children);   
+                console.log('intersected: '+e.target.intersected);
+            }
+        } 
+    });
 });
 
 canvas.on({'object:moving':onObjectMoving});
@@ -145,15 +162,17 @@ function onObjectMoving(e){
             if (activeObject.parentNode[activeObject.parentNode.length-1] !== obj.ID){
                 activeObject.intersected = true;
                 activeObject.parentNode.push(obj.ID);
+                console.log(activeObject.parentNode);
                 // obj.children.push({x:center.x, y:center.y, ID:activeObject.ID});
                 // obj.sortChildren(obj.children);   
                 console.log('intersected');
             }
-        } else if (activeObject.intersected){
-            activeObject.parentNode.pop();
-            console.log(activeObject.parentNode);
-            activeObject.intersected = false;
-        }
+        } 
+        //else if (activeObject.intersected){
+        //     activeObject.parentNode.pop();
+        //     console.log(activeObject.parentNode);
+        //     activeObject.intersected = false;
+        // }
     });
 
     // if(activeObject.getLeft()+activeObject.getWidth() > currentWidth){

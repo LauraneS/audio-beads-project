@@ -29,4 +29,15 @@ function SampleNode(coords){
 			canvas.renderAll();
 		}
 	}
+
+	sampleGroup.on('mouseup', function(){
+		if (sampleGroup.intersected){
+			canvas.forEachObject(function(obj){
+				if (obj.ID === sampleGroup.parentNode[0] && !sampleGroup.intersectsWithObject(obj)){
+					sampleGroup.intersected = false;
+					sampleGroup.parentNode.pop();
+				}
+			})
+		}
+	});
 }
