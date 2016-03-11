@@ -32,9 +32,18 @@ div#sidebar-left{
 }
 .icon{
 	margin-top: 10px;
+	margin-left: auto;
+    margin-right: auto;
 	padding: 0.5em 0.5em;
 	height:60px;
 	width: 60px;
+}
+.plusBtn{
+	width: 25px;
+	image-rendering: -webkit-optimize-contrast;
+	display:inline; 
+	position:absolute; 
+	right: 5%;
 }
 
 div#wrapper {

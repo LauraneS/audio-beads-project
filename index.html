@@ -79,7 +79,7 @@
         <input type="range" id="note" min="0" max="127", step="1", value= "60" onchange=" document.getElementById('noteInput').value=this.value;"> <br>                                                   
         Duration: <input type="text" id="durationInput" min="0" max = "10" step= "1" value="2", onchange=" document.getElementById('duration').value=this.value;", style="width: 20px; text-align: center"><br>
         <input type="range" id="duration" min="0" max = "10" step= "1" value="2" onchange=" document.getElementById('durationInput').value=this.value;"> <br> <br>
-        Effects <input style="display:inline; position:absolute; right: 5%;" id="effect-menu" type="image" src="png/circle.png" onclick="addEffect('#play-effects')">
+        Effects <input class="plusBtn" id="effect-menu" type="image" src="png/circle.svg" onclick="addEffect('#play-effects')">
         <div id="play-effects"></div>
       </form>
     </div>
@@ -97,7 +97,7 @@
         </select> <br>
         Loop
         <input type="checkbox" id="loop" value="Loop"><br><br>
-        Effects <input style="display:inline; position:absolute; right: 5%;" id="effect-menu" type="image" src="png/circle.png" onclick="addEffect('#samp-effects')">
+        Effects <input class= "plusBtn" id="effect-menu" type="image" src="png/circle.svg" onclick="addEffect('#samp-effects')">
         <div id="samp-effects"></div>
       </form>
     </div>

@@ -137,8 +137,7 @@ function onObjectMoving(e){
     canvas.forEachObject(function(obj) {
       if (obj === activeObject) return;
         if (activeObject.intersectsWithObject(obj)){
-            if (obj.type === 'loop'){
-                debugger
+            if (obj.type === 'loop' && activeObject.type !== 'loop'){
                 var center = activeObject.getCenterPoint();
                 var newleft = obj.closestLoopPoint(center).x-activeObject.getWidth()/2;
                 var newtop = obj.closestLoopPoint(center).y-activeObject.getHeight()/2
@@ -177,6 +176,10 @@ function onObjectMoving(e){
 
 
 canvas.on('mouse:down', function(e){
+    if (canvas.getActiveObject() === null){
+        displayNothing();
+        return
+    }
     var pointerDown = canvas.getPointer(e.e);
     canvas.forEachObject(function(obj){
         if(obj.type !== 'line'){
@@ -186,9 +189,9 @@ canvas.on('mouse:down', function(e){
                 line = makeLine([obj.getBottomArrowCenter().x, obj.getBottomArrowCenter().y, obj.getBottomArrowCenter().x, obj.getBottomArrowCenter().y]);
                 canvas.add(line);
                 line.sendToBack();
-            }
-        }   
-    })
+            } 
+        }
+    }); 
 })
 
 //Tracking pointer

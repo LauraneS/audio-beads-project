@@ -40,7 +40,7 @@ function LoopNode(coords){
     var loopCenter = loopGroup.getAbsCenter();
     var vect = {x: point.x - loopCenter.x, y:point.y-loopCenter.y};
     var mag = Math.sqrt(Math.pow(vect.x,2)+Math.pow(vect.y,2));
-    return {x: loopCenter.x + vect.x/mag * 100 , y:loopCenter.x + vect.x/mag * 100}
+    return {x: loopCenter.x + vect.x/mag * 100 , y:loopCenter.y + vect.y/mag * 100}
   }
 
 }

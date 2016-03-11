@@ -44,6 +44,14 @@ function dragDrop(ev) {
     ev.stopPropagation();
     return false;
 }
+
+function displayNothing(){
+    var elements = ['play-info', 'sample-info', 'sleep-info', 'line-info'], i;
+    for (i= 0; i < elements.length; i++){
+        document.getElementById(elements[i]).style.display = 'none';
+    }
+    document.getElementById('node-name').innerHTML = "Not sure what to do next? <br><br> Some suggestions:<br>  - Add a new node <br> - Connect 2 nodes <br> - Press Play";    
+}
 //Display relevant parameters
 function displayParam(node, nodeType, evt){
     var elements = ['play-info', 'sample-info', 'sleep-info', 'line-info'], i;
