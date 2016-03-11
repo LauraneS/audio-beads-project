@@ -42,6 +42,36 @@ function LoopNode(coords){
     var mag = Math.sqrt(Math.pow(vect.x,2)+Math.pow(vect.y,2));
     return {x: loopCenter.x + vect.x/mag * 100 , y:loopCenter.y + vect.y/mag * 100}
   }
+  // loopGroup.on('moving', function(e){
+  //   var center
+  //   
+  // }); 
+  loopGroup.on('mousedown', function(){
+    console.log('down');
+    canvas.forEachObject(function(obj){
+      if ((obj.type !== 'line'||obj.type!=='startNode'||obj.type!=='loop') && obj.intersected === true && obj.parentNode[0]===loopGroup.ID){
+        obj.loopCenter = loopGroup.getCenterPoint();
+      }
+    })
+  });
+  loopGroup.on('moving', function(){
+    canvas.forEachObject(function(obj){
+      if ((obj.type !== 'line'||obj.type!=='startNode'||obj.type!=='loop') && obj.intersected === true && obj.parentNode[0]===loopGroup.ID){
+        obj.followLoop(loopGroup.getCenterPoint());
+        obj.loopCenter = loopGroup.getCenterPoint();
+      }
+    })
+  })
+
+  loopGroup.on('mouseup', function(){
+    console.log('up');
+    var newCenter = loopGroup.getCenterPoint();
+    canvas.forEachObject(function(obj){
+      if ((obj.type !== 'line'||obj.type!=='startNode'||obj.type!=='loop') && obj.intersected === true && obj.parentNode[0]===loopGroup.ID){
+        obj.followLoop(newCenter);
+      }
+    })
+  });
 
 }
 //   function createOrbit() {

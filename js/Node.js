@@ -111,5 +111,12 @@ function Node(type, coords, radius, topArrow, bottomArrow){
 		}
 	}
 
+	group.followLoop = function(newCenter){
+		var offsetLeft = newCenter.x - group.loopCenter.x;
+		var offsetTop = newCenter.y - group.loopCenter.y;
+		group.set({left:group.left+offsetLeft, top: group.top+offsetTop}).setCoords();
+		canvas.renderAll();
+	}
+
 	return group;
 }

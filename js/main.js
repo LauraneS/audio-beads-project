@@ -136,26 +136,20 @@ function onObjectMoving(e){
     
     canvas.forEachObject(function(obj) {
       if (obj === activeObject) return;
-        if (activeObject.intersectsWithObject(obj)){
-            if (obj.type === 'loop' && activeObject.type !== 'loop'){
-                var center = activeObject.getCenterPoint();
-                var newleft = obj.closestLoopPoint(center).x-activeObject.getWidth()/2;
-                var newtop = obj.closestLoopPoint(center).y-activeObject.getHeight()/2
-                activeObject.set({left:newleft, top: newtop}).setCoords();
-                canvas.renderAll();
-                if (activeObject.parentNode[activeObject.parentNode.length-1] !== obj.ID){
-                    
-                    // activeObject.intersected = true;
-                    
-                    // console.log(obj.closestLoopPoint(center));
-                    // console.log(center);
-                    // activeObject.parentNode.push(obj.ID);
-                    // obj.children.push({x:center.x, y:center.y, ID:activeObject.ID});
-                    // obj.sortChildren(obj.children);   
-                    console.log('intersected');
-                }
-            } 
-        } else if (isSdown && activeObject.intersected){
+        if (activeObject.intersectsWithObject(obj) && obj.type === 'loop' && activeObject.type !== 'loop'){
+            var center = activeObject.getCenterPoint();
+            var newleft = obj.closestLoopPoint(center).x-activeObject.getWidth()/2;
+            var newtop = obj.closestLoopPoint(center).y-activeObject.getHeight()/2
+            activeObject.set({left:newleft, top: newtop}).setCoords();
+            canvas.renderAll(); 
+            if (activeObject.parentNode[activeObject.parentNode.length-1] !== obj.ID){
+                activeObject.intersected = true;
+                activeObject.parentNode.push(obj.ID);
+                // obj.children.push({x:center.x, y:center.y, ID:activeObject.ID});
+                // obj.sortChildren(obj.children);   
+                console.log('intersected');
+            }
+        } else if (activeObject.intersected){
             activeObject.parentNode.pop();
             console.log(activeObject.parentNode);
             activeObject.intersected = false;
