@@ -83,19 +83,21 @@ function parsePlay(canvasObject){
 		play.frequency.value = freqValue;
 
 		//If the node has added effects
-		//debugger
+		
 		if (effects[0] !== undefined){
+			var prevEffect;
 			for (var i=0; i < effects.length; i++){
 				var effect = connectEffect(effects[i]);	
 				if (i === 0){
 					play.connect(effect.input);
 				} else {
-					var prevEffect = connectEffect(effects[i-1]);
+					// var prevEffect = connectEffect(effects[i-1]);
 					prevEffect.connect(effect.input);
 				}
 				if (i === effects.length-1){
 					effect.connect(ac.destination);
 				}
+				prevEffect = effect;
 			}
 		} else {
 			play.connect(ac.destination);
@@ -114,16 +116,16 @@ function parsePlay(canvasObject){
 function connectEffect(effect){
 	switch (effect) {
 		case 'tremolo':
-			var tremolo = new tuna.Tremolo({
+			return new tuna.Tremolo({
 			    intensity: 0.3,    	//0 to 1
 			    rate: 4,         		//0.001 to 8
 			    stereoPhase: 0,    						//0 to 180
 			    bypass: 0
 			});
-			return (tremolo);
+			//return (tremolo);
 			break;
 		case 'wahwah':
-			var wahwah = new tuna.WahWah({
+			return new tuna.WahWah({
 			    automode: true,                						//true/false
 			    baseFrequency: 0.5,            						//0 to 1
 			    excursionOctaves: 3,           	//1 to 6
@@ -132,26 +134,23 @@ function connectEffect(effect){
 			    sensitivity: 0.5,             	 					//-1 to 1
 			    bypass: 0
 			});
-			return (wahwah);
 		 	break;
 		 	//Something wrong with next 2 effects - they block the sound
 		case 'chorus':
-			var chorus = new tuna.Chorus({
+			return new tuna.Chorus({
 			    rate: 0.01,         //0.01 to 8+
 			    feedback: 0.8,     					//0 to 1+
 			    delay: 0.005,     	//0 to 1
 			    bypass: 1          					//the value 1 starts the effect as bypassed, 0 or 1
 			});
-			return (chorus);
 			break;
 		case 'pingpong':
-			var pingpong = new tuna.PingPongDelay({
+			return new tuna.PingPongDelay({
 			    wetLevel: 1, //0 to 1
 			    feedback: 0.5, //0 to 1
 			    delayTimeLeft: 500,//canvasObject.delay/2*1000, //1 to 10000 (milliseconds)
 			    delayTimeRight: 500//canvasObject.delay/2*1000 //1 to 10000 (milliseconds)
 			});
-			return (pingpong);
 			break;
 
 	}
@@ -194,17 +193,19 @@ function parseSample(canvasObject){
 	source.loop = canvasObject.loop;
 
 	if (effects[0] !== undefined){
+		var prevEffect;
 			for (var i=0; i < effects.length; i++){
 				var effect = connectEffect(effects[i]);	
 				if (i === 0){
 					source.connect(effect.input);
 				} else {
-					var prevEffect = connectEffect(effects[i-1]);
+					//var prevEffect = connectEffect(effects[i-1]);
 					prevEffect.connect(effect.input);
 				}
 				if (i === effects.length-1){
 					effect.connect(ac.destination);
 				}
+				prevEffect = effect;
 			}
 		} else {
 			source.connect(ac.destination);
