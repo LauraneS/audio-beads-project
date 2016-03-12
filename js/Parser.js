@@ -32,7 +32,7 @@ function unflatten(canvasObjectArray) {
 	return tree;
 }
 
-function parse(canvasObjectArray, ite){
+function parse(canvasObjectArray, t){
 	var length = canvasObjectArray.length, i, j;
 	var inspectedNodes = [];
 
@@ -45,26 +45,22 @@ function parse(canvasObjectArray, ite){
 		}
 		switch(canvasObjectType){
 			case 'startNode':
-				parse(canvasObject.children, 1);
+				parse(canvasObject.children, t);
 				break;
 			case 'playNode':
-				parsePlay(canvasObject);
+				parsePlay(canvasObject, t);
 				break;
 			case 'sleepNode':
-				parseSleep(canvasObject);
+				parseSleep(canvasObject, t);
 				break;
 			case 'sampleNode':
-				parseSample(canvasObject);
+				parseSample(canvasObject, t);
 				break;
 			case 'loop':
-				parseLoop(canvasObject);
+				parseLoop(canvasObject, t);
 				break;
 		}
 		inspectedNodes.push(canvasObjectID);
-		ite--;
-		if (ite > 0){
-			parse(canvasObjectArray, ite);
-		}
 		// var childNbr = canvasObject.children.length;
 		// for (j=0; j < childNbr; j++){
 		// 	parse(canvasObject.children);
@@ -72,7 +68,7 @@ function parse(canvasObjectArray, ite){
 	}
 }
 
-function parsePlay(canvasObject){
+function parsePlay(canvasObject, t){
 	var duration = parseInt(canvasObject.duration),
 		wave = canvasObject.wave,
 		freqValue = Math.pow(2, (canvasObject.note - 69)/12)*440,
@@ -102,13 +98,16 @@ function parsePlay(canvasObject){
 		} else {
 			play.connect(ac.destination);
 		}
-	
-		play.start();
-		play.stop(ac.currentTime + duration);
+		if (t !== undefined){
+			play.start(ac.currentTime + t);
+			play.stop(ac.currentTime + t + duration);
+		} else {
+			play.start(ac.currentTime);
+			play.stop(ac.currentTime + duration);	
+		}
+		
 		play.onended = function(){
-			parse(canvasObject.children,1);
-			
-			console.log('next');
+			parse(canvasObject.children);
 		}
 
 }
@@ -156,18 +155,13 @@ function connectEffect(effect){
 	}
 }
 
-function parseSleep(canvasObject){
-	//return [canvasObject.ID, canvasObject.type, canvasObject.parentNode, canvasObject.children, canvasObject.duration];
-	//string += 'sleepNode:canvasObject.ID, canvasObject.type, canvasObject.parentNode, canvasObject.children, canvasObject.duration; ';
-	ac.suspend();
-	setTimeout(nextInstruction, canvasObject.duration * 1000);
-	function nextInstruction() {
-		ac.resume();
-		parse(canvasObject.children,1);
-	}
+function parseSleep(canvasObject, t){
+	var tt = parseInt(canvasObject.duration);
+	console.log(tt);
+	parse(canvasObject.children, tt);
 }
 
-function parseSample(canvasObject){
+function parseSample(canvasObject, t){
 	var source = ac.createBufferSource();
 	effects = canvasObject.effects;
 	switch (canvasObject.sample){
@@ -210,84 +204,23 @@ function parseSample(canvasObject){
 		} else {
 			source.connect(ac.destination);
 		}
-	source.start(ac.currentTime);
+	if (t !== undefined){
+		source.start(ac.currentTime + t);
+	} else {
+		source.start(ac.currentTime);
+	}
 	source.onended = function(){
-			parse(canvasObject.children, 1);
+			parse(canvasObject.children);
 			console.log('next');
 		}
-}
-
-function parseEffect(canvasObject){
-	if (canvasObject.parentType === 'startNode'){
-		document.getElementById('node-name').innerHTML = "You haven't connected anything to the start node.";
- 		return;
-	} else {
-		var effectType = canvasObject.effect;
-		switch (effectType){
-			case 'tremolo':
-					var tremolo = new tuna.Tremolo({
-					    intensity: canvasObject.intensity,    	//0 to 1
-					    rate: canvasObject.rate,         		//0.001 to 8
-					    stereoPhase: 0,    						//0 to 180
-					    bypass: 0
-					});
-					tremolo.connect(ac.destination);
-					console.log(tremolo.input);
-					return (tremolo.input);
-					break;
-			case 'wahwah':
-				var wahwah = new tuna.WahWah({
-				    automode: true,                						//true/false
-				    baseFrequency: 0.5,            						//0 to 1
-				    excursionOctaves: canvasObject.octave,           	//1 to 6
-				    sweep: 0.2,                    						//0 to 1
-				    resonance: canvasObject.resonance,                	//1 to 100
-				    sensitivity: 0.5,             	 					//-1 to 1
-				    bypass: 0
-				});
-				wahwah.connect(ac.destination);
-				return (wahwah.input);
-			 	break;
-			 	//Something wrong with next 2 effects - they block the sound
-			case 'chorus':
-				var chorus = new tuna.Chorus({
-				    rate: canvasObject.rateCho,         //0.01 to 8+
-				    feedback: 0.2,     					//0 to 1+
-				    delay: canvasObject.delayCho,     	//0 to 1
-				    bypass: 0          					//the value 1 starts the effect as bypassed, 0 or 1
-				});
-				return (chorus.input);
-				break;
-			case 'pingpong':
-				var pingpong = new tuna.PingPongDelay({
-				    wetLevel: 0.5, //0 to 1
-				    feedback: 1, //0 to 1
-				    delayTimeLeft: 100,//canvasObject.delay/2*1000, //1 to 10000 (milliseconds)
-				    delayTimeRight: 200//canvasObject.delay/2*1000 //1 to 10000 (milliseconds)
-				});
-				return (pingpong.input);
-				break;
-		}
-	}
 }
 
 function parseLoop(loopObject){
 	//loop contains all the objects
 	// for each object 
 		// call the relevant parsing method
-	var children = loopObject.children;
-	var length = children.length, i;
-	for (i = 0; i < length; i++){
-		console.log('here');
-		if (i!==0){
-			children[i].parentNode = [children[i-1].ID];
-		}
-		console.log(children);
-	for (var j = 0; j < 3; j++){
-		parse(children, 3);
-	}
-		
-	}
+	loopObject.sortChildren(loopObject.children);
+
 }
 
 
