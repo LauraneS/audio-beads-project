@@ -48,7 +48,6 @@ function Node(type, coords, radius, topArrow, bottomArrow){
 	    var center_x = group.getCenterPoint().x;
 	    var center_y = group.getCenterPoint().y;
 	    if (Math.pow(x-center_x,2) + Math.pow(y-center_y,2) < 900){
-	    	console.log("Inside circle");
 	        return true;
 	    }
 	}
@@ -68,7 +67,6 @@ function Node(type, coords, radius, topArrow, bottomArrow){
 	    var b2 = (x - rv.x) * (lv.y - rv.y) - (lv.x - rv.x) * (y - rv.y) < 0.0;
 	    var b3 = (x - bv.x) * (rv.y - bv.y) - (rv.x - bv.x) * (y - bv.y) < 0.0;
 	    if ((b1 == b2) && (b2 == b3)){
-	    	console.log('Top arrow: true');
 	    	return true;
 	    }
 	    return false;
@@ -90,7 +88,6 @@ function Node(type, coords, radius, topArrow, bottomArrow){
 	    var b2 = (x - rv.x) * (lv.y - rv.y) - (lv.x - rv.x) * (y - rv.y) < 0.0;
 	    var b3 = (x - bv.x) * (rv.y - bv.y) - (rv.x - bv.x) * (y - bv.y) < 0.0;
 	    if ((b1 == b2) && (b2 == b3)){
-	    	console.log('Bottom arrow: true');
 	    	return true;
 	    }
 	    return false;

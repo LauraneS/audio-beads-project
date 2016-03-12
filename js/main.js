@@ -17,7 +17,6 @@ var sourceMouseDown, line;
     canvas.calcOffset() 
 
     fabric.util.addListener(document.getElementById('wrapper'), 'scroll', function () {
-    console.log('scroll');
     canvas.calcOffset();
 });
 
@@ -136,7 +135,6 @@ canvas.on('object:added', function(e){
                 e.target.parentNode.push(obj.ID);
                 // obj.children.push({x:center.x, y:center.y, ID:activeObject.ID});
                 // obj.sortChildren(obj.children);   
-                console.log('intersected: '+e.target.intersected);
             }
         } 
     });
@@ -162,17 +160,10 @@ function onObjectMoving(e){
             if (activeObject.parentNode[activeObject.parentNode.length-1] !== obj.ID){
                 activeObject.intersected = true;
                 activeObject.parentNode.push(obj.ID);
-                console.log(activeObject.parentNode);
                 // obj.children.push({x:center.x, y:center.y, ID:activeObject.ID});
                 // obj.sortChildren(obj.children);   
-                console.log('intersected');
             }
         } 
-        //else if (activeObject.intersected){
-        //     activeObject.parentNode.pop();
-        //     console.log(activeObject.parentNode);
-        //     activeObject.intersected = false;
-        // }
     });
 
     // if(activeObject.getLeft()+activeObject.getWidth() > currentWidth){
@@ -272,7 +263,6 @@ function addChildLine(fromObject, toObject) {
         from: (fromObject.addChild && fromObject.addChild.from) || [],
         to: (fromObject.addChild && fromObject.addChild.to)
     }
-    console.log(fromObject.addChild);
     fromObject.addChild.from.push(line);
     toObject.addChild = {
         from: (toObject.addChild && toObject.addChild.from),
@@ -331,14 +321,15 @@ ac.onstatechange = function(){
 }
 
 function canvasState(){
-    if (ac.state === 'running' && playBtClicks === 0){
+    // if (ac.state === 'running' && playBtClicks === 0){
         playBtClicks++;
         document.getElementById("playBtn").src="/png/pauseBtn.png";
         var state = (JSON.stringify(canvas));
         var stateArray = $.parseJSON(state.substring(11, state.length - 17));
         var tree = unflatten(stateArray);
         parse(tree);
-    } else if (ac.state === 'running' && playBtClicks === 1){
+    // } else
+    if (ac.state === 'running' && playBtClicks === 1){
         playBtClicks--;
         try{
             ac.suspend();

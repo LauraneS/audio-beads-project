@@ -50,9 +50,6 @@ function parse(canvasObjectArray, ite){
 			case 'playNode':
 				parsePlay(canvasObject);
 				break;
-			case 'effectNode':
-				parseEffect(canvasObject);
-				break;
 			case 'sleepNode':
 				parseSleep(canvasObject);
 				break;
@@ -76,44 +73,88 @@ function parse(canvasObjectArray, ite){
 }
 
 function parsePlay(canvasObject){
-	var attack = canvasObject.attack,
-		release = canvasObject.release,
-		duration = parseInt(canvasObject.duration),
+	var duration = parseInt(canvasObject.duration),
 		wave = canvasObject.wave,
 		freqValue = Math.pow(2, (canvasObject.note - 69)/12)*440,
+		effects = canvasObject.effects,
 		play = ac.createOscillator();
-		//gain = ac.createGain();
-	
 
 		play.type = wave;
 		play.frequency.value = freqValue;
-		var i, children = canvasObject.children;
-		if (children.length === 0){
-			play.connect(ac.destination);
-		} else {
-			for (i = 0; i < children.length; i++){
-				if (children[i].type === 'effectNode'){
-					var out = parseEffect(children[i]);
-					play.connect(out);
-			 	} else {
-			 		play.connect(ac.destination);
-				}	
+
+		//If the node has added effects
+		//debugger
+		if (effects[0] !== undefined){
+			for (var i=0; i < effects.length; i++){
+				var effect = connectEffect(effects[i]);	
+				if (i === 0){
+					play.connect(effect.input);
+				} else {
+					var prevEffect = connectEffect(effects[i-1]);
+					prevEffect.connect(effect.input);
+				}
+				if (i === effects.length-1){
+					effect.connect(ac.destination);
+				}
 			}
+		} else {
+			play.connect(ac.destination);
 		}
 	
 		play.start();
 		play.stop(ac.currentTime + duration);
 		play.onended = function(){
 			parse(canvasObject.children,1);
+			
 			console.log('next');
 		}
 
-	//TODO: not proper ADSR envelope here
-	// gain.gain.setValueAtTime(0, ac.currentTime);
-	// gain.gain.linearRampToValueAtTime(1, ac.currentTime + attack);
-	// gain.gain.linearRampToValueAtTime(0, ac.currentTime + duration);
-	// play.start(ac.currentTime);
-	// console.log('on');
+}
+
+function connectEffect(effect){
+	switch (effect) {
+		case 'tremolo':
+			var tremolo = new tuna.Tremolo({
+			    intensity: 0.3,    	//0 to 1
+			    rate: 4,         		//0.001 to 8
+			    stereoPhase: 0,    						//0 to 180
+			    bypass: 0
+			});
+			return (tremolo);
+			break;
+		case 'wahwah':
+			var wahwah = new tuna.WahWah({
+			    automode: true,                						//true/false
+			    baseFrequency: 0.5,            						//0 to 1
+			    excursionOctaves: 3,           	//1 to 6
+			    sweep: 0.2,                    						//0 to 1
+			    resonance: 10,                	//1 to 100
+			    sensitivity: 0.5,             	 					//-1 to 1
+			    bypass: 0
+			});
+			return (wahwah);
+		 	break;
+		 	//Something wrong with next 2 effects - they block the sound
+		case 'chorus':
+			var chorus = new tuna.Chorus({
+			    rate: 0.01,         //0.01 to 8+
+			    feedback: 0.8,     					//0 to 1+
+			    delay: 0.005,     	//0 to 1
+			    bypass: 1          					//the value 1 starts the effect as bypassed, 0 or 1
+			});
+			return (chorus);
+			break;
+		case 'pingpong':
+			var pingpong = new tuna.PingPongDelay({
+			    wetLevel: 1, //0 to 1
+			    feedback: 0.5, //0 to 1
+			    delayTimeLeft: 500,//canvasObject.delay/2*1000, //1 to 10000 (milliseconds)
+			    delayTimeRight: 500//canvasObject.delay/2*1000 //1 to 10000 (milliseconds)
+			});
+			return (pingpong);
+			break;
+
+	}
 }
 
 function parseSleep(canvasObject){
@@ -129,6 +170,7 @@ function parseSleep(canvasObject){
 
 function parseSample(canvasObject){
 	var source = ac.createBufferSource();
+	effects = canvasObject.effects;
 	switch (canvasObject.sample){
 		case 'hihat':
 			source.buffer = bList[0];
@@ -151,18 +193,21 @@ function parseSample(canvasObject){
 	}
 	source.loop = canvasObject.loop;
 
-	var i, children = canvasObject.children;
-		if (children.length === 0){
-			source.connect(ac.destination);
-		} else {
-			for (i = 0; i < children.length; i++){
-				if (children[i].type === 'effectNode'){
-					var out = parseEffect(children[i]);
-					source.connect(out);
-			 	} else {
-			 		source.connect(ac.destination);
-				}	
+	if (effects[0] !== undefined){
+			for (var i=0; i < effects.length; i++){
+				var effect = connectEffect(effects[i]);	
+				if (i === 0){
+					source.connect(effect.input);
+				} else {
+					var prevEffect = connectEffect(effects[i-1]);
+					prevEffect.connect(effect.input);
+				}
+				if (i === effects.length-1){
+					effect.connect(ac.destination);
+				}
 			}
+		} else {
+			source.connect(ac.destination);
 		}
 	source.start(ac.currentTime);
 	source.onended = function(){
