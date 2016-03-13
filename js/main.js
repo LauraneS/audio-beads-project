@@ -93,19 +93,20 @@ fabric.Object.prototype.toObject = (function (toObject){
             sample: this.sample,
             wave: this.wave,
             effects: this.effects,
+            loopPos: this.loopPos
         });
     };
 })(fabric.Object.prototype.toObject);
 
-canvas.on('mouse:over', function(e){
-    var pointer = canvas.getPointer(e.e);
-    if (e.target.type !== 'line' && e.target.containsBottomArrow(pointer)) {
-        canvas.hoverCursor = 'crosshair';
-    }
-    if(e.target.type !== 'line' && !e.target.containsBottomArrow(pointer)){
-        canvas.hoverCursor = 'pointer';
-    }
-})
+// canvas.on('mouse:over', function(e){
+//     var pointer = canvas.getPointer(e.e);
+//     if (e.target.type !== 'line' && e.target.containsBottomArrow(pointer)) {
+//         canvas.hoverCursor = 'crosshair';
+//     }
+//     if(e.target.type !== 'line' && !e.target.containsBottomArrow(pointer)){
+//         canvas.hoverCursor = 'pointer';
+//     }
+// })
 
 canvas.on('object:selected', function(e){
     var activeObject = e.target;
@@ -133,6 +134,7 @@ canvas.on('object:added', function(e){
             if (e.target.parentNode[e.target.parentNode.length-1] !== obj.ID){
                 e.target.intersected = true;
                 e.target.parentNode.push(obj.ID);
+                e.target.loopPos = obj.loopToPointAngle({x:center.x, y:center.y});
                 // obj.children.push({x:center.x, y:center.y, ID:activeObject.ID});
                 // obj.sortChildren(obj.children);   
             }
@@ -160,6 +162,7 @@ function onObjectMoving(e){
             if (activeObject.parentNode[activeObject.parentNode.length-1] !== obj.ID){
                 activeObject.intersected = true;
                 activeObject.parentNode.push(obj.ID);
+                 e.target.loopPos = obj.loopToPointAngle({x:center.x, y:center.y});
                 // obj.children.push({x:center.x, y:center.y, ID:activeObject.ID});
                 // obj.sortChildren(obj.children);   
             }
@@ -203,7 +206,7 @@ canvas.on('mouse:move', function(e){
     var pointer = canvas.getPointer(e.e);
     document.getElementById('pointerx').value = "x: " + pointer.x;
     document.getElementById('pointery').value = "y: " + pointer.y;
-    if (line !== undefined){
+    if (sourceMouseDown !== undefined){
         line.set({x2: pointer.x, y2: pointer.y});
         canvas.renderAll();
     }
@@ -211,14 +214,19 @@ canvas.on('mouse:move', function(e){
 
 canvas.on('mouse:up', function(e){
     var pointerUp = canvas.getPointer(e.e);
-    if(line !== undefined){
+    var objAr;
+    if(sourceMouseDown !== undefined){
         canvas.forEachObject(function(obj){
-            if (obj.type === 'startNode' || obj.type === 'line'){
-                canvas.remove(line);
-                line = undefined;
-                return 
+            // if (obj.type === 'startNode' || obj.type === 'line'){
+            //     canvas.remove(line);
+            //     //line = undefined;
+            //     return 
+            // }
+            if(obj.type === 'loop'){
+                console.log(obj.containsTopArrow(pointerUp));
             }
-            if(obj.containsTopArrow(pointerUp)){
+            if(obj.type !== 'startNode' && obj.type !== 'line' && obj.containsTopArrow(pointerUp)){
+                //debugger
                 line.set({x2:obj.getTopArrowCenter().x, y2:obj.getTopArrowCenter().y});
                 addChildLine(sourceMouseDown, obj);
                 line.setCoords();
@@ -228,8 +236,10 @@ canvas.on('mouse:up', function(e){
                 if (sourceMouseDown.type !== 'startNode'){
                     sourceMouseDown.set({lockMovementX: false, lockMovementY: false});
                 }
-            } else {
+            } 
+            else {
                 canvas.remove(line);
+                canvas.renderAll();
             } 
             sourceMouseDown = undefined;
             line = undefined;

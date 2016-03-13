@@ -109,7 +109,6 @@ function parsePlay(canvasObject, t){
 		play.onended = function(){
 			parse(canvasObject.children);
 		}
-
 }
 
 function connectEffect(effect){
@@ -157,7 +156,6 @@ function connectEffect(effect){
 
 function parseSleep(canvasObject, t){
 	var tt = parseInt(canvasObject.duration);
-	console.log(tt);
 	parse(canvasObject.children, tt);
 }
 
@@ -208,19 +206,146 @@ function parseSample(canvasObject, t){
 		source.start(ac.currentTime + t);
 	} else {
 		source.start(ac.currentTime);
-	}
-	source.onended = function(){
-			parse(canvasObject.children);
-			console.log('next');
 		}
+	source.onended = function(){
+		parse(canvasObject.children);			
+	}
 }
 
 function parseLoop(loopObject){
-	//loop contains all the objects
+	//Sort children in clockwise order
+	var children = loopObject.children;
+	children.sort(function (a, b) {
+        if (a.loopPos > b.loopPos) {
+          return 1;
+        }
+        if (a.loopPos < b.loopPos) {
+          return -1;
+        }
+        return 0;
+      });	
+	if (children.length > 1){
+		for (var i = 0; i < children.length; i++){
+			if (i !== children.length - 1){
+				children[i].children.push(children[i+1]);
+			} 
+		}		
+	}
 	// for each object 
 		// call the relevant parsing method
-	loopObject.sortChildren(loopObject.children);
+	var t = 0;
+	for (var j = 0; j < 2; j++){
+		for (var k=0; k < children.length; k++){
+			switch(children[k].type){
+				case 'playNode':
+					parsePlayLoop(children[k], t);
+					t += parseInt(children[k].duration);
+					break;
+				case 'sleepNode':
+					t += parseInt(children[k].duration)
+					break;
+				case 'sampleNode':
+					var tt = parseSampleLoop(children[k], t);
+					t += tt;
 
+					break;
+			}
+		}
+			
+	}
 }
 
+function parsePlayLoop(canvasObject, t){
+	var duration = parseInt(canvasObject.duration),
+		wave = canvasObject.wave,
+		freqValue = Math.pow(2, (canvasObject.note - 69)/12)*440,
+		effects = canvasObject.effects,
+		play = ac.createOscillator();
+
+		play.type = wave;
+		play.frequency.value = freqValue;
+
+		//If the node has added effects
+		
+		if (effects[0] !== undefined){
+			var prevEffect;
+			for (var i=0; i < effects.length; i++){
+				var effect = connectEffect(effects[i]);	
+				if (i === 0){
+					play.connect(effect.input);
+				} else {
+					// var prevEffect = connectEffect(effects[i-1]);
+					prevEffect.connect(effect.input);
+				}
+				if (i === effects.length-1){
+					effect.connect(ac.destination);
+				}
+				prevEffect = effect;
+			}
+		} else {
+			play.connect(ac.destination);
+		}
+		if (t !== undefined){
+			play.start(ac.currentTime + t);
+			play.stop(ac.currentTime + t + duration);
+		} else {
+			play.start(ac.currentTime);
+			play.stop(ac.currentTime + duration);	
+		}
+}
+
+function parseSampleLoop(canvasObject, t){
+	var source = ac.createBufferSource();
+	effects = canvasObject.effects;
+	switch (canvasObject.sample){
+		case 'hihat':
+			source.buffer = bList[0];
+			break;
+		case 'drum-kick':
+			source.buffer = bList[1];
+			break;
+		case 'alien':
+			source.buffer = bList[2];
+			break;
+		case 'beat':
+			source.buffer = bList[3];
+			break;
+		case 'bass':
+			source.buffer = bList[4];
+			break;
+		case 'flute':
+			source.buffer = bList[5];
+			break;
+	}
+	source.loop = canvasObject.loop;
+
+	if (effects[0] !== undefined){
+		var prevEffect;
+			for (var i=0; i < effects.length; i++){
+				var effect = connectEffect(effects[i]);	
+				if (i === 0){
+					source.connect(effect.input);
+				} else {
+					//var prevEffect = connectEffect(effects[i-1]);
+					prevEffect.connect(effect.input);
+				}
+				if (i === effects.length-1){
+					effect.connect(ac.destination);
+				}
+				prevEffect = effect;
+			}
+		} else {
+			source.connect(ac.destination);
+		}
+	if (t !== undefined){
+		source.start(ac.currentTime + t);
+	} else {
+		source.start(ac.currentTime);
+	}
+	return source.buffer.duration;
+}
+
+function parseSleep(canvasObject, t){
+	return tt = parseInt(canvasObject.duration);
+}
 
