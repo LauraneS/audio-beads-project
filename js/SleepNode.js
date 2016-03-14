@@ -14,9 +14,9 @@ function SleepNode(coords){
 	sleepGroup.on('mouseup', function(){
 		if (sleepGroup.intersected){
 			canvas.forEachObject(function(obj){
-				if (obj.ID === sleepGroup.parentNode[0] && !sleepGroup.intersectsWithObject(obj)){
+				if (obj.ID === sleepGroup.loopParent && !sleepGroup.intersectsWithObject(obj)){
 					sleepGroup.intersected = false;
-					sleepGroup.parentNode.pop();
+					sleepGroup.loopParent = '' ;
 				}
 			})
 		}

@@ -14,6 +14,10 @@ function unflatten(canvasObjectArray) {
     	if (lookup.hasOwnProperty(ID)) {
 	    	keyedElem = lookup[ID];
 	      	if (keyedElem.type !== 'line'){
+	      		if (keyedElem.type !== 'loop' && keyedElem.type !== 'startNode' && keyedElem.intersected === true){
+	      			var loopParentNode = lookup[keyedElem.loopParent];
+	      			loopParentNode.loopChildren.push(keyedElem);
+	      		}
 		    	var parents = keyedElem.parentNode;
 		      	var parentsNbr = parents.length, k;
 		      	for(k=0; k < parentsNbr; k++){
@@ -21,7 +25,7 @@ function unflatten(canvasObjectArray) {
 			        	var parentNode = lookup[keyedElem.parentNode[0]];
 			       		parentNode.children.push(keyedElem);
 			      	}
-		      		// If the element is at the root level, add it to first level elements array.
+		      		// If the element is at the root level (so their parent is equal to O), add it to first level elements array.
 		     	 	else {
 		        		tree.push(keyedElem);
 		      		}
@@ -220,9 +224,9 @@ function parseSample(canvasObject, t){
 function parseLoop(loopObject){
 	console.log(loopObject.iteration);
 	//Sort children in clockwise order
-	var children = loopObject.children;
-	var length = children.length;
-	children.sort(function (a, b) {
+	var loopChildren = loopObject.loopChildren;
+	var length = loopChildren.length;
+	loopChildren.sort(function (a, b) {
         if (a.loopPos > b.loopPos) {
           return 1;
         }
@@ -242,16 +246,16 @@ function parseLoop(loopObject){
 	} else if (loopObject.iteration === 'forever'){
 			window.setInterval(function(){
 				for (var k=0; k < length; k++){
-					switch(children[k].type){
+					switch(loopChildren[k].type){
 						case 'playNode':
-							parsePlayLoop(children[k], t);
-							t += parseInt(children[k].duration);
+							parsePlayLoop(loopChildren[k], t);
+							t += parseInt(loopChildren[k].duration);
 							break;
 						case 'sleepNode':
-							t += parseInt(children[k].duration)
+							t += parseInt(loopChildren[k].duration)
 							break;
 						case 'sampleNode':
-							var tt = parseSampleLoop(children[k], t);
+							var tt = parseSampleLoop(loopChildren[k], t);
 							t += tt;
 							break;
 					}
@@ -260,21 +264,22 @@ function parseLoop(loopObject){
 	} else {
 		for (var j = 0; j < parseInt(loopObject.x); j++){
 			for (var k=0; k < length; k++){
-				switch(children[k].type){
+				switch(loopChildren[k].type){
 					case 'playNode':
-						parsePlayLoop(children[k], t);
-						t += parseInt(children[k].duration);
+						parsePlayLoop(loopChildren[k], t);
+						t += parseInt(loopChildren[k].duration);
 						break;
 					case 'sleepNode':
-						t += parseInt(children[k].duration)
+						t += parseInt(loopChildren[k].duration)
 						break;
 					case 'sampleNode':
-						var tt = parseSampleLoop(children[k], t);
+						var tt = parseSampleLoop(loopChildren[k], t);
 						t += tt;
 						break;
 				}
 			}
 		}
+		parse(loopObject.children, t);
 	}
 }
 

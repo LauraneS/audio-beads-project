@@ -1,6 +1,7 @@
 var orbit, bead, dur = 1000, oCoords;
 function LoopNode(coords){
   var loopGroup = Node('loop', coords, 100, true, true);
+  loopGroup.loopChildren = [];
   var ite = document.getElementById("iteration");
   loopGroup.iteration = ite.options[ite.selectedIndex].value;
   loopGroup.x = document.getElementById("xInput").value;
@@ -48,14 +49,14 @@ function LoopNode(coords){
 
   loopGroup.on('mousedown', function(){
     canvas.forEachObject(function(obj){
-      if ((obj.type !== 'line'||obj.type!=='startNode'||obj.type!=='loop') && obj.intersected === true && obj.parentNode[0]===loopGroup.ID){
+      if ((obj.type !== 'line'||obj.type!=='startNode'||obj.type!=='loop') && obj.intersected === true && obj.loopParent === loopGroup.ID){
         obj.loopCenter = loopGroup.getCenterPoint();
       }
     })
   });
   loopGroup.on('moving', function(){
     canvas.forEachObject(function(obj){
-      if ((obj.type !== 'line'||obj.type!=='startNode'||obj.type!=='loop') && obj.intersected === true && obj.parentNode[0]===loopGroup.ID){
+      if ((obj.type !== 'line'||obj.type!=='startNode'||obj.type!=='loop') && obj.intersected === true && obj.loopParent ===loopGroup.ID){
         obj.followLoop(loopGroup.getCenterPoint());
         obj.loopCenter = loopGroup.getCenterPoint();
       }
@@ -65,7 +66,7 @@ function LoopNode(coords){
   loopGroup.on('mouseup', function(){
     var newCenter = loopGroup.getCenterPoint();
     canvas.forEachObject(function(obj){
-      if ((obj.type !== 'line'||obj.type!=='startNode'||obj.type!=='loop') && obj.intersected === true && obj.parentNode[0]===loopGroup.ID){
+      if ((obj.type !== 'line'||obj.type!=='startNode'||obj.type!=='loop') && obj.intersected === true && obj.loopParent ===loopGroup.ID){
         obj.followLoop(newCenter);
       }
     })

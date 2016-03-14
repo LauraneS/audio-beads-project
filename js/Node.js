@@ -19,6 +19,7 @@ function Node(type, coords, radius, topArrow, bottomArrow){
 			parentType: '',
 			ID: guid(),
 			parentNode: [],
+			loopParent: '',
 			children: [],
 			intersected: false, 
 	});

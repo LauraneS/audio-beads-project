@@ -35,9 +35,9 @@ function PlayNode(coords){
 	playGroup.on('mouseup', function(){
 		if (playGroup.intersected){
 			canvas.forEachObject(function(obj){
-				if (obj.ID === playGroup.parentNode[0] && !playGroup.intersectsWithObject(obj)){
+				if (obj.ID === playGroup.loopParent && !playGroup.intersectsWithObject(obj)){
 					playGroup.intersected = false;
-					playGroup.parentNode.pop();
+					playGroup.loopParent = '';
 				}
 			})
 		}

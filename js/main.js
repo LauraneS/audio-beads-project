@@ -93,6 +93,8 @@ fabric.Object.prototype.toObject = (function (toObject){
             sample: this.sample,
             wave: this.wave,
             effects: this.effects,
+            loopParent: this.loopParent,
+            loopChildren: this.loopChildren,
             loopPos: this.loopPos,
             iteration: this.iteration,
             x: this.x
@@ -133,9 +135,9 @@ canvas.on('object:added', function(e){
             var newtop = obj.closestLoopPoint(center).y-e.target.getHeight()/2
             e.target.set({left:newleft, top: newtop}).setCoords();
             canvas.renderAll(); 
-            if (e.target.parentNode[e.target.parentNode.length-1] !== obj.ID){
+            if (e.target.loopParent !== obj.ID){
                 e.target.intersected = true;
-                e.target.parentNode.push(obj.ID);
+                e.target.loopParent = obj.ID;
                 e.target.loopPos = obj.loopToPointAngle({x:center.x, y:center.y});
                 // obj.children.push({x:center.x, y:center.y, ID:activeObject.ID});
                 // obj.sortChildren(obj.children);   
@@ -161,10 +163,10 @@ function onObjectMoving(e){
             var newtop = obj.closestLoopPoint(center).y-activeObject.getHeight()/2
             activeObject.set({left:newleft, top: newtop}).setCoords();
             canvas.renderAll(); 
-            if (activeObject.parentNode[activeObject.parentNode.length-1] !== obj.ID){
+            if (activeObject.loopParent !== obj.ID){
                 activeObject.intersected = true;
-                activeObject.parentNode.push(obj.ID);
-                 e.target.loopPos = obj.loopToPointAngle({x:center.x, y:center.y});
+                activeObject.loopParent = obj.ID;
+                activeObject.loopPos = obj.loopToPointAngle({x:center.x, y:center.y});
                 // obj.children.push({x:center.x, y:center.y, ID:activeObject.ID});
                 // obj.sortChildren(obj.children);   
             }
