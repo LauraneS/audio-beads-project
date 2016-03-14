@@ -1,6 +1,9 @@
 var orbit, bead, dur = 1000, oCoords;
 function LoopNode(coords){
   var loopGroup = Node('loop', coords, 100, true, true);
+  var iteration = document.getElementById("iteration");
+  loopGroup.iteration = iteration.options[iteration.selectedIndex].value;
+  loopGroup.x = document.getElementById("xInput").value;
   canvas.add(loopGroup);
 
   loopGroup.loopToPointAngle = function(point){

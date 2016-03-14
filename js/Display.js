@@ -54,7 +54,7 @@ function displayNothing(){
 }
 //Display relevant parameters
 function displayParam(node, nodeType, evt){
-    var elements = ['play-info', 'sample-info', 'sleep-info', 'line-info'], i;
+    var elements = ['play-info', 'sample-info', 'sleep-info', 'line-info', 'loop-info'], i;
     switch (nodeType){
         case 'playNode':
             for (i = 0; i < elements.length; i++){
@@ -107,7 +107,12 @@ function displayParam(node, nodeType, evt){
             break;
         case 'loop':
             for (i = 0; i < elements.length; i++){
-                document.getElementById(elements[i]).style.display = 'none'; 
+                if (elements[i] === 'loop-info'){
+                    document.getElementById(elements[i]).style.display = 'block';
+                    document.getElementById("iteration").value = node.iteration;
+                } else {
+                    document.getElementById(elements[i]).style.display = 'none'; 
+                }  
             }
             break;
         case 'startNode':
@@ -158,6 +163,20 @@ document.getElementById("loop").onchange = function(){
 document.getElementById("sleep").oninput = document.getElementById("sleepInput").oninput= function(){
     canvas.getActiveObject().duration = this.value;
 };
+document.getElementById("iteration").onchange = function(){
+    canvas.getActiveObject().iteration = this.options[this.selectedIndex].value;
+    var value = this.value;
+    if (this.value === "x"){
+        document.getElementById("xtimes-nbr").style.display = 'block';
+        document.getElementById("xInput").value = canvas.getActiveObject().x;
+    } else {
+        document.getElementById("xtimes-nbr").style.display = "none";
+    }
+}
+
+document.getElementById("xInput").onchange = function(){
+    canvas.getActiveObject().x = this.value;
+}
 
 document.getElementById("delete-line").onchange = function(){
     if (this.options[this.selectedIndex].value === 'yes'){

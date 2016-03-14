@@ -93,7 +93,8 @@ fabric.Object.prototype.toObject = (function (toObject){
             sample: this.sample,
             wave: this.wave,
             effects: this.effects,
-            loopPos: this.loopPos
+            loopPos: this.loopPos,
+            iteration: this.iteration
         });
     };
 })(fabric.Object.prototype.toObject);
