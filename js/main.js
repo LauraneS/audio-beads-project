@@ -139,6 +139,7 @@ canvas.on('object:added', function(e){
                 e.target.intersected = true;
                 e.target.loopParent = obj.ID;
                 e.target.loopPos = obj.loopToPointAngle({x:center.x, y:center.y});
+                e.target.hideHands();
                 // obj.children.push({x:center.x, y:center.y, ID:activeObject.ID});
                 // obj.sortChildren(obj.children);   
             }
@@ -167,6 +168,7 @@ function onObjectMoving(e){
                 activeObject.intersected = true;
                 activeObject.loopParent = obj.ID;
                 activeObject.loopPos = obj.loopToPointAngle({x:center.x, y:center.y});
+                activeObject.hideHands();
                 // obj.children.push({x:center.x, y:center.y, ID:activeObject.ID});
                 // obj.sortChildren(obj.children);   
             }
@@ -229,7 +231,7 @@ canvas.on('mouse:up', function(e){
             if(obj.type === 'loop'){
                 console.log(obj.containsTopArrow(pointerUp));
             }
-            if(obj.type !== 'startNode' && obj.type !== 'line' && obj.containsTopArrow(pointerUp)){
+            if(obj.type !== 'startNode' && obj.type !== 'line' && obj.intersected === false && obj.containsTopArrow(pointerUp)){
                 //debugger
                 line.set({x2:obj.getTopArrowCenter().x, y2:obj.getTopArrowCenter().y});
                 addChildLine(sourceMouseDown, obj);

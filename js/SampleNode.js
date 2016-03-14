@@ -30,12 +30,13 @@ function SampleNode(coords){
 		}
 	}
 
-	sampleGroup.on('mouseup', function(){
+	sampleGroup.on('moving', function(){
 		if (sampleGroup.intersected){
 			canvas.forEachObject(function(obj){
 				if (obj.ID === sampleGroup.loopParent && !sampleGroup.intersectsWithObject(obj)){
 					sampleGroup.intersected = false;
 					sampleGroup.loopParent = '';
+					sampleGroup.findHands();
 				}
 			})
 		}

@@ -11,12 +11,13 @@ function SleepNode(coords){
 	})
 	canvas.add(sleepGroup); 
 
-	sleepGroup.on('mouseup', function(){
+	sleepGroup.on('moving', function(){
 		if (sleepGroup.intersected){
 			canvas.forEachObject(function(obj){
 				if (obj.ID === sleepGroup.loopParent && !sleepGroup.intersectsWithObject(obj)){
 					sleepGroup.intersected = false;
 					sleepGroup.loopParent = '' ;
+					sleepGroup.findHands();
 				}
 			})
 		}

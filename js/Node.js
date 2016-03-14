@@ -116,5 +116,14 @@ function Node(type, coords, radius, topArrow, bottomArrow){
 		canvas.renderAll();
 	}
 
+	group.hideHands = function(){
+		hand1.set({stroke:''});
+		hand2.set({stroke:''});
+	}
+	group.findHands = function(){
+		hand1.set({stroke:'black'});
+		hand2.set({stroke:'black'});
+	}
+
 	return group;
 }

@@ -32,12 +32,13 @@ function PlayNode(coords){
 			canvas.renderAll();
 		}
 	}
-	playGroup.on('mouseup', function(){
+	playGroup.on('moving', function(){
 		if (playGroup.intersected){
 			canvas.forEachObject(function(obj){
 				if (obj.ID === playGroup.loopParent && !playGroup.intersectsWithObject(obj)){
 					playGroup.intersected = false;
 					playGroup.loopParent = '';
+					playGroup.findHands();
 				}
 			})
 		}
