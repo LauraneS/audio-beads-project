@@ -45,7 +45,7 @@ function parse(canvasObjectArray, t){
 		}
 		switch(canvasObjectType){
 			case 'startNode':
-				parse(canvasObject.children, t);
+				parseStart(canvasObject, t);
 				break;
 			case 'playNode':
 				parsePlay(canvasObject, t);
@@ -61,10 +61,16 @@ function parse(canvasObjectArray, t){
 				break;
 		}
 		inspectedNodes.push(canvasObjectID);
-		// var childNbr = canvasObject.children.length;
-		// for (j=0; j < childNbr; j++){
-		// 	parse(canvasObject.children);
-		// }
+	}
+}
+
+function parseStart(canvasObject, t){
+	if (canvasObject.children[0] === undefined){
+		displayNothing();
+		document.getElementById("node-name").style.color = 'red';
+		document.getElementById("node-name").innerHTML = "No hearing anything? <br> <br> Have you connected something to the startNode?";
+	} else {
+		parse(canvasObject.children, t);
 	}
 }
 
@@ -78,8 +84,7 @@ function parsePlay(canvasObject, t){
 		play.type = wave;
 		play.frequency.value = freqValue;
 
-		//If the node has added effects
-		
+		//If the node has added effects		
 		if (effects[0] !== undefined){
 			var prevEffect;
 			for (var i=0; i < effects.length; i++){
@@ -213,8 +218,10 @@ function parseSample(canvasObject, t){
 }
 
 function parseLoop(loopObject){
+	console.log(loopObject.iteration);
 	//Sort children in clockwise order
 	var children = loopObject.children;
+	var length = children.length;
 	children.sort(function (a, b) {
         if (a.loopPos > b.loopPos) {
           return 1;
@@ -224,34 +231,50 @@ function parseLoop(loopObject){
         }
         return 0;
       });	
-	if (children.length > 1){
-		for (var i = 0; i < children.length; i++){
-			if (i !== children.length - 1){
-				children[i].children.push(children[i+1]);
-			} 
-		}		
-	}
+
 	// for each object 
 		// call the relevant parsing method
 	var t = 0;
-	for (var j = 0; j < 2; j++){
-		for (var k=0; k < children.length; k++){
-			switch(children[k].type){
-				case 'playNode':
-					parsePlayLoop(children[k], t);
-					t += parseInt(children[k].duration);
-					break;
-				case 'sleepNode':
-					t += parseInt(children[k].duration)
-					break;
-				case 'sampleNode':
-					var tt = parseSampleLoop(children[k], t);
-					t += tt;
-
-					break;
+	if (loopObject.iteration === '-- select an option --'){
+		displayNothing();
+		document.getElementById("node-name").style.color = 'red';
+		document.getElementById("node-name").innerHTML = "Ooops! You forgot to specify a parameter for one of your loops...";
+	} else if (loopObject.iteration === 'forever'){
+			window.setInterval(function(){
+				for (var k=0; k < length; k++){
+					switch(children[k].type){
+						case 'playNode':
+							parsePlayLoop(children[k], t);
+							t += parseInt(children[k].duration);
+							break;
+						case 'sleepNode':
+							t += parseInt(children[k].duration)
+							break;
+						case 'sampleNode':
+							var tt = parseSampleLoop(children[k], t);
+							t += tt;
+							break;
+					}
+				}
+			}, 0);
+	} else {
+		for (var j = 0; j < parseInt(loopObject.x); j++){
+			for (var k=0; k < length; k++){
+				switch(children[k].type){
+					case 'playNode':
+						parsePlayLoop(children[k], t);
+						t += parseInt(children[k].duration);
+						break;
+					case 'sleepNode':
+						t += parseInt(children[k].duration)
+						break;
+					case 'sampleNode':
+						var tt = parseSampleLoop(children[k], t);
+						t += tt;
+						break;
+				}
 			}
 		}
-			
 	}
 }
 
@@ -343,9 +366,5 @@ function parseSampleLoop(canvasObject, t){
 		source.start(ac.currentTime);
 	}
 	return source.buffer.duration;
-}
-
-function parseSleep(canvasObject, t){
-	return tt = parseInt(canvasObject.duration);
 }
 

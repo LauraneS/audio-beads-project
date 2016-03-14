@@ -94,7 +94,8 @@ fabric.Object.prototype.toObject = (function (toObject){
             wave: this.wave,
             effects: this.effects,
             loopPos: this.loopPos,
-            iteration: this.iteration
+            iteration: this.iteration,
+            x: this.x
         });
     };
 })(fabric.Object.prototype.toObject);
@@ -319,42 +320,42 @@ function addChildMoveLine(event) {
     });
 }
 
-var playBtClicks = 0;
-ac.onstatechange = function(){
-    if (ac.state === 'suspended'){
-        document.getElementById("playBtn").src="/png/playBtn.png";
-    } else 
-    if (ac.state === 'closed'){
-        debugger
-        document.getElementById("playBtn").src="/png/playBtn.png";
-        playBtClicks = 0;
-    }
-}
+// var playBtClicks = 0;
+// ac.onstatechange = function(){
+//     if (ac.state === 'suspended'){
+//         document.getElementById("playBtn").src="/png/playBtn.png";
+//     } else 
+//     if (ac.state === 'closed'){
+//         debugger
+//         document.getElementById("playBtn").src="/png/playBtn.png";
+//         playBtClicks = 0;
+//     }
+// }
 
 function canvasState(){
     // if (ac.state === 'running' && playBtClicks === 0){
-        playBtClicks++;
-        document.getElementById("playBtn").src="/png/pauseBtn.png";
+        // playBtClicks++;
+        //document.getElementById("playBtn").src="/png/pauseBtn.png";
         var state = (JSON.stringify(canvas));
         var stateArray = $.parseJSON(state.substring(11, state.length - 17));
         var tree = unflatten(stateArray);
         parse(tree);
     // } else
-    if (ac.state === 'running' && playBtClicks === 1){
-        playBtClicks--;
-        try{
-            ac.suspend();
-            console.log("Paused");
-        }
-        catch(err){
-            console.log("There is nothing to pause.");
-        }
-    } else if (ac.state === 'suspended'){
-        document.getElementById("playBtn").src="/png/pauseBtn.png";
-        ac.resume();
-        console.log("Playing after pause");
+    // if (ac.state === 'running' && playBtClicks === 1){
+    //     playBtClicks--;
+    //     try{
+    //         ac.suspend();
+    //         console.log("Paused");
+    //     }
+    //     catch(err){
+    //         console.log("There is nothing to pause.");
+    //     }
+    // } else if (ac.state === 'suspended'){
+    //     document.getElementById("playBtn").src="/png/pauseBtn.png";
+    //     ac.resume();
+    //     console.log("Playing after pause");
         
-    }
+    // }
 }
 
 function stopSound(){

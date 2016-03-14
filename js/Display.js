@@ -46,7 +46,8 @@ function dragDrop(ev) {
 }
 
 function displayNothing(){
-    var elements = ['play-info', 'sample-info', 'sleep-info', 'line-info'], i;
+    document.getElementById("node-name").style.color = 'black';
+    var elements = ['play-info', 'sample-info', 'sleep-info', 'line-info', 'loop-info'], i;
     for (i= 0; i < elements.length; i++){
         document.getElementById(elements[i]).style.display = 'none';
     }
@@ -54,6 +55,7 @@ function displayNothing(){
 }
 //Display relevant parameters
 function displayParam(node, nodeType, evt){
+    document.getElementById("node-name").style.color = 'black';
     var elements = ['play-info', 'sample-info', 'sleep-info', 'line-info', 'loop-info'], i;
     switch (nodeType){
         case 'playNode':
@@ -165,6 +167,7 @@ document.getElementById("sleep").oninput = document.getElementById("sleepInput")
 };
 document.getElementById("iteration").onchange = function(){
     canvas.getActiveObject().iteration = this.options[this.selectedIndex].value;
+    console.log(canvas.getActiveObject().iteration);
     var value = this.value;
     if (this.value === "x"){
         document.getElementById("xtimes-nbr").style.display = 'block';
