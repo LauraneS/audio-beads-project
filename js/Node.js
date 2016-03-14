@@ -1,7 +1,7 @@
 function Node(type, coords, radius, topArrow, bottomArrow){
 	this.type = type;
 
-	var c = new fabric.Circle({radius: radius, left:0, stroke:'black', fill:''});
+	var c = new fabric.Circle({radius: radius, left:0, stroke:'black', fill:'white'});
 	var cCenter = c.getCenterPoint();
 	var hand1, hand2;
 	
