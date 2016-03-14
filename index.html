@@ -79,7 +79,7 @@
         <input type="range" id="note" min="0" max="127", step="1", value= "60" onchange=" document.getElementById('noteInput').value=this.value;"> <br>                                                   
         Duration: <input type="text" id="durationInput" min="0" max = "10" step= "1" value="2", onchange=" document.getElementById('duration').value=this.value;", style="width: 20px; text-align: center"><br>
         <input type="range" id="duration" min="0" max = "10" step= "1" value="2" onchange=" document.getElementById('durationInput').value=this.value;"> <br> <br>
-        Effects <input class="plusBtn" id="effect-menu" type="image" src="png/circle.svg" onclick="addEffect('#play-effects')">
+        Effects <img class="plusBtn" id="effect-menu" src="png/circle.svg" onclick="addEffect('#play-effects')"/>
         <div id="play-effects"></div>
       </form>
     </div>
@@ -97,7 +97,7 @@
         </select> <br>
         Loop
         <input type="checkbox" id="loop" value="Loop"><br><br>
-        Effects <input class= "plusBtn" id="effect-menu" type="image" src="png/circle.svg" onclick="addEffect('#samp-effects')">
+        Effects <img class= "plusBtn" id="effect-menu" src="png/circle.svg" onclick="addEffect('#samp-effects')"/>
         <div id="samp-effects"></div>
       </form>
     </div>
@@ -105,6 +105,19 @@
       <form onSubmit="return false;">
       Duration: <input type="text" id="sleepInput" value="1" onchange="document.getElementById('sleep').value=this.value;" style="width: 20px; text-align: center"><br>
         <input type="range" id="sleep" min="0" max="10" onchange="document.getElementById('sleepInput').value=this.value;" value="1"> <br>
+      </form>
+    </div>
+    <div class = "param" id="loop-info" style="display:none">
+      <form onSubmit="return false;">
+        Repeat: 
+        <select id="iteration">
+          <option disabled selected> -- select an option -- </option>
+            <option value="forever">Forever</option>
+            <option value="x">x times</option>
+        </select> <br>
+      </form>
+      <form onSubmit="return false;" id="xtimes-nbr" style="display:none">
+        <br> x: <input type="text" id="xInput" value="2" style="width: 20px; text-align: center"><br>
       </form>
     </div>
   </div>
