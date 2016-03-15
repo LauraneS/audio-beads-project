@@ -1,6 +1,6 @@
 window.onload = init;
 
-var line, smtgChanged = false, playing;
+var line, smtgChanged = false;
 var canvas, bufferLoader, bList, ac = new AudioContext(), tuna = new Tuna(ac);
 var lastAdded= window._lastAdded = [];
 
@@ -48,28 +48,6 @@ function guid() {
         return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
     }
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
-}
-
-//Functions to link keydown events to various functions 
-document.onkeydown = function(e) {
-    switch (e.keyCode) { 
-        case 67: //C key down
-            canvas.clear().renderAll();
-            break;
-      }
-}
-document.onkeyup = function(e) {
-    switch (e.keyCode) {
-        case 32: //spacebar
-            if (playing){
-                ac.suspend();
-                playing = false;
-            } else{
-                ac.resume();
-                playing = true;
-            }
-            break;
-    }
 }
 
 //Setting properties for all objects
@@ -120,7 +98,6 @@ canvas.on('object:selected', function(e){
 });
 
 canvas.on('object:added', function(e){
-    playing = undefined;
     if (e.target.type === 'line'){
         return
     }
@@ -140,8 +117,6 @@ canvas.on('object:added', function(e){
                 e.target.loopParent = obj.ID;
                 e.target.loopPos = obj.loopToPointAngle({x:center.x, y:center.y});
                 e.target.hideHands();
-                // obj.children.push({x:center.x, y:center.y, ID:activeObject.ID});
-                // obj.sortChildren(obj.children);   
             }
         } 
     });
@@ -169,9 +144,7 @@ function onObjectMoving(e){
                 activeObject.intersected = true;
                 activeObject.loopParent = obj.ID;
                 activeObject.loopPos = obj.loopToPointAngle({x:center.x, y:center.y});
-                activeObject.hideHands();
-                // obj.children.push({x:center.x, y:center.y, ID:activeObject.ID});
-                // obj.sortChildren(obj.children);   
+                activeObject.hideHands(); 
             }
         } 
     });
@@ -221,36 +194,35 @@ canvas.on('mouse:move', function(e){
 
 canvas.on('mouse:up', function(e){
     var pointerUp = canvas.getPointer(e.e);
-    var objAr;
+    var match;
     if(sourceMouseDown !== undefined){
         canvas.forEachObject(function(obj){
-            // if (obj.type === 'startNode' || obj.type === 'line'){
-            //     canvas.remove(line);
-            //     //line = undefined;
-            //     return 
-            // }
-            if(obj.type !== 'startNode' && obj.type !== 'line' && obj.intersected === false && obj.containsTopArrow(pointerUp)){
-                //debugger
-                line.set({x2:obj.getTopArrowCenter().x, y2:obj.getTopArrowCenter().y});
-                addChildLine(sourceMouseDown, obj);
-                line.setCoords();
-                lastAdded.push(line);
-                canvas.setActiveObject(line);
-                displayParam(line, 'line', 'added');
-                smtgChanged = true;
-                if (sourceMouseDown.type !== 'startNode'){
-                    sourceMouseDown.set({lockMovementX: false, lockMovementY: false});
+            try{
+                if (obj.containsTopArrow(pointerUp)){
+                    match = obj;
                 }
-            } 
-            else {
-                canvas.remove(line);
-                canvas.renderAll();
-            } 
-            sourceMouseDown = undefined;
-            line = undefined;
-        })
+            } catch (err){
+                console.log("This object does not have the required method.");
+            }
+        }); 
+        if (match !== undefined && match.intersected === false){
+            line.set({x2:match.getTopArrowCenter().x, y2:match.getTopArrowCenter().y}).setCoords();
+            addChildLine(sourceMouseDown, match);
+            lastAdded.push(line);
+            canvas.setActiveObject(line);
+            displayParam(line, 'line', 'added');
+            smtgChanged = true;
+            if (sourceMouseDown.type !== 'startNode'){
+                sourceMouseDown.set({lockMovementX: false, lockMovementY: false});
+            }
+        } else {
+            canvas.remove(line);
+            canvas.renderAll();
+        }
+        line = undefined;
+        sourceMouseDown = undefined;
     } 
-})
+});
 
 //Function to draw a line
 function makeLine(coords) {
