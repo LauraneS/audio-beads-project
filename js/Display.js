@@ -147,26 +147,32 @@ function displayParam(node, nodeType, evt){
 //Event listeners for input changes on parameters
 document.getElementById("note").oninput = document.getElementById("noteInput").oninput = function(){
     canvas.getActiveObject().note = this.value;
+    smtgChanged = true;
 };
 document.getElementById("duration").oninput = document.getElementById("durationInput").oninput= function(){
     canvas.getActiveObject().duration = this.value;
+    smtgChanged = true;
 };
 document.getElementById("wave-type").oninput = function(){
     canvas.getActiveObject().wave = this.value;
+    smtgChanged = true;
 };
 
 document.getElementById("sample").onchange = function(){
     canvas.getActiveObject().sample=this.options[this.selectedIndex].value;
+    smtgChanged = true;
 };
 document.getElementById("loop").onchange = function(){
     canvas.getActiveObject().loop = this.checked;
-    console.log(canvas.getActiveObject().loop);
+    smtgChanged = true;
 };
 document.getElementById("sleep").oninput = document.getElementById("sleepInput").oninput= function(){
     canvas.getActiveObject().duration = this.value;
+    smtgChanged = true;
 };
 document.getElementById("iteration").onchange = function(){
     canvas.getActiveObject().iteration = this.options[this.selectedIndex].value;
+    smtgChanged = true;
     console.log(canvas.getActiveObject().iteration);
     var value = this.value;
     if (this.value === "x"){
@@ -179,6 +185,7 @@ document.getElementById("iteration").onchange = function(){
 
 document.getElementById("xInput").onchange = function(){
     canvas.getActiveObject().x = this.value;
+    smtgChanged = true;
 }
 
 document.getElementById("delete-line").onchange = function(){
@@ -187,6 +194,7 @@ document.getElementById("delete-line").onchange = function(){
         canvas.remove(canvas.getActiveObject());
         document.getElementById("node-name").innerHTML = "The line has been deleted.";
         document.getElementById('line-info').style.display = 'none';
+        smtgChanged = true;
     }
 }
 
@@ -234,6 +242,7 @@ document.getElementById('delete').onmouseup = function(){
     }
     canvas.remove(actObject);
     canvas.renderAll();
+    smtgChanged = true;
     document.getElementById('info').value = "on trash";
 }
 
@@ -255,17 +264,20 @@ function addEffect(div){
     var select_id = document.getElementById("effect-"+effectClicks+"-value");
     
     canvas.getActiveObject().setEffect(effectClicks, select_id.options[select_id.selectedIndex].value);
+    smtgChanged = true;
 
     
     select_id.onchange = function(){ 
         var value = $(this).val();
         canvas.getActiveObject().setEffect(parseInt(this.id.charAt(7)),value);
+        smtgChanged = true;
     };
     var button_id = document.getElementById("buttonfx-"+effectClicks);
     button_id.onclick = function(){
         var i = parseInt(this.id.charAt(9));
         var d = div.substr(1,div.length);
         remEffect(i, d);
+        smtgChanged = true;
     }
     effectClicks++;
     return false;
@@ -297,12 +309,14 @@ function addEffectValue(val, nbr, div){
         select_id.onchange = function(){ 
             var value = $(this).val();
             canvas.getActiveObject().setEffect(parseInt(this.id.charAt(7)),value);
+            smtgChanged = true;
         };
         var button_id = document.getElementById("buttonfx-"+nbr);
         button_id.onclick = function(){
             var i = parseInt(this.id.charAt(9));
             var d = div.substr(1,div.length);
             remEffect(i, d);
+            smtgChanged = true;
         }
 }
 
@@ -332,8 +346,8 @@ function remEffect(number, div){
             canvas.getActiveObject().setEffect(number,document.getElementById(select_id).options[document.getElementById(select_id).selectedIndex].value);
         }
     }
-    effectClicks--;
-    
+    smtgChanged = true;
+    effectClicks--;   
 }
 
     

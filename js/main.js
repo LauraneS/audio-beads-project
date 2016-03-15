@@ -1,6 +1,6 @@
 window.onload = init;
 
-var line, isSdown, center, playing;
+var line, smtgChanged = false, playing;
 var canvas, bufferLoader, bList, ac = new AudioContext(), tuna = new Tuna(ac);
 var lastAdded= window._lastAdded = [];
 
@@ -165,6 +165,7 @@ function onObjectMoving(e){
             activeObject.set({left:newleft, top: newtop}).setCoords();
             canvas.renderAll(); 
             if (activeObject.loopParent !== obj.ID){
+                smtgChanged = true;
                 activeObject.intersected = true;
                 activeObject.loopParent = obj.ID;
                 activeObject.loopPos = obj.loopToPointAngle({x:center.x, y:center.y});
@@ -228,9 +229,6 @@ canvas.on('mouse:up', function(e){
             //     //line = undefined;
             //     return 
             // }
-            if(obj.type === 'loop'){
-                console.log(obj.containsTopArrow(pointerUp));
-            }
             if(obj.type !== 'startNode' && obj.type !== 'line' && obj.intersected === false && obj.containsTopArrow(pointerUp)){
                 //debugger
                 line.set({x2:obj.getTopArrowCenter().x, y2:obj.getTopArrowCenter().y});
@@ -239,6 +237,7 @@ canvas.on('mouse:up', function(e){
                 lastAdded.push(line);
                 canvas.setActiveObject(line);
                 displayParam(line, 'line', 'added');
+                smtgChanged = true;
                 if (sourceMouseDown.type !== 'startNode'){
                     sourceMouseDown.set({lockMovementX: false, lockMovementY: false});
                 }
@@ -337,36 +336,48 @@ function addChildMoveLine(event) {
 // }
 
 function canvasState(){
-    // if (ac.state === 'running' && playBtClicks === 0){
-        // playBtClicks++;
-        //document.getElementById("playBtn").src="/png/pauseBtn.png";
+    var ctxtState = ac.state;
+    var button = document.getElementById("playBtn");
+    if (button.title === "play" && ctxtState === 'running'){
+        //Playing from parse
+        smtgChanged = false;
         var state = (JSON.stringify(canvas));
         var stateArray = $.parseJSON(state.substring(11, state.length - 17));
         var tree = unflatten(stateArray);
         parse(tree);
-    // } else
-    // if (ac.state === 'running' && playBtClicks === 1){
-    //     playBtClicks--;
-    //     try{
-    //         ac.suspend();
-    //         console.log("Paused");
-    //     }
-    //     catch(err){
-    //         console.log("There is nothing to pause.");
-    //     }
-    // } else if (ac.state === 'suspended'){
-    //     document.getElementById("playBtn").src="/png/pauseBtn.png";
-    //     ac.resume();
-    //     console.log("Playing after pause");
-        
-    // }
+        button.src='/png/pauseBtn.png';
+        button.title = "pause";
+    } else if(button.title=== "play" && ctxtState === 'suspended' && !smtgChanged){
+        //Sound was paused, nothing (significant) has changed in the meantime
+        smtgChanged = false;
+        ac.resume();
+        button.src="/png/pauseBtn.png";
+        button.title = "pause";
+    } else if (button.title === "play" && ctxtState === 'suspended' && smtgChanged) {
+        //Sound was paused, something changed in the representation, need to parse again
+        smtgChanged = false;
+        var state = (JSON.stringify(canvas));
+        var stateArray = $.parseJSON(state.substring(11, state.length - 17));
+        var tree = unflatten(stateArray);
+        parse(tree);
+        button.src="/png/pauseBtn.png";
+        button.title = "pause";
+    } else if (button.src="/png/pauseBtn.png"){
+        //Pausing the sound
+        ac.suspend();
+        button.src="/png/playBtn.png";
+        button.title = "play";
+        smtgChanged = false;
+    } 
 }
 
 function stopSound(){
     try{
         ac.close();
         playBtClicks = 0;
+        //Reset the play/pause button to initial play from parse
         document.getElementById("playBtn").src="/png/playBtn.png";
+        document.getElementById("playBtn").title = "play";
         ac = new AudioContext();
     } catch(err){
         console.log("There is nothing to stop");

@@ -1,3 +1,11 @@
+var doneThreads, threads;
+function setButton() {
+	var button = document.getElementById("playBtn");
+	button.src="/png/playBtn.png";
+    button.title = "play";
+    smtgChanged = false;
+}
+
 function unflatten(canvasObjectArray) {
   		var tree = [],
       	lookup = {},
@@ -73,7 +81,11 @@ function parseStart(canvasObject, t){
 		displayNothing();
 		document.getElementById("node-name").style.color = 'red';
 		document.getElementById("node-name").innerHTML = "No hearing anything? <br> <br> Have you connected something to the startNode?";
+		setButton();
 	} else {
+		threads = canvasObject.children.length;
+		console.log(threads);
+		doneThreads = 0;
 		parse(canvasObject.children, t);
 	}
 }
@@ -116,7 +128,14 @@ function parsePlay(canvasObject, t){
 		}
 		
 		play.onended = function(){
-			parse(canvasObject.children);
+			if (canvasObject.children[0] === undefined){
+				doneThreads++;
+				if (doneThreads === threads) {
+					setButton();
+				}
+			} else {
+				parse(canvasObject.children);
+			}
 		}
 }
 
@@ -217,7 +236,14 @@ function parseSample(canvasObject, t){
 		source.start(ac.currentTime);
 		}
 	source.onended = function(){
-		parse(canvasObject.children);			
+		if (canvasObject.children[0] === undefined){
+			doneThreads++;
+			if (doneThreads === threads) {
+				setButton();
+			}
+		} else {
+			parse(canvasObject.children);
+		}		
 	}
 }
 
@@ -279,7 +305,14 @@ function parseLoop(loopObject){
 				}
 			}
 		}
-		parse(loopObject.children, t);
+		if (loopObject.children[0] === undefined){
+			doneThreads++;
+			if (doneThreads === threads) {
+				setButton();
+			}
+		} else {
+				parse(loopObject.children, t);
+		}
 	}
 }
 
