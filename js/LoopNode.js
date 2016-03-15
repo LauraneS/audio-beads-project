@@ -1,10 +1,20 @@
 var orbit, bead, dur = 1000, oCoords;
 function LoopNode(coords){
   var loopGroup = Node('loop', coords, 100, true, true);
+  loopGroup.item(0).set({stroke:'#86269B', fill: '', strokeWidth: 2});
   loopGroup.loopChildren = [];
   var ite = document.getElementById("iteration");
   loopGroup.iteration = ite.options[ite.selectedIndex].value;
   loopGroup.x = document.getElementById("xInput").value;
+  loopGroup.shadow = {
+        color: '#0b030d',
+        blur: 10,    
+        offsetX: 0,
+        offsetY: 0,
+        opacity: 1,
+        fillShadow: true, 
+        strokeShadow: true 
+  };
   canvas.add(loopGroup);
 
   loopGroup.loopToPointAngle = function(point){

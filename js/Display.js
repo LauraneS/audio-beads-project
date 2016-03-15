@@ -1,10 +1,10 @@
-//var isDClicked = false;
+// var isDClicked = false;
 
-$(document).ready(function(){
-  $('.buttons').dblclick(function(e){
-    e.preventDefault();
-  });
-});
+// $(document).ready(function(){
+//   $('.buttons').dblclick(function(e){
+//     e.preventDefault();
+//   });
+// });
 
 //Drag and drop to create a new node
 function dragStart(ev) {
@@ -46,6 +46,14 @@ function dragDrop(ev) {
 }
 
 function displayNothing(){
+    canvas.forEachObject(function(obj){
+        if (obj.type === 'line'){
+            obj.setShadow(null);
+        } else {
+            obj.removeShadow();
+        }
+    });
+    
     document.getElementById("node-name").style.color = 'black';
     var elements = ['play-info', 'sample-info', 'sleep-info', 'line-info', 'loop-info'], i;
     for (i= 0; i < elements.length; i++){
@@ -55,6 +63,27 @@ function displayNothing(){
 }
 //Display relevant parameters
 function displayParam(node, nodeType, evt){
+    canvas.forEachObject(function(obj){
+        if (obj === node && nodeType === 'line'){
+            obj.setShadow({
+                color: 'black',
+                blur: 10,    
+                offsetX: 0,
+                offsetY: 0,
+                opacity: 1,
+                fillShadow: true, 
+                strokeShadow: true 
+            });
+        } else if (obj === node && nodeType !== 'line'){
+            obj.addShadow();
+        } else {
+            if (obj.type === 'line'){
+                obj.setShadow(null);
+            } else {
+                obj.removeShadow();
+            }
+        }
+    });
     document.getElementById("node-name").style.color = 'black';
     var elements = ['play-info', 'sample-info', 'sleep-info', 'line-info', 'loop-info'], i;
     switch (nodeType){

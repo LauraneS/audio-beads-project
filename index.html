@@ -10,22 +10,26 @@
   
   <div id="mainbar" oncontextmenu="return false;">
     <div id = "sidebar-left">
-      <h2 style="text-align:center">Node Box</h2>
-      <div class="icon" draggable="true" id="playIcon" ondragstart="return dragStart(event)"> Note
+      <h3 style="text-align:center" >Node Box</h3>
+      <div class="icon" draggable="true" id="playIcon" ondragstart="return dragStart(event)" style="text-align:center"> Note
         <img src="png/PlayNode.png" alt="PlayNode" id="playImg">
       </div> 
-      <div class="icon" draggable="true" id="sleepIcon" ondragstart="return dragStart(event)"> Sleep
+      <div class="icon" draggable="true" id="sleepIcon" ondragstart="return dragStart(event)" style="text-align:center"> Sleep
         <img src="png/SleepNode.png" alt="SleepNode" id="sleepImg">
       </div> 
-      <div class="icon" draggable="true" id="SampleIcon" ondragstart="return dragStart(event)"> Sample
+      <div class="icon" draggable="true" id="SampleIcon" ondragstart="return dragStart(event)" style="text-align:center"> Sample
         <img src="png/SampleNode.png" alt="SampleNode" id="sampleImg">
       </div> 
       <!-- <div class="icon" draggable="true" id="effectIcon" ondragstart="return dragStart(event)"> Effect
         <img src="png/EffectNode.png" alt="EffectNode" id="effectImg">
       </div> 
- -->      <div class="icon" draggable="true" id="loopIcon" ondragstart="return dragStart(event)"> Loop
+ -->  <br><h3 style="text-align:center">Tool Box</h1> 
+      <div class="icon" draggable="true" id="loopIcon" ondragstart="return dragStart(event)" style="text-align:center"> Loop
         <img src="png/Loop.png" alt="Loop" id="loopImg">
       </div> 
+      <div class="icon" draggable="true" id"CondIcon" ondragstart="return dragStart(event)" style="text-align:center"> Condition
+        <!-- <img src="png/" alt="Conditional" id="condImg"> -->
+      </div>
     </div>
     <div id="wrapper" ondragenter="return dragEnter(event)" ondrop="return dragDrop(event)" ondragover="return dragOver(event)"> 
     <canvas id="canvas" >
@@ -139,6 +143,7 @@
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 
 <script src="js/BufferLoader.js"></script>
+<script src="js/CondNode.js"></script>
 <script src="js/Display.js"></script>
 <script src="js/EffectNode.js"></script>
 <script src="js/Interpreter.js"></script>

@@ -8,10 +8,16 @@ function Node(type, coords, radius, topArrow, bottomArrow){
 		hand1 = new fabric.Triangle({
 			width: 10, height: 10, angle: -180, left: cCenter.x + 5, fill:'', stroke:'black'
 		});
-
-		hand2 = new fabric.Triangle({
-			width: 10, height: 10, angle: -180, top: 2*radius+11, left: cCenter.x + 5, fill:'', stroke:'black'
-		});
+		if (type === 'loop'){
+			hand2 = new fabric.Triangle({
+				width: 10, height: 10, angle: -180, top: 2*radius+12.5, left: cCenter.x + 5, fill:'', stroke:'black'
+			});
+		} else {
+			hand2 = new fabric.Triangle({
+				width: 10, height: 10, angle: -180, top: 2*radius+11, left: cCenter.x + 5, fill:'', stroke:'black'
+			});
+		}
+		
 	var group = new fabric.Group([c, hand1, hand2],{
 			left: coords.x,
 			top:coords.y,
@@ -123,6 +129,16 @@ function Node(type, coords, radius, topArrow, bottomArrow){
 	group.findHands = function(){
 		hand1.set({stroke:'black'});
 		hand2.set({stroke:'black'});
+	}
+
+	group.addShadow = function(){
+		c.setShadow(group.shadow);
+		canvas.renderAll();
+	}
+
+	group.removeShadow = function(){
+		c.setShadow(null);
+		canvas.renderAll();
 	}
 
 	return group;

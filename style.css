@@ -8,16 +8,18 @@ html *
 img{
 	max-width: 100%;
 	max-height:100%;
+	margin-top: 5px;
+}
+h3{
+	margin: 10px 0px 0px 0px; 
+	padding: 0px 0px 0px 0px;
 }
 
 div#mainbar{
-	/*float: left;*/
     width: 70%;
     height: 100%;
     margin-right: 4px;
     display: inline-block;
-
-    /*border: 2px solid black;*/
 }
 
 div#sidebar-left{
@@ -31,7 +33,7 @@ div#sidebar-left{
 	min-width: 70px;
 }
 .icon{
-	margin-top: 10px;
+	margin-bottom: 20px;
 	margin-left: auto;
     margin-right: auto;
 	padding: 0.5em 0.5em;
