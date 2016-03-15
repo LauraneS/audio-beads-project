@@ -4,7 +4,7 @@ var line, smtgChanged = false;
 var canvas, bufferLoader, bList, ac = new AudioContext(), tuna = new Tuna(ac);
 var lastAdded= window._lastAdded = [];
 
-var sourceMouseDown, line;
+var sourceMouseDown, line, side;
 
 
 //Canvas Initialisation 
@@ -60,6 +60,8 @@ fabric.Object.prototype.toObject = (function (toObject){
     return function(){
         return fabric.util.object.extend(toObject.call(this), {
             children: this.children,
+            leftChildren: this.leftChildren,
+            rightChildren: this.rightChildren,
             duration: this.duration,
             effect: this.effect,
             ID: this.ID,
@@ -169,7 +171,7 @@ canvas.on('mouse:down', function(e){
     }
     var pointerDown = canvas.getPointer(e.e);
     canvas.forEachObject(function(obj){
-        if(obj.type !== 'line'){
+        if(obj.type !== 'line' && obj.type !== 'condition'){
             if(obj.containsBottomArrow(pointerDown)){
                 sourceMouseDown = obj;
                 sourceMouseDown.set({lockMovementX: true, lockMovementY: true});
@@ -177,6 +179,22 @@ canvas.on('mouse:down', function(e){
                 canvas.add(line);
                 line.sendToBack();
             } 
+        } else if (obj.type === 'condition'){
+            if(obj.containsLeftArrow(pointerDown)){
+                sourceMouseDown = obj;
+                side = 'left';
+                sourceMouseDown.set({lockMovementX: true, lockMovementY: true});
+                line = makeLine([obj.getLeftArrowCenter().x, obj.getLeftArrowCenter().y, obj.getLeftArrowCenter().x, obj.getLeftArrowCenter().y], 'left');
+                canvas.add(line);
+                line.sendToBack();
+            } else if(obj.containsRightArrow(pointerDown)){
+                sourceMouseDown = obj;
+                side = 'right';
+                sourceMouseDown.set({lockMovementX: true, lockMovementY: true});
+                line = makeLine([obj.getRightArrowCenter().x, obj.getRightArrowCenter().y, obj.getRightArrowCenter().x, obj.getRightArrowCenter().y], 'right');
+                canvas.add(line);
+                line.sendToBack();
+            }
         }
     }); 
 })
@@ -206,14 +224,22 @@ canvas.on('mouse:up', function(e){
             }
         }); 
         if (match !== undefined && match.intersected === false){
-            line.set({x2:match.getTopArrowCenter().x, y2:match.getTopArrowCenter().y}).setCoords();
-            addChildLine(sourceMouseDown, match);
-            lastAdded.push(line);
-            canvas.setActiveObject(line);
-            displayParam(line, 'line', 'added');
-            smtgChanged = true;
-            if (sourceMouseDown.type !== 'startNode'){
-                sourceMouseDown.set({lockMovementX: false, lockMovementY: false});
+            if (match.parentNode[0] !== undefined){
+                canvas.remove(line);
+                canvas.renderAll();
+                displayNothing();
+                document.getElementById("node-name").style.color = 'red';
+                document.getElementById("node-name").innerHTML = "Ooops! This node already has an incoming link.";
+            } else {
+                line.set({x2:match.getTopArrowCenter().x, y2:match.getTopArrowCenter().y}).setCoords();
+                addChildLine(sourceMouseDown, match, side);
+                lastAdded.push(line);
+                canvas.setActiveObject(line);
+                displayParam(line, 'line', 'added');
+                smtgChanged = true;
+                if (sourceMouseDown.type !== 'startNode'){
+                    sourceMouseDown.set({lockMovementX: false, lockMovementY: false});
+                }
             }
         } else {
             canvas.remove(line);
@@ -221,35 +247,45 @@ canvas.on('mouse:up', function(e){
         }
         line = undefined;
         sourceMouseDown = undefined;
+        side = undefined;
     } 
 });
 
 //Function to draw a line
-function makeLine(coords) {
+function makeLine(coords, sid) {
     return new fabric.Line(coords, {
         stroke: 'black',
         selectable: true,
         originX: 'center',
         originY: 'center',
         lockMovementX: true,
-        lockMovementY: true
+        lockMovementY: true,
+        side: sid
     });
 };
 
 // Functions + Events to draw a line between objects by 'adding a child' to a clicked object
 ['object:moving'].forEach(addChildMoveLine);
 
-function addChildLine(fromObject, toObject) {
+function addChildLine(fromObject, toObject, sid) {
     toObject.parentNode.push(fromObject.ID);
-    toObject.parentType = fromObject.type;
-
+    if (sid !== undefined){
+        toObject.parentType = sid;
+    } 
 
     // add a reference to the line to each object
     fromObject.addChild = {
         // this retains the existing arrays (if there were any)
         from: (fromObject.addChild && fromObject.addChild.from) || [],
-        to: (fromObject.addChild && fromObject.addChild.to)
+        to: (fromObject.addChild && fromObject.addChild.to),
     }
+    if (sid === 'left'){
+        fromObject.addChild.left = true;
+    }
+    if (sid === 'right'){
+        fromObject.addChild.right = true;
+    }
+
     fromObject.addChild.from.push(line);
     toObject.addChild = {
         from: (toObject.addChild && toObject.addChild.from),
@@ -282,30 +318,25 @@ function addChildMoveLine(event) {
         if (obj.addChild) {
             if (obj.addChild.from)
                 obj.addChild.from.forEach(function (line) {
-                    line.set({ 'x1': obj.getBottomArrowCenter().x, 'y1': obj.getBottomArrowCenter().y});
-                    line.setCoords();
+                    if (obj.type !== 'condition'){
+                        line.set({ 'x1': obj.getBottomArrowCenter().x, 'y1': obj.getBottomArrowCenter().y}).setCoords();
+                    } else {
+                        if (line.side === 'left'){
+                            line.set({ 'x1': obj.getLeftArrowCenter().x, 'y1': obj.getLeftArrowCenter().y}).setCoords()
+                        } 
+                        if (line.side === 'right'){
+                            line.set({ 'x1': obj.getRightArrowCenter().x, 'y1': obj.getRightArrowCenter().y}).setCoords()
+                        }
+                    }    
                 })
             if (obj.addChild.to)
                 obj.addChild.to.forEach(function (line) {
-                    line.set({ 'x2':obj.getTopArrowCenter().x, 'y2':obj.getTopArrowCenter().y});
-                    line.setCoords();
+                    line.set({ 'x2':obj.getTopArrowCenter().x, 'y2':obj.getTopArrowCenter().y}).setCoords();
                 })
         }
         canvas.renderAll();
     });
 }
-
-// var playBtClicks = 0;
-// ac.onstatechange = function(){
-//     if (ac.state === 'suspended'){
-//         document.getElementById("playBtn").src="/png/playBtn.png";
-//     } else 
-//     if (ac.state === 'closed'){
-//         debugger
-//         document.getElementById("playBtn").src="/png/playBtn.png";
-//         playBtClicks = 0;
-//     }
-// }
 
 function canvasState(){
     var ctxtState = ac.state;
