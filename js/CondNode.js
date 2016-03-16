@@ -44,6 +44,18 @@ function CondNode(coords){
 		    strokeShadow: true 
 	};
 
+	fabric.Image.fromURL('/png/mouse.png', function(oImg){
+		oImg.scale(0.6);
+		group.add(oImg.set({left: -oImg.getWidth()/2, top: - 8}));
+		canvas.renderAll();
+	});
+
+	group.changeImg = function(url, top){
+		group.item(4).setSrc(url);
+		group.item(4).setTop(top);
+		canvas.renderAll();
+	};
+
 	group.getAbsCenter = function(){
 		return group.getCenterPoint();
 	};
