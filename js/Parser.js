@@ -1,8 +1,9 @@
 var doneThreads, threads;
 function setButton() {
+	
 	var button = document.getElementById("playBtn");
 	button.src="/png/playBtn.png";
-    button.title = "play";
+    button.title = "Play";
     smtgChanged = false;
 }
 

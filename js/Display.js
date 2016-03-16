@@ -322,7 +322,6 @@ document.getElementById("condition").onchange = function(){
 document.getElementById("down-up").onchange = function(){
     smtgChanged = true;
     canvas.getActiveObject().mouse = this.options[this.selectedIndex].value;
-    console.log(canvas.getActiveObject().mouse);
 }
 document.getElementById("whichkey").onchange = function(){
     smtgChanged = true;
