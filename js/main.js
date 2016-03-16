@@ -115,16 +115,6 @@ fabric.Object.prototype.toObject = (function (toObject){
     };
 })(fabric.Object.prototype.toObject);
 
-// canvas.on('mouse:over', function(e){
-//     var pointer = canvas.getPointer(e.e);
-//     if (e.target.type !== 'line' && e.target.containsBottomArrow(pointer)) {
-//         canvas.hoverCursor = 'crosshair';
-//     }
-//     if(e.target.type !== 'line' && !e.target.containsBottomArrow(pointer)){
-//         canvas.hoverCursor = 'pointer';
-//     }
-// })
-
 canvas.on('object:selected', function(e){
     var activeObject = e.target;
     var activeObjectType = e.target.type;
