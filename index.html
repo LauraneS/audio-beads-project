@@ -9,37 +9,46 @@
 
   
   <div id="mainbar" oncontextmenu="return false;">
+
     <div id = "sidebar-left">
+
       <h3 style="text-align:center" >Node Box</h3>
       <div class="icon" draggable="true" id="playIcon" ondragstart="return dragStart(event)" style="text-align:center"> Note
         <img src="png/PlayNode.png" alt="PlayNode" id="playImg">
       </div> 
+
       <div class="icon" draggable="true" id="sleepIcon" ondragstart="return dragStart(event)" style="text-align:center"> Sleep
         <img src="png/SleepNode.png" alt="SleepNode" id="sleepImg">
       </div> 
+
       <div class="icon" draggable="true" id="SampleIcon" ondragstart="return dragStart(event)" style="text-align:center"> Sample
         <img src="png/SampleNode.png" alt="SampleNode" id="sampleImg">
       </div> 
+
       <br><h3 style="text-align:center">Tool Box</h1> 
       <div class="icon" draggable="true" id="loopIcon" ondragstart="return dragStart(event)" style="text-align:center"> Loop
         <img src="png/Loop.png" alt="Loop" id="loopImg">
       </div> 
+
       <div class="icon" draggable="true" id"CondIcon" ondragstart="return dragStart(event)" style="text-align:center"> Condition
         <img src="png/CondNode.png" alt="Conditional" id="condImg">
       </div>
+
     </div>
+
+
     <div id="wrapper" ondragenter="return dragEnter(event)" ondrop="return dragDrop(event)" ondragover="return dragOver(event)"> 
-    <canvas id="canvas" >
-        This text is displayed if your browser does not support HTML5 Canvas.
-    </canvas>
-    <form>
-      <input class = "pointerx" type="text" id="pointerx">
-      <input class = "pointery" type="text" id="pointery">
-      <input class = "info" type="text" id="info">
-    </form>
-    <div id="delete" class="buttons">
-        <img src="png/bin.png" alt="Clear Canvas" id="deleteBtn">
-    </div>
+      <canvas id="canvas" >
+          This text is displayed if your browser does not support HTML5 Canvas.
+      </canvas>
+      <form>
+        <input class = "pointerx" type="text" id="pointerx">
+        <input class = "pointery" type="text" id="pointery">
+        <input class = "info" type="text" id="info">
+      </form>
+      <div id="delete" class="buttons">
+          <img src="png/bin.png" alt="Clear Canvas" id="deleteBtn">
+      </div>
     </div>
 
 
@@ -55,113 +64,124 @@
     </div>
 
     <div id="sidebar-right">
-    <div id="node-name">Click an object to get started!</div>
+      <div id="node-name">Click an object to get started!</div>
 
-    <div class = "param" id="line-info" style="display:none">
-       <form onSubmit="return false;">
-      Do you want to delete it? 
-      <select id="delete-line">
-        <option value="no" selected>No</option>
-        <option value="yes" >Yes</option>
-      </select>
-    </form>
-    </div>
+      <div class = "param" id="line-info" style="display:none">
+        <form onSubmit="return false;">
+          Do you want to delete it? 
+          <select id="delete-line">
+            <option value="no" selected>No</option>
+            <option value="yes" >Yes</option>
+          </select>
+        </form>
+      </div>
 
-    <div class = "param" id="play-info" style="display:none">
-      <form onSubmit="return false;">
-        Wave form:
-        <select id="wave-type">
-          <option value="sawtooth">Sawtooth</option>
-          <option value="sine">Sine</option>
-          <option value="square">Square</option>
-          <option value="triangle">Triangle</option>
-        </select> <br>
-        Note: <input type="text" id="noteInput" value="60", onchange=" document.getElementById('note').value=this.value;", style="width: 20px; text-align: center"><br>
-        <input type="range" id="note" min="0" max="127", step="1", value= "60" onchange=" document.getElementById('noteInput').value=this.value;"> <br>                                                   
-        Duration: <input type="text" id="durationInput" min="0" max = "10" step= "1" value="2", onchange=" document.getElementById('duration').value=this.value;", style="width: 20px; text-align: center"><br>
-        <input type="range" id="duration" min="0" max = "10" step= "1" value="2" onchange=" document.getElementById('durationInput').value=this.value;"> <br> <br>
-        Effects <img class="plusBtn" id="effect-menu" src="png/circle.svg" onclick="addEffect('#play-effects')"/>
-        <div id="play-effects"></div>
-      </form>
-    </div>
+      <div class = "param" id="play-info" style="display:none">
+        <form onSubmit="return false;">
+          Wave form:
+          <select id="wave-type">
+            <option value="sawtooth">Sawtooth</option>
+            <option value="sine">Sine</option>
+            <option value="square">Square</option>
+            <option value="triangle">Triangle</option>
+          </select> <br>
 
-    <div class = "param" id="sample-info" style="display:none">
-      <form onSubmit="return false;">
-          Sample: 
-        <select id="sample">
-          <option value="hihat" selected>High-hat</option>
-          <option value="drum-kick">Drum kick</option>
-          <option value="alien">Alien</option>
-          <option value="beat">Beat</option>
-          <option value="bass">Bass</option>
-          <option value="flute">Flute</option>
-        </select> <br>
-        Loop
-        <input type="checkbox" id="loop" value="Loop"><br><br>
-        Effects <img class= "plusBtn" id="effect-menu" src="png/circle.svg" onclick="addEffect('#samp-effects')"/>
-        <div id="samp-effects"></div>
-      </form>
+          Note: <input type="text" id="noteInput" value="60", onchange=" document.getElementById('note').value=this.value;", style="width: 20px; text-align: center"><br>
+          <input type="range" id="note" min="0" max="127", step="1", value= "60" onchange=" document.getElementById('noteInput').value=this.value;"> <br>                                                   
+          Duration: <input type="text" id="durationInput" min="0" max = "10" step= "1" value="2", onchange=" document.getElementById('duration').value=this.value;", style="width: 20px; text-align: center"><br>
+          <input type="range" id="duration" min="0" max = "10" step= "1" value="2" onchange=" document.getElementById('durationInput').value=this.value;"> <br> <br>
+
+          Effects <img class="plusBtn" id="effect-menu" src="png/circle.svg" onclick="addEffect('#play-effects')"/>
+          <div id="play-effects"></div>
+        </form>
+      </div>
+
+      <div class = "param" id="sample-info" style="display:none">
+        <form onSubmit="return false;">
+            Sample: 
+          <select id="sample">
+            <option value="hihat" selected>High-hat</option>
+            <option value="drum-kick">Drum kick</option>
+            <option value="alien">Alien</option>
+            <option value="beat">Beat</option>
+            <option value="bass">Bass</option>
+            <option value="flute">Flute</option>
+          </select> <br>
+
+          Loop
+          <input type="checkbox" id="loop" value="Loop"><br><br>
+
+          Effects <img class= "plusBtn" id="effect-menu" src="png/circle.svg" onclick="addEffect('#samp-effects')"/>
+          <div id="samp-effects"></div>
+        </form>
+      </div>
+
+      <div class = "param" id="sleep-info" style="display:none">
+        <form onSubmit="return false;">
+        Duration: <input type="text" id="sleepInput" value="1" onchange="document.getElementById('sleep').value=this.value;" style="width: 20px; text-align: center"><br>
+          <input type="range" id="sleep" min="0" max="10" onchange="document.getElementById('sleepInput').value=this.value;" value="1"> <br>
+        </form>
+      </div>
+
+      <div class = "param" id="loop-info" style="display:none">
+        <form onSubmit="return false;">
+          Repeat: 
+          <select id="iteration">
+            <option disabled selected> -- select an option -- </option>
+              <option value="forever">Forever</option>
+              <option value="x">x times</option>
+          </select> <br>
+        </form>
+        <form onSubmit="return false;" id="xtimes-nbr" style="display:none">
+          <br> x: <input type="text" id="xInput" value="2" style="width: 20px; text-align: center"><br>
+        </form>
+      </div>
+
+      <div class = "param" id="cond-info" style="display:none">
+        <form onSubmit="return false;">
+          Condition: 
+          <select id="condition">
+            <option disabled selected> -- select an option -- </option>
+              <option value="mouse">Mouse event</option>
+              <option value="key">Key press</option>
+              <option value="rand"> Randomization</option>
+          </select> <br><br>
+        </form>
+
+        <form onSubmit="return false;" id="mouse-event" style="display:none">
+          If 
+          <select id="down-up">
+              <option value="up" selected>Mouse up</option>
+              <option value="down">Mouse down</option>
+          </select>, go down the green path.<br>
+        </form>
+
+        <form onSubmit="return false;" id="key-event" style="display:none">
+          If Key 
+          <select id="whichkey">
+              <option value="65" selected>A</option>
+              <option value="90">Z</option>
+              <option value="69">E</option>
+              <option value="82">R</option>
+              <option value="84">T</option>
+              <option value="89">Y</option>
+              <option value="32">Space bar</option>
+          </select> is pressed, go down the green path.<br>
+        </form>
+
+        <form onSubmit="return false;" id="rand-event" style="display:none">
+          Generate a random integer comprised between
+          <input type="text" id="aInput" value="0" style="width: 20px; text-align: center"> <br> and
+          <input type="text" id="bInput" value="5" style="width: 20px; text-align: center">. <br> <br> If it is 
+          <select id="comp">
+              <option value="more" selected>></option>
+              <option value="less"><</option>
+              <option value="eq">=</option>
+          </select> <input type="text" id="cInput" value="3" style="width: 20px; text-align: center">, go down the green path.<br>
+        </form>
+        
+      </div>
     </div>
-    <div class = "param" id="sleep-info" style="display:none">
-      <form onSubmit="return false;">
-      Duration: <input type="text" id="sleepInput" value="1" onchange="document.getElementById('sleep').value=this.value;" style="width: 20px; text-align: center"><br>
-        <input type="range" id="sleep" min="0" max="10" onchange="document.getElementById('sleepInput').value=this.value;" value="1"> <br>
-      </form>
-    </div>
-    <div class = "param" id="loop-info" style="display:none">
-      <form onSubmit="return false;">
-        Repeat: 
-        <select id="iteration">
-          <option disabled selected> -- select an option -- </option>
-            <option value="forever">Forever</option>
-            <option value="x">x times</option>
-        </select> <br>
-      </form>
-      <form onSubmit="return false;" id="xtimes-nbr" style="display:none">
-        <br> x: <input type="text" id="xInput" value="2" style="width: 20px; text-align: center"><br>
-      </form>
-    </div>
-    <div class = "param" id="cond-info" style="display:none">
-      <form onSubmit="return false;">
-        Condition: 
-        <select id="condition">
-          <option disabled selected> -- select an option -- </option>
-            <option value="mouse">Mouse event</option>
-            <option value="key">Key press</option>
-            <option value="rand"> Randomization</option>
-        </select> <br><br>
-      </form>
-      <form onSubmit="return false;" id="mouse-event" style="display:none">
-        If 
-        <select id="down-up">
-            <option value="up" selected>Mouse up</option>
-            <option value="down">Mouse down</option>
-        </select>, go down the green path.<br>
-      </form>
-      <form onSubmit="return false;" id="key-event" style="display:none">
-        If Key 
-        <select id="whichkey">
-            <option value="65" selected>A</option>
-            <option value="90">Z</option>
-            <option value="69">E</option>
-            <option value="82">R</option>
-            <option value="84">T</option>
-            <option value="89">Y</option>
-            <option value="32">Space bar</option>
-        </select> is pressed, go down the green path.<br>
-      </form>
-      <form onSubmit="return false;" id="rand-event" style="display:none">
-        Generate a random integer comprised between
-        <input type="text" id="aInput" value="0" style="width: 20px; text-align: center"> <br> and
-        <input type="text" id="bInput" value="5" style="width: 20px; text-align: center">. <br> <br> If it is 
-        <select id="comp">
-            <option value="more" selected>></option>
-            <option value="less"><</option>
-            <option value="eq">=</option>
-        </select> <input type="text" id="cInput" value="3" style="width: 20px; text-align: center">, go down the green path.<br>
-      </form>
-    </div>
-  </div>
   </div>
   
 

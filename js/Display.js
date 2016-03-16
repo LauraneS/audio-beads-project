@@ -39,7 +39,6 @@ function dragDrop(ev) {
             SleepNode(pointer);
             break;
         case 'condImg':
-        debugger
             CondNode(pointer);
             break;
     }
@@ -79,7 +78,12 @@ function displayParam(node, nodeType, evt){
                 strokeShadow: true 
             });
         } else if (obj === node && nodeType !== 'line'){
-            obj.addShadow();
+            try{
+                obj.addShadow();
+            } catch(err){
+                console.log(err);
+            }
+            
         } else {
             if (obj.type === 'line'){
                 obj.setShadow(null);
@@ -170,38 +174,38 @@ function displayParam(node, nodeType, evt){
                 if (elements[i] === 'cond-info'){
                     document.getElementById(elements[i]).style.display = 'block';
                     document.getElementById("condition").value = node.condition;
-                    var elt = ["mouse-event", "key-event", "rand-event"];
+                    var elt = ["mouse-event", "key-event", "rand-event"], j;
                     switch(node.condition){
                         case 'mouse':
-                            for (i = 0; i < elt.length; i++){
-                                if (elt[i] === 'mouse-event'){
-                                    document.getElementById(elt[i]).style.display = 'block';
+                            for (j = 0; j < elt.length; j++){
+                                if (elt[j] === 'mouse-event'){
+                                    document.getElementById(elt[j]).style.display = 'block';
                                     document.getElementById("down-up").value = canvas.getActiveObject().mouse;
                                 } else {
-                                    document.getElementById(elt[i]).style.display = 'none';
+                                    document.getElementById(elt[j]).style.display = 'none';
                                 }
                             }
                             break;
                         case 'key':
-                            for (i = 0; i < elt.length; i++){
-                                if (elt[i] === 'key-event'){
-                                    document.getElementById(elt[i]).style.display = 'block';
+                            for (j = 0; j < elt.length; j++){
+                                if (elt[j] === 'key-event'){
+                                    document.getElementById(elt[j]).style.display = 'block';
                                     document.getElementById("whichkey").value = canvas.getActiveObject().key;
                                 } else {
-                                    document.getElementById(elt[i]).style.display = 'none';
+                                    document.getElementById(elt[j]).style.display = 'none';
                                 }
                             }
                             break;
                         case 'rand':
-                            for (i = 0; i < elt.length; i++){
-                                if (elt[i] === 'rand-event'){
-                                    document.getElementById(elt[i]).style.display = 'block';
+                            for (j = 0; j < elt.length; j++){
+                                if (elt[j] === 'rand-event'){
+                                    document.getElementById(elt[j]).style.display = 'block';
                                     document.getElementById("aInput").value = canvas.getActiveObject().rand[0];
                                     document.getElementById("bInput").value = canvas.getActiveObject().rand[1];
                                     document.getElementById("comp").value = canvas.getActiveObject().rand[2];
                                     document.getElementById("cInput").value = canvas.getActiveObject().rand[3];
                                 } else {
-                                    document.getElementById(elt[i]).style.display = 'none';
+                                    document.getElementById(elt[j]).style.display = 'none';
                                 }
                             }
                             break;
@@ -257,7 +261,6 @@ document.getElementById("sleep").oninput = document.getElementById("sleepInput")
 document.getElementById("iteration").onchange = function(){
     canvas.getActiveObject().iteration = this.options[this.selectedIndex].value;
     smtgChanged = true;
-    console.log(canvas.getActiveObject().iteration);
     var value = this.value;
     if (this.value === "x"){
         document.getElementById("xtimes-nbr").style.display = 'block';
@@ -274,9 +277,10 @@ document.getElementById("xInput").onchange = function(){
 //Listen for changes on Condition parameters
 document.getElementById("condition").onchange = function(){
     canvas.getActiveObject().condition = this.options[this.selectedIndex].value;
+    console.log( canvas.getActiveObject().condition);
     smtgChanged = true;
     var value = this.value;
-    var el = ["mouse-event", "key-event", "rand-event"];
+    var el = ["mouse-event", "key-event", "rand-event"], i;
 
     switch(value){
         case 'mouse':
@@ -317,6 +321,7 @@ document.getElementById("condition").onchange = function(){
 document.getElementById("down-up").onchange = function(){
     smtgChanged = true;
     canvas.getActiveObject().mouse = this.options[this.selectedIndex].value;
+    console.log(canvas.getActiveObject().mouse);
 }
 document.getElementById("whichkey").onchange = function(){
     smtgChanged = true;

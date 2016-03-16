@@ -14,12 +14,13 @@ function CondNode(coords){
 		hand3 = new fabric.Triangle({
 			width:10, height:10, angle: 180, left:c.width/2+6, top: c.getTop(), fill:'white', stroke: 'black'
 		});
+
 	var comp = document.getElementById("comp");
 	var whichkey = document.getElementById('whichkey');
 	var group = new fabric.Group([c, hand1, hand2, hand3],{
+			type:'condition',
 			left: coords.x,
 			top:coords.y,
-			type: 'condition',
 			parentType: '',
 			ID: guid(),
 			parentNode: [],
@@ -27,10 +28,10 @@ function CondNode(coords){
 			leftChildren: [],
 			rightChildren:[],
 			intersected: false,
-			condition:'mouse'
-			//mouse:'up',
-			//key:whichkey.options[whichkey.selectedIndex].value,
-			//rand:[document.getElementById("aInput").value, document.getElementById("bInput").value, comp.options[comp.selectedIndex].value, document.getElementById("cInput").value]
+			condition:'mouse',
+			mouse:'up',
+			key:whichkey.options[whichkey.selectedIndex].value,
+			rand:[document.getElementById("aInput").value, document.getElementById("bInput").value, comp.options[comp.selectedIndex].value, document.getElementById("cInput").value]
 	});
 
 	group.shadow = {
@@ -45,7 +46,7 @@ function CondNode(coords){
 
 	group.getAbsCenter = function(){
 		return group.getCenterPoint();
-	}
+	};
 
 	group.containsTopArrow = function(point){
 	    var x = point.x;
@@ -65,11 +66,11 @@ function CondNode(coords){
 	    	return true;
 	    }
 	    return false;
-	}
+	};
 
 	group.getTopArrowCenter = function(){
 		return {x:hand3.group.getCenterPoint().x + hand3.getCenterPoint().x, y:hand3.group.getCenterPoint().y + hand3.getCenterPoint().y - hand3.getHeight()/2};
-	}
+	};
 
 	group.containsLeftArrow = function(point){
 	    var x = point.x;
@@ -89,11 +90,11 @@ function CondNode(coords){
 	    	return true;
 	    }
 	    return false;
-	}
+	};
 
 	group.getLeftArrowCenter = function(){
 		return {x:hand1.group.getCenterPoint().x + hand1.getCenterPoint().x, y:hand1.group.getCenterPoint().y + hand1.getCenterPoint().y - hand1.radius};
-	}
+	};
 
 	group.containsRightArrow = function(point){
 	    var x = point.x;
@@ -113,7 +114,8 @@ function CondNode(coords){
 	    	return true;
 	    }
 	    return false;
-	}
+	};
+
 	group.getRightArrowCenter = function(){
 		return {x:hand2.group.getCenterPoint().x + hand2.getCenterPoint().x, y:hand2.group.getCenterPoint().y + hand2.getCenterPoint().y - hand2.radius};
 	}
@@ -126,13 +128,6 @@ function CondNode(coords){
 	group.removeShadow = function(){
 		c.setShadow(null);
 		canvas.renderAll();
-	}
-
-	group.deleteParent = function(parentID){
-		var index = group.parentNode.indexOf(parentID);
-		if (index > -1) {
-    		array.splice(index, 1);
-		}
 	}
 
 	group.followLoop = function(newCenter){
@@ -152,6 +147,7 @@ function CondNode(coords){
 		hand2.set({stroke:'black', fill:'white'});
 		hand3.set({stroke:'black', fill:'white'});
 	}
+
 	group.on('moving', function(){
 		if (group.intersected){
 			canvas.forEachObject(function(obj){
@@ -160,7 +156,7 @@ function CondNode(coords){
 					group.loopParent = '';
 					group.findHands();
 				}
-			})
+			});
 		}
 	});
 
