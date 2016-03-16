@@ -23,24 +23,24 @@
     <div class="row" id="mainbar">
       <div class="col-sm-1" id="sidebar-left">
         <h3 style="text-align:center">Node Box</h3>
-        <div class="icon" draggable="true" id="playIcon" ondragstart="return dragStart(event)" style="text-align:center"> Note
+        <div class="icon" title="Play Node"draggable="true" id="playIcon" ondragstart="return dragStart(event)" style="text-align:center"> Note
           <img src="png/PlayNode.png" alt="PlayNode" id="playImg">
         </div> 
 
-        <div class="icon" draggable="true" id="sleepIcon" ondragstart="return dragStart(event)" style="text-align:center"> Sleep
+        <div class="icon" title="Sleep Node" draggable="true" id="sleepIcon" ondragstart="return dragStart(event)" style="text-align:center"> Sleep
           <img src="png/SleepNode.png" alt="SleepNode" id="sleepImg">
         </div> 
 
-        <div class="icon" draggable="true" id="SampleIcon" ondragstart="return dragStart(event)" style="text-align:center"> Sample
+        <div class="icon" title="Sample Node" draggable="true" id="SampleIcon" ondragstart="return dragStart(event)" style="text-align:center"> Sample
           <img src="png/SampleNode.png" alt="SampleNode" id="sampleImg">
         </div> 
 
         <br><h3 style="text-align:center">Tool Box</h1> 
-        <div class="icon" draggable="true" id="loopIcon" ondragstart="return dragStart(event)" style="text-align:center"> Loop
+        <div class="icon" title="Loop" draggable="true" id="loopIcon" ondragstart="return dragStart(event)" style="text-align:center"> Loop
           <img src="png/Loop.png" alt="Loop" id="loopImg">
         </div> 
 
-        <div class="icon" draggable="true" id"CondIcon" ondragstart="return dragStart(event)" style="text-align:center"> Condition
+        <div class="icon" title="Condition" draggable="true" id"CondIcon" ondragstart="return dragStart(event)" style="text-align:center"> Condition
           <img src="png/CondNode.png" alt="Conditional" id="condImg">
         </div>
       </div>
@@ -82,7 +82,7 @@
             Duration: <input type="text" id="durationInput" min="0" max = "10" step= "1" value="2", onchange=" document.getElementById('duration').value=this.value;", style="width: 20px; text-align: center"><br>
             <input type="range" id="duration" min="0" max = "10" step= "1" value="2" onchange=" document.getElementById('durationInput').value=this.value;"> <br> <br>
 
-            Effects <img class="plusBtn" id="effect-menu" src="png/circle.svg" onclick="addEffect('#play-effects')"/>
+            Effects <img title="Add an effect" class="plusBtn" id="effect-menu" src="png/circle.svg" onclick="addEffect('#play-effects')"/>
             <br><br>
             <div id="play-effects"></div>
           </form>
@@ -185,7 +185,7 @@
               </div>
             </div>
           </div>
-          <div id="undelete" class="buttons" onclick="undelete()">
+          <div id="undelete" title="Undelete" class="buttons" onclick="undelete()">
             <img src="png/undelete.png" alt="Undelete" id="undeleteBtn">
           </div>
         </div>
