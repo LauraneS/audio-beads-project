@@ -22,7 +22,7 @@ function unflatten(canvasObjectArray) {
     	if (lookup.hasOwnProperty(ID)) {
 	    	keyedElem = lookup[ID];
 	      	if (keyedElem.type !== 'line'){
-	      		if (keyedElem.type !== 'loop' && keyedElem.type !== 'startNode' && keyedElem.type !== 'conditional'){
+	      		if (keyedElem.type !== 'loop' && keyedElem.type !== 'startNode' && keyedElem.intersected){
 	      			var loopParentNode = lookup[keyedElem.loopParent];
 	      			loopParentNode.loopChildren.push(keyedElem);
 	      		}
@@ -31,12 +31,15 @@ function unflatten(canvasObjectArray) {
 		      	for(k=0; k < parentsNbr; k++){
 		      		if (keyedElem.parentNode[0] !== 0){
 		      			var parentNode = lookup[keyedElem.parentNode[0]];
-		      			if (parentType !== undefined){
+		      			console.log(parentNode.type);
+		      			if (parentNode.type !== 'condition'){
 			       			parentNode.children.push(keyedElem);
-		      			} else if (parentType === 'left'){
-			       			parentNode.leftChildren.push(keyedElem);
 		      			} else {
-		      				parentNode.rightChildren.push(keyedElem);
+		      				if (keyedElem.parentType === 'left' ){
+			       				parentNode.leftChildren.push(keyedElem);
+			       			} else {
+		      					parentNode.rightChildren.push(keyedElem);
+		      				}
 		      			}	
 			      	}
 		      		// If the element is at the root level (so their parent is equal to O), add it to first level elements array.
@@ -76,6 +79,9 @@ function parse(canvasObjectArray, t){
 				break;
 			case 'loop':
 				parseLoop(canvasObject, t);
+				break;
+			case 'condition':
+				parseCond(canvasObject, t);
 				break;
 		}
 		inspectedNodes.push(canvasObjectID);
@@ -411,4 +417,65 @@ function parseSampleLoop(canvasObject, t){
 	}
 	return source.buffer.duration;
 }
+
+function parseCond(canvasObject, t){
+	var cond = canvasObject.condition;
+	switch (cond){
+		case 'mouse':
+			if(canvasObject.mouse === 'up'){
+				if (!isDown){
+					parse(canvasObject.leftChildren, t);
+				} else {
+					parse(canvasObject.rightChildren, t);
+				}
+			} else if (canvasObject.mouse === 'down'){
+				if (isDown){
+					parse(canvasObject.leftChildren, t);
+				} else {
+					parse(canvasObject.rightChildren, t);
+				}
+			} else {
+				displayNothing();
+				document.getElementById("node-name").style.color = 'red';
+				document.getElementById("node-name").innerHTML = "Double check the parameters for your conditions.";
+			}
+			break;
+		case 'key':
+			if (parseInt(canvasObject.key) === keyDown){
+				parse(canvasObject.leftChildren, t);
+			} else {
+				parse(canvasObject.rightChildren, t);
+			}
+			break;
+		case 'rand':
+			var n = Math.floor(Math.random() * (parseInt(canvasObject.rand[1]) - parseInt(canvasObject.rand[0]) + 1) + parseInt(canvasObject.rand[0]));
+			console.log(n);
+			var c = parseInt(canvasObject.rand[3]);
+			console.log(c);
+			switch(canvasObject.rand[2]){
+				case 'more':
+					if (n > c){
+						parse(canvasObject.leftChildren, t);
+					} else {
+						parse(canvasObject.rightChildren, t);
+					}
+					break;
+				case 'less':
+					if (n < c){
+						parse(canvasObject.leftChildren, t);
+					} else {
+						parse(canvasObject.rightChildren, t);
+					}
+					break;
+				case 'eq':
+					if (n = c){
+						parse(canvasObject.leftChildren, t);
+					} else {
+						parse(canvasObject.rightChildren, t);
+					}
+			}		break;
+			break;
+	}
+}
+
 

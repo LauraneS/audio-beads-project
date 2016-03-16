@@ -4,8 +4,37 @@ var line, smtgChanged = false;
 var canvas, bufferLoader, bList, ac = new AudioContext(), tuna = new Tuna(ac);
 var lastAdded= window._lastAdded = [];
 
-var sourceMouseDown, line, side;
+var sourceMouseDown, line, side, keyDown, isDown;
 
+document.onkeydown = function(e){
+    switch (e.keyCode){
+        case 65:
+            keyDown = 65;
+            break;
+        case 90:
+            keyDown = 90;
+            break;
+        case 69:
+            keyDown = 69;
+            break;
+        case 82:
+            keyDown = 82;
+            break;
+        case 84:
+            keyDown = 84;
+            break;
+        case 89:
+            keyDown = 89;
+            break;
+        case 32:
+            keyDown = 32;
+            break;
+    }
+}
+
+document.onkeyup = function(e){
+    keyDown = 0;
+}
 
 //Canvas Initialisation 
     canvas = this.__canvas = new fabric.Canvas('canvas');
@@ -169,6 +198,7 @@ function onObjectMoving(e){
 
 
 canvas.on('mouse:down', function(e){
+    isDown = true;
     if (canvas.getActiveObject() === null){
         displayNothing();
         return
@@ -217,6 +247,7 @@ canvas.on('mouse:move', function(e){
 });
 
 canvas.on('mouse:up', function(e){
+    isDown = false;
     var pointerUp = canvas.getPointer(e.e);
     var match;
     if(sourceMouseDown !== undefined){
@@ -226,6 +257,7 @@ canvas.on('mouse:up', function(e){
                     match = obj;
                 }
             } catch (err){
+                console.log(obj.type);
                 console.log("This object does not have the required method.");
             }
         }); 
@@ -277,7 +309,7 @@ function addChildLine(fromObject, toObject, sid) {
     toObject.parentNode.push(fromObject.ID);
     if (sid !== undefined){
         toObject.parentType = sid;
-    } 
+    }
 
     // add a reference to the line to each object
     fromObject.addChild = {
