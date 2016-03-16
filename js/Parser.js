@@ -160,7 +160,6 @@ function connectEffect(effect){
 			    stereoPhase: 0,    						//0 to 180
 			    bypass: 0
 			});
-			//return (tremolo);
 			break;
 		case 'wahwah':
 			return new tuna.WahWah({
@@ -173,7 +172,6 @@ function connectEffect(effect){
 			    bypass: 0
 			});
 		 	break;
-		 	//Something wrong with next 2 effects - they block the sound
 		case 'chorus':
 			return new tuna.Chorus({
 			    rate: 0.01,         //0.01 to 8+

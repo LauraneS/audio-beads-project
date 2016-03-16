@@ -149,17 +149,5 @@ function CondNode(coords){
 		canvas.renderAll();
 	}
 
-	group.on('moving', function(){
-		if (group.intersected){
-			canvas.forEachObject(function(obj){
-				if (obj.ID === group.loopParent && !group.intersectsWithObject(obj)){
-					group.intersected = false;
-					group.loopParent = '';
-					group.findHands();
-				}
-			});
-		}
-	});
-
 	canvas.add(group);
 }
