@@ -372,7 +372,7 @@ function addChildMoveLine(event) {
 function canvasState(){
     var ctxtState = ac.state;
     var button = document.getElementById("playBtn");
-    if (button.title === "play" && ctxtState === 'running'){
+    if (button.title === "Play" && ctxtState === 'running'){
         //Playing from parse
         smtgChanged = false;
         button.src='/png/pauseBtn.png';
@@ -381,13 +381,13 @@ function canvasState(){
         var stateArray = $.parseJSON(state.substring(11, state.length - 17));
         var tree = unflatten(stateArray);
         parse(tree); 
-    } else if(button.title=== "play" && ctxtState === 'suspended' && !smtgChanged){
+    } else if(button.title=== "Play" && ctxtState === 'suspended' && !smtgChanged){
         //Sound was paused, nothing (significant) has changed in the meantime
         smtgChanged = false;
         button.src="/png/pauseBtn.png";
         button.title = "Pause";
         ac.resume();
-    } else if (button.title === "play" && ctxtState === 'suspended' && smtgChanged) {
+    } else if (button.title === "Play" && ctxtState === 'suspended' && smtgChanged) {
         //Sound was paused, something changed in the representation, need to parse again
         smtgChanged = false;
         button.src="/png/pauseBtn.png";
