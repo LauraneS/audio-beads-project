@@ -48,7 +48,6 @@ function displayNothing(){
             obj.removeShadow();
         }
     });
-    
     document.getElementById("node-name").style.color = 'black';
     var elements = ['play-info', 'sample-info', 'sleep-info', 'line-info', 'loop-info', 'cond-info'], i;
     for (i= 0; i < elements.length; i++){
@@ -387,11 +386,6 @@ document.getElementById('delete').onmouseup = function(){
     canvas.remove(actObject);
     canvas.renderAll();
     smtgChanged = true;
-    document.getElementById('info').value = "on trash";
-}
-
-document.getElementById('delete').onmouseout = function(){
-    document.getElementById('info').value = "";
 }
 
 var effectClicks;

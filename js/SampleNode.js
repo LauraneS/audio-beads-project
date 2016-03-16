@@ -53,6 +53,21 @@ function SampleNode(coords){
 					sampleGroup.findHands();
 				}
 			})
+		} else {
+			var on = false
+			canvas.forEachObject(function(obj){
+				if (obj.type === 'loop' && sampleGroup.intersectsWithObject(obj)){
+					on = true;
+					console.log(on);
+				}
+				if (!on){
+					displayParam(sampleGroup, 'sampleNode', 'selected');
+				} else {
+					displayNothing();
+                	document.getElementById("node-name").style.color = 'red';
+                	document.getElementById("node-name").innerHTML ="This node cannot be part of the loop because it is already tied to other nodes.";
+				}
+			});
 		}
 	});
 }

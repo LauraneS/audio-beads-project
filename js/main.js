@@ -159,6 +159,9 @@ function onObjectMoving(e){
     canvas.forEachObject(function(obj) {
       if (obj === activeObject) return;
         if (activeObject.intersectsWithObject(obj) && obj.type === 'loop' && activeObject.type !== 'loop' && activeObject.type !== 'condition'){
+            if (e.target.parentNode[0] !== undefined){
+                return 
+            }
             var center = activeObject.getCenterPoint();
             var newleft = obj.closestLoopPoint(center).x-activeObject.getWidth()/2;
             var newtop = obj.closestLoopPoint(center).y-activeObject.getHeight()/2

@@ -45,7 +45,7 @@ function PlayNode(coords){
 			canvas.renderAll();
 		}
 	}
-	playGroup.on('moving', function(){
+	playGroup.on('moving', function(){		
 		if (playGroup.intersected){
 			canvas.forEachObject(function(obj){
 				if (obj.ID === playGroup.loopParent && !playGroup.intersectsWithObject(obj)){
@@ -54,6 +54,21 @@ function PlayNode(coords){
 					playGroup.findHands();
 				}
 			})
+		} else {
+			var on = false
+			canvas.forEachObject(function(obj){
+				if (obj.type === 'loop' && playGroup.intersectsWithObject(obj)){
+					on = true;
+					console.log(on);
+				}
+				if (!on){
+					displayParam(playGroup, 'playNode', 'selected');
+				} else {
+					displayNothing();
+                	document.getElementById("node-name").style.color = 'red';
+                	document.getElementById("node-name").innerHTML ="This node cannot be part of the loop because it is already tied to other nodes.";
+				}
+			});
 		}
 	});
 }
