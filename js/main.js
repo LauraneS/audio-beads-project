@@ -77,7 +77,11 @@ fabric.Object.prototype.toObject = (function (toObject){
             loopChildren: this.loopChildren,
             loopPos: this.loopPos,
             iteration: this.iteration,
-            x: this.x
+            x: this.x,
+            condition:this.condition,
+            mouse:this.mouse,
+            key:this.key,
+            rand: this.rand
         });
     };
 })(fabric.Object.prototype.toObject);
@@ -185,6 +189,7 @@ canvas.on('mouse:down', function(e){
                 side = 'left';
                 sourceMouseDown.set({lockMovementX: true, lockMovementY: true});
                 line = makeLine([obj.getLeftArrowCenter().x, obj.getLeftArrowCenter().y, obj.getLeftArrowCenter().x, obj.getLeftArrowCenter().y], 'left');
+                line.setStroke('green');
                 canvas.add(line);
                 line.sendToBack();
             } else if(obj.containsRightArrow(pointerDown)){
@@ -192,6 +197,7 @@ canvas.on('mouse:down', function(e){
                 side = 'right';
                 sourceMouseDown.set({lockMovementX: true, lockMovementY: true});
                 line = makeLine([obj.getRightArrowCenter().x, obj.getRightArrowCenter().y, obj.getRightArrowCenter().x, obj.getRightArrowCenter().y], 'right');
+                line.setStroke('red');
                 canvas.add(line);
                 line.sendToBack();
             }

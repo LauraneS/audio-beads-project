@@ -20,10 +20,7 @@
       <div class="icon" draggable="true" id="SampleIcon" ondragstart="return dragStart(event)" style="text-align:center"> Sample
         <img src="png/SampleNode.png" alt="SampleNode" id="sampleImg">
       </div> 
-      <!-- <div class="icon" draggable="true" id="effectIcon" ondragstart="return dragStart(event)"> Effect
-        <img src="png/EffectNode.png" alt="EffectNode" id="effectImg">
-      </div> 
- -->  <br><h3 style="text-align:center">Tool Box</h1> 
+      <br><h3 style="text-align:center">Tool Box</h1> 
       <div class="icon" draggable="true" id="loopIcon" ondragstart="return dragStart(event)" style="text-align:center"> Loop
         <img src="png/Loop.png" alt="Loop" id="loopImg">
       </div> 
@@ -122,6 +119,46 @@
       </form>
       <form onSubmit="return false;" id="xtimes-nbr" style="display:none">
         <br> x: <input type="text" id="xInput" value="2" style="width: 20px; text-align: center"><br>
+      </form>
+    </div>
+    <div class = "param" id="cond-info" style="display:none">
+      <form onSubmit="return false;">
+        Condition: 
+        <select id="condition">
+          <option disabled selected> -- select an option -- </option>
+            <option value="mouse">Mouse event</option>
+            <option value="key">Key press</option>
+            <option value="rand"> Randomization</option>
+        </select> <br><br>
+      </form>
+      <form onSubmit="return false;" id="mouse-event" style="display:none">
+        If 
+        <select id="down-up">
+            <option value="up" selected>Mouse up</option>
+            <option value="down">Mouse down</option>
+        </select>, go down the green path.<br>
+      </form>
+      <form onSubmit="return false;" id="key-event" style="display:none">
+        If Key 
+        <select id="whichkey">
+            <option value="65" selected>A</option>
+            <option value="90">Z</option>
+            <option value="69">E</option>
+            <option value="82">R</option>
+            <option value="84">T</option>
+            <option value="89">Y</option>
+            <option value="32">Space bar</option>
+        </select> is pressed, go down the green path.<br>
+      </form>
+      <form onSubmit="return false;" id="rand-event" style="display:none">
+        Generate a random integer comprised between
+        <input type="text" id="aInput" value="0" style="width: 20px; text-align: center"> <br> and
+        <input type="text" id="bInput" value="5" style="width: 20px; text-align: center">. <br> <br> If it is 
+        <select id="comp">
+            <option value="more" selected>></option>
+            <option value="less"><</option>
+            <option value="eq">=</option>
+        </select> <input type="text" id="cInput" value="3" style="width: 20px; text-align: center">, go down the green path.<br>
       </form>
     </div>
   </div>

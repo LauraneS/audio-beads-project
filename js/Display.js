@@ -39,6 +39,7 @@ function dragDrop(ev) {
             SleepNode(pointer);
             break;
         case 'condImg':
+        debugger
             CondNode(pointer);
             break;
     }
@@ -58,7 +59,7 @@ function displayNothing(){
     });
     
     document.getElementById("node-name").style.color = 'black';
-    var elements = ['play-info', 'sample-info', 'sleep-info', 'line-info', 'loop-info'], i;
+    var elements = ['play-info', 'sample-info', 'sleep-info', 'line-info', 'loop-info', 'cond-info'], i;
     for (i= 0; i < elements.length; i++){
         document.getElementById(elements[i]).style.display = 'none';
     }
@@ -88,7 +89,7 @@ function displayParam(node, nodeType, evt){
         }
     });
     document.getElementById("node-name").style.color = 'black';
-    var elements = ['play-info', 'sample-info', 'sleep-info', 'line-info', 'loop-info'], i;
+    var elements = ['play-info', 'sample-info', 'sleep-info', 'line-info', 'loop-info', 'cond-info'], i;
     switch (nodeType){
         case 'playNode':
             for (i = 0; i < elements.length; i++){
@@ -164,6 +165,52 @@ function displayParam(node, nodeType, evt){
                 }
             }
             break;
+        case 'condition':
+            for (i = 0; i < elements.length; i++){
+                if (elements[i] === 'cond-info'){
+                    document.getElementById(elements[i]).style.display = 'block';
+                    document.getElementById("condition").value = node.condition;
+                    var elt = ["mouse-event", "key-event", "rand-event"];
+                    switch(node.condition){
+                        case 'mouse':
+                            for (i = 0; i < elt.length; i++){
+                                if (elt[i] === 'mouse-event'){
+                                    document.getElementById(elt[i]).style.display = 'block';
+                                    document.getElementById("down-up").value = canvas.getActiveObject().mouse;
+                                } else {
+                                    document.getElementById(elt[i]).style.display = 'none';
+                                }
+                            }
+                            break;
+                        case 'key':
+                            for (i = 0; i < elt.length; i++){
+                                if (elt[i] === 'key-event'){
+                                    document.getElementById(elt[i]).style.display = 'block';
+                                    document.getElementById("whichkey").value = canvas.getActiveObject().key;
+                                } else {
+                                    document.getElementById(elt[i]).style.display = 'none';
+                                }
+                            }
+                            break;
+                        case 'rand':
+                            for (i = 0; i < elt.length; i++){
+                                if (elt[i] === 'rand-event'){
+                                    document.getElementById(elt[i]).style.display = 'block';
+                                    document.getElementById("aInput").value = canvas.getActiveObject().rand[0];
+                                    document.getElementById("bInput").value = canvas.getActiveObject().rand[1];
+                                    document.getElementById("comp").value = canvas.getActiveObject().rand[2];
+                                    document.getElementById("cInput").value = canvas.getActiveObject().rand[3];
+                                } else {
+                                    document.getElementById(elt[i]).style.display = 'none';
+                                }
+                            }
+                            break;
+                    }
+                } else {
+                    document.getElementById(elements[i]).style.display = 'none';
+                }
+            }
+            break;
     }
     if (nodeType === 'startNode'){
         document.getElementById('node-name').innerHTML = "This is the "+ nodeType + ". <br><br> Connect other nodes to it to start playing.";
@@ -176,7 +223,7 @@ function displayParam(node, nodeType, evt){
     }
 }
 
-//Event listeners for input changes on parameters
+//Listen for changes on Play parameters
 document.getElementById("note").oninput = document.getElementById("noteInput").oninput = function(){
     canvas.getActiveObject().note = this.value;
     smtgChanged = true;
@@ -190,6 +237,7 @@ document.getElementById("wave-type").oninput = function(){
     smtgChanged = true;
 };
 
+//Listen for changes on Sample parameters
 document.getElementById("sample").onchange = function(){
     canvas.getActiveObject().sample=this.options[this.selectedIndex].value;
     smtgChanged = true;
@@ -198,10 +246,14 @@ document.getElementById("loop").onchange = function(){
     canvas.getActiveObject().loop = this.checked;
     smtgChanged = true;
 };
+
+//Listen for changes on Sleep parameters
 document.getElementById("sleep").oninput = document.getElementById("sleepInput").oninput= function(){
     canvas.getActiveObject().duration = this.value;
     smtgChanged = true;
 };
+
+//Listen for change on Loop parameters
 document.getElementById("iteration").onchange = function(){
     canvas.getActiveObject().iteration = this.options[this.selectedIndex].value;
     smtgChanged = true;
@@ -209,17 +261,86 @@ document.getElementById("iteration").onchange = function(){
     var value = this.value;
     if (this.value === "x"){
         document.getElementById("xtimes-nbr").style.display = 'block';
-        document.getElementById("xInput").value = canvas.getActiveObject().x;
+        canvas.getActiveObject().x = document.getElementById("xInput").value;
     } else {
         document.getElementById("xtimes-nbr").style.display = "none";
     }
 }
-
 document.getElementById("xInput").onchange = function(){
     canvas.getActiveObject().x = this.value;
     smtgChanged = true;
 }
 
+//Listen for changes on Condition parameters
+document.getElementById("condition").onchange = function(){
+    canvas.getActiveObject().condition = this.options[this.selectedIndex].value;
+    smtgChanged = true;
+    var value = this.value;
+    var el = ["mouse-event", "key-event", "rand-event"];
+
+    switch(value){
+        case 'mouse':
+            for (i = 0; i < el.length; i++){
+                if (el[i] === 'mouse-event'){
+                    document.getElementById(el[i]).style.display = 'block';
+                    document.getElementById("down-up").options[document.getElementById("down-up").selectedIndex].value = "up";
+                } else {
+                    document.getElementById(el[i]).style.display = 'none';
+                }
+            }
+            break;
+        case 'key':
+            for (i = 0; i < el.length; i++){
+                if (el[i] === 'key-event'){
+                    document.getElementById(el[i]).style.display = 'block';
+                    document.getElementById("whichkey").options[document.getElementById("whichkey").selectedIndex].value = "65";
+                } else {
+                    document.getElementById(el[i]).style.display = 'none';
+                }
+            }
+            break;
+        case 'rand':
+            for (i = 0; i < el.length; i++){
+                if (el[i] === 'rand-event'){
+                    document.getElementById(el[i]).style.display = 'block';
+                    document.getElementById("aInput").value = "0";
+                    document.getElementById("bInput").value = "5";
+                    document.getElementById("comp").value = "more";
+                    document.getElementById("cInput").value = "3";
+                } else {
+                    document.getElementById(el[i]).style.display = 'none';
+                }
+            }
+            break;
+    }
+}
+document.getElementById("down-up").onchange = function(){
+    smtgChanged = true;
+    canvas.getActiveObject().mouse = this.options[this.selectedIndex].value;
+}
+document.getElementById("whichkey").onchange = function(){
+    smtgChanged = true;
+    canvas.getActiveObject().key = this.options[this.selectedIndex].value;
+}
+document.getElementById("comp").onchange = function(){
+    smtgChanged = true;
+    canvas.getActiveObject().rand[2] = this.options[this.selectedIndex].value;
+}
+document.getElementById("aInput").onchange = function(){
+    smtgChanged = true;
+    canvas.getActiveObject().rand[0] = this.value;
+}
+document.getElementById("bInput").onchange = function(){
+    smtgChanged = true;
+    canvas.getActiveObject().rand[1] = this.value;
+}
+document.getElementById("cInput").onchange = function(){
+    smtgChanged = true;
+    canvas.getActiveObject().rand[3] = this.value;
+}
+
+
+//Listen for changes on line deletion
 document.getElementById("delete-line").onchange = function(){
     if (this.options[this.selectedIndex].value === 'yes'){
         canvas.getActiveObject().addChildRemove();

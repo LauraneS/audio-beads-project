@@ -22,7 +22,7 @@ function unflatten(canvasObjectArray) {
     	if (lookup.hasOwnProperty(ID)) {
 	    	keyedElem = lookup[ID];
 	      	if (keyedElem.type !== 'line'){
-	      		if (keyedElem.type !== 'loop' && keyedElem.type !== 'startNode' && keyedElem.intersected === true){
+	      		if (keyedElem.type !== 'loop' && keyedElem.type !== 'startNode' && keyedElem.type !== 'conditional'){
 	      			var loopParentNode = lookup[keyedElem.loopParent];
 	      			loopParentNode.loopChildren.push(keyedElem);
 	      		}
@@ -30,8 +30,14 @@ function unflatten(canvasObjectArray) {
 		      	var parentsNbr = parents.length, k;
 		      	for(k=0; k < parentsNbr; k++){
 		      		if (keyedElem.parentNode[0] !== 0){
-			        	var parentNode = lookup[keyedElem.parentNode[0]];
-			       		parentNode.children.push(keyedElem);
+		      			var parentNode = lookup[keyedElem.parentNode[0]];
+		      			if (parentType !== undefined){
+			       			parentNode.children.push(keyedElem);
+		      			} else if (parentType === 'left'){
+			       			parentNode.leftChildren.push(keyedElem);
+		      			} else {
+		      				parentNode.rightChildren.push(keyedElem);
+		      			}	
 			      	}
 		      		// If the element is at the root level (so their parent is equal to O), add it to first level elements array.
 		     	 	else {

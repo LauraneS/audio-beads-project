@@ -14,6 +14,8 @@ function CondNode(coords){
 		hand3 = new fabric.Triangle({
 			width:10, height:10, angle: 180, left:c.width/2+6, top: c.getTop(), fill:'white', stroke: 'black'
 		});
+	var comp = document.getElementById("comp");
+	var whichkey = document.getElementById('whichkey');
 	var group = new fabric.Group([c, hand1, hand2, hand3],{
 			left: coords.x,
 			top:coords.y,
@@ -24,7 +26,11 @@ function CondNode(coords){
 			loopParent: '',
 			leftChildren: [],
 			rightChildren:[],
-			intersected: false, 
+			intersected: false,
+			condition:'mouse'
+			//mouse:'up',
+			//key:whichkey.options[whichkey.selectedIndex].value,
+			//rand:[document.getElementById("aInput").value, document.getElementById("bInput").value, comp.options[comp.selectedIndex].value, document.getElementById("cInput").value]
 	});
 
 	group.shadow = {
