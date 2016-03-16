@@ -5,40 +5,40 @@ html *
    font-family: Trebuchet MS !important;
 }
 
+body{
+	padding: 10px;
+}
+
 img{
 	max-width: 100%;
 	max-height:100%;
-	margin-top: 5px;
 }
 h3{
 	margin: 10px 0px 0px 0px; 
 	padding: 0px 0px 0px 0px;
 }
-
-div#mainbar{
-    width: 70%;
-    height: 100%;
-    margin-right: 4px;
-    display: inline-block;
+.row{
+	display:-webkit-box;
+	display:-webkit-flex;
+	display:-ms-flexbox;
+	display:flex;
+	justify-content:space-around;
+}
+.row > [class*='col-']{
+	display:flex;
+	flex-direction:column;
 }
 
 div#sidebar-left{
-	padding: 0.5em 0.5em;
-	/*margin: 0 0.5em 0.5em 0;*/
-	position: absolute;
-	float: left;
 	border: 2px solid black;
-	width: 6%;
-	height:80%;
-	min-width: 70px;
 }
 .icon{
 	margin-bottom: 20px;
 	margin-left: auto;
     margin-right: auto;
 	padding: 0.5em 0.5em;
-	height:60px;
-	width: 60px;
+	height:80px;
+	width: 80px;
 }
 .plusBtn{
 	width: 25px;
@@ -48,11 +48,7 @@ div#sidebar-left{
 	right: 5%;
 }
 
-div#wrapper {
-	position: absolute;
-	margin-left: 8%;
-    overflow: hidden;
-    width: 75%;	
+div#wrapper {	
     border: 2px solid black;
 }
 div#delete {
@@ -60,52 +56,41 @@ div#delete {
     bottom: 0.5%;
     right: 0.5%;
 }
+div#undelete{
+	right:0.5%;
+}
 
 div#sidebar-right{
-	float:right;
-	position: absolute;
-	margin-left: 84%;
-	width: 15%;
-	min-width: 140px;
     border: 2px solid black;
-    height: 80%;
 }
 .param{
 	padding: 0.5em 0.5em;
 }
 
 div#node-name{
-	padding: 0.5em 0.5em;
+	padding: 0.2em 0em;
 }
 
 div#menu {
-	position:absolute;
-	top: 85%;
-	left:30%;
-/*	width:80%;*/
-	display: inline-block;
-	padding: 0.5em 0.5em;
-	margin: 0 0.5em 0.5em 0;
-	/*border: 1px solid #D9D9D9;
-	border-radius: 3px;*/
+
+	/*border: 1px solid #D9D9D9;*/
+	/*border-radius: 3px;*/
 }
 
 .buttons {
 	cursor: pointer;
-	position: absolute;
-	padding: 0.5em 0.5em;
-	padding: 0.5em 0.5em;
-	height:30px;
-	width: 30px;
+	padding: 0.2em 0.2em;
+	height:40px;
+	width: 40px;
 	border: 1px solid #D9D9D9;
 	border-radius: 3px;
+}
+div#centBut{
+	margin: 0 auto;
 }
 div#play {
 	left:100px;
 }
-/*div#pause {
-	left:200px;
-}*/
 div#stop {
 	left: 200px;
 }

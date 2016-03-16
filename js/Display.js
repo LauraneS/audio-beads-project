@@ -1,3 +1,4 @@
+var lastDeleted;
 //Drag and drop to create a new node
 function dragStart(ev) {
     ev.dataTransfer.effectAllowed='move';
@@ -383,6 +384,7 @@ document.getElementById('delete').onmouseup = function(){
                 canvas.remove(line);
             }
     }
+    lastDeleted = actObject;
     canvas.remove(actObject);
     canvas.renderAll();
     smtgChanged = true;

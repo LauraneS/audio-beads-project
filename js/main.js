@@ -38,7 +38,7 @@ document.onkeyup = function(e){
 
 //Canvas Initialisation 
     canvas = this.__canvas = new fabric.Canvas('canvas');
-    canvas.setHeight(window.innerHeight*0.80);
+    canvas.setHeight(window.innerHeight*0.95);
     canvas.setWidth(window.innerWidth*0.80);
     canvas.selection = false;
     canvas.hoverCursor = canvas.moveCursor ='pointer';
