@@ -1,11 +1,3 @@
-// var isDClicked = false;
-
-// $(document).ready(function(){
-//   $('.buttons').dblclick(function(e){
-//     e.preventDefault();
-//   });
-// });
-
 //Drag and drop to create a new node
 function dragStart(ev) {
     ev.dataTransfer.effectAllowed='move';
@@ -284,6 +276,9 @@ document.getElementById("condition").onchange = function(){
 
     switch(value){
         case 'mouse':
+            canvas.getActiveObject().item(4).setElement(Image1);
+            canvas.getActiveObject().item(4).setTop(-8);
+            canvas.renderAll();
             for (i = 0; i < el.length; i++){
                 if (el[i] === 'mouse-event'){
                     document.getElementById(el[i]).style.display = 'block';
@@ -294,6 +289,9 @@ document.getElementById("condition").onchange = function(){
             }
             break;
         case 'key':
+            canvas.getActiveObject().item(4).setElement(Image2);
+            canvas.getActiveObject().item(4).setTop(-4);
+            canvas.renderAll();
             for (i = 0; i < el.length; i++){
                 if (el[i] === 'key-event'){
                     document.getElementById(el[i]).style.display = 'block';
@@ -304,6 +302,9 @@ document.getElementById("condition").onchange = function(){
             }
             break;
         case 'rand':
+             canvas.getActiveObject().item(4).setElement(Image3);
+            canvas.getActiveObject().item(4).setTop(-4);
+            canvas.renderAll();
             for (i = 0; i < el.length; i++){
                 if (el[i] === 'rand-event'){
                     document.getElementById(el[i]).style.display = 'block';
@@ -362,13 +363,6 @@ window.addEventListener('resize', function(){
     canvas.setWidth(window.innerWidth*0.80 - 20);
     canvas.item(0).set({left:canvas.getWidth()/2 - 15, top: 15});
 })
-
-//Adding double click event listener (not supported by fabric.js)
-// window.addEventListener('dblclick', function (e, self) {
-//     var target = canvas.findTarget(e);
-//     var pointer = canvas.getPointer(e.e);
-//     CondNode(pointer);
-// });
 
 //Deleting objects
 document.getElementById('delete').onmouseup = function(){
@@ -500,5 +494,17 @@ function remEffect(number, div){
     effectClicks--;   
 }
 
-    
+// var isDClicked = false;
+
+// $(document).ready(function(){
+//   $('.buttons').dblclick(function(e){
+//     e.preventDefault();
+//   });
+// });
+// //Adding double click event listener (not supported by fabric.js)
+// window.addEventListener('dblclick', function (e, self) {
+//     canvas.setZoom(3);
+// });
+
+
 
