@@ -49,7 +49,7 @@
         <canvas id="canvas" >
           This text is displayed if your browser does not support HTML5 Canvas.
         </canvas>
-        <div id="delete" class="buttons">
+        <div id="delete" title="Drag here to delete" class="buttons">
             <img src="png/bin.png" alt="Clear Canvas" id="deleteBtn">
         </div>
       </div>
@@ -178,14 +178,14 @@
           <div class="col-sm-1 col-sm-offset-2">
             <div class="row">
               <div id="play" class="buttons" onclick="canvasState()">
-                <img src="png/playBtn.png" alt="Play" id="playBtn" title="play">
+                <img src="png/playBtn.png" alt="Play" id="playBtn" title="Play">
               </div>
-              <div id="stop" class="buttons" onclick="stopSound()">
+              <div id="stop" title="Stop"class="buttons" onclick="stopSound()">
                 <img src="png/stopBtn.png" alt="Stop" id="stopBtn">
               </div>
             </div>
           </div>
-          <div id="undelete" title="Undelete" class="buttons" onclick="undelete()">
+          <div id="undelete" title="Undelete last deleted" class="buttons" onclick="undelete()">
             <img src="png/undelete.png" alt="Undelete" id="undeleteBtn">
           </div>
         </div>

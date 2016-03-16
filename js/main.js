@@ -376,7 +376,7 @@ function canvasState(){
         //Playing from parse
         smtgChanged = false;
         button.src='/png/pauseBtn.png';
-        button.title = "pause";
+        button.title = "Pause";
         var state = (JSON.stringify(canvas));
         var stateArray = $.parseJSON(state.substring(11, state.length - 17));
         var tree = unflatten(stateArray);
@@ -385,13 +385,13 @@ function canvasState(){
         //Sound was paused, nothing (significant) has changed in the meantime
         smtgChanged = false;
         button.src="/png/pauseBtn.png";
-        button.title = "pause";
+        button.title = "Pause";
         ac.resume();
     } else if (button.title === "play" && ctxtState === 'suspended' && smtgChanged) {
         //Sound was paused, something changed in the representation, need to parse again
         smtgChanged = false;
         button.src="/png/pauseBtn.png";
-        button.title = "pause";
+        button.title = "Pause";
         var state = (JSON.stringify(canvas));
         var stateArray = $.parseJSON(state.substring(11, state.length - 17));
         var tree = unflatten(stateArray);
@@ -400,7 +400,7 @@ function canvasState(){
         //Pausing the sound
         ac.suspend();
         button.src="/png/playBtn.png";
-        button.title = "play";
+        button.title = "Play";
         smtgChanged = false;
     } 
 }
@@ -411,7 +411,7 @@ function stopSound(){
         playBtClicks = 0;
         //Reset the play/pause button to initial play from parse
         document.getElementById("playBtn").src="/png/playBtn.png";
-        document.getElementById("playBtn").title = "play";
+        document.getElementById("playBtn").title = "Play";
         ac = new AudioContext();
     } catch(err){
         console.log("There is nothing to stop");
