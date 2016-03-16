@@ -61,7 +61,7 @@ function displayParam(node, nodeType, evt){
     canvas.forEachObject(function(obj){
         if (obj === node && nodeType === 'line'){
             obj.setShadow({
-                color: 'black',
+                color: obj.stroke,
                 blur: 10,    
                 offsetX: 0,
                 offsetY: 0,

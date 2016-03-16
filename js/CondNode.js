@@ -149,17 +149,6 @@ function CondNode(coords){
 		canvas.renderAll();
 	}
 
-	group.hideHands = function(){
-		hand1.set({stroke:'', fill:''});
-		hand2.set({stroke:'', fill:''});
-		hand3.set({stroke:'', fill:''});
-	}
-	group.findHands = function(){
-		hand1.set({stroke:'black', fill:'white'});
-		hand2.set({stroke:'black', fill:'white'});
-		hand3.set({stroke:'black', fill:'white'});
-	}
-
 	group.on('moving', function(){
 		if (group.intersected){
 			canvas.forEachObject(function(obj){

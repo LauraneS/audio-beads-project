@@ -131,7 +131,7 @@ canvas.on('object:added', function(e){
     displayParam(e.target, e.target.type, 'added');
     canvas.forEachObject(function(obj) {
       if (obj === e.target) return;
-        if (e.target.intersectsWithObject(obj) && obj.type === 'loop' && e.target.type !== 'loop'){
+        if (e.target.intersectsWithObject(obj) && obj.type === 'loop' && e.target.type !== 'loop' && e.target.type !== 'condition'){
             var center = e.target.getCenterPoint();
             var newleft = obj.closestLoopPoint(center).x-e.target.getWidth()/2;
             var newtop = obj.closestLoopPoint(center).y-e.target.getHeight()/2
@@ -158,7 +158,7 @@ function onObjectMoving(e){
     
     canvas.forEachObject(function(obj) {
       if (obj === activeObject) return;
-        if (activeObject.intersectsWithObject(obj) && obj.type === 'loop' && activeObject.type !== 'loop'){
+        if (activeObject.intersectsWithObject(obj) && obj.type === 'loop' && activeObject.type !== 'loop' && activeObject.type !== 'condition'){
             var center = activeObject.getCenterPoint();
             var newleft = obj.closestLoopPoint(center).x-activeObject.getWidth()/2;
             var newtop = obj.closestLoopPoint(center).y-activeObject.getHeight()/2
@@ -209,7 +209,7 @@ canvas.on('mouse:down', function(e){
                 side = 'left';
                 sourceMouseDown.set({lockMovementX: true, lockMovementY: true});
                 line = makeLine([obj.getLeftArrowCenter().x, obj.getLeftArrowCenter().y, obj.getLeftArrowCenter().x, obj.getLeftArrowCenter().y], 'left');
-                line.setStroke('green');
+                line.setStroke('#63CC00');
                 canvas.add(line);
                 line.sendToBack();
             } else if(obj.containsRightArrow(pointerDown)){
@@ -217,7 +217,7 @@ canvas.on('mouse:down', function(e){
                 side = 'right';
                 sourceMouseDown.set({lockMovementX: true, lockMovementY: true});
                 line = makeLine([obj.getRightArrowCenter().x, obj.getRightArrowCenter().y, obj.getRightArrowCenter().x, obj.getRightArrowCenter().y], 'right');
-                line.setStroke('red');
+                line.setStroke('#CC0300');
                 canvas.add(line);
                 line.sendToBack();
             }
@@ -228,8 +228,6 @@ canvas.on('mouse:down', function(e){
 //Tracking pointer
 canvas.on('mouse:move', function(e){
     var pointer = canvas.getPointer(e.e);
-    document.getElementById('pointerx').value = "x: " + pointer.x;
-    document.getElementById('pointery').value = "y: " + pointer.y;
     if (sourceMouseDown !== undefined){
         line.set({x2: pointer.x, y2: pointer.y});
         canvas.renderAll();
