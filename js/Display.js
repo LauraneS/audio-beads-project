@@ -359,9 +359,10 @@ document.getElementById("delete-line").onchange = function(){
 
 //On window resize
 window.addEventListener('resize', function(){
-    canvas.setHeight(window.innerHeight - 150);
-    canvas.setWidth(window.innerWidth*0.80 - 20);
-    canvas.item(0).set({left:canvas.getWidth()/2 - 15, top: 15});
+    canvas.setHeight(window.innerHeight*0.92);
+    canvas.setWidth(wrapper.offsetWidth);
+    canvas.item(0).set({left:canvas.getWidth()/2 - 30, top: 15}).setCoords();
+    canvas.renderAll();
 })
 
 //Deleting objects
@@ -488,6 +489,24 @@ function remEffect(number, div){
     }
     smtgChanged = true;
     effectClicks--;   
+}
+
+function undelete(){
+    try{
+        lastDeleted.set({
+            left:canvas.getWidth()/2-lastDeleted.getWidth()/2, 
+            top:canvas.getHeight()-lastDeleted.getHeight()/2 - 120, 
+            parentNode:[], 
+            parentType:'',
+            intersected:false,
+            loopParent:''
+        });
+        canvas.add(lastDeleted);
+        lastDeleted = undefined;
+    } catch (err){
+        console.log("Nothing to undelete.");
+    }
+    
 }
 
 // var isDClicked = false;

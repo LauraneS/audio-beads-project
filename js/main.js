@@ -38,12 +38,14 @@ document.onkeyup = function(e){
 
 //Canvas Initialisation 
     canvas = this.__canvas = new fabric.Canvas('canvas');
-    canvas.setHeight(window.innerHeight*0.95);
-    canvas.setWidth(window.innerWidth*0.80);
+    //var wrapper = document.getElementById('wrapper');
+    canvas.setHeight(window.innerHeight*0.92);
+    canvas.setWidth(wrapper.offsetWidth);
     canvas.selection = false;
     canvas.hoverCursor = canvas.moveCursor ='pointer';
-    StartNode({x:canvas.getWidth()/2 - 15, y: 15});
-    canvas.calcOffset() 
+    StartNode({x:canvas.getWidth()/2 - 30, y: 15});
+    canvas.calcOffset();
+    canvas.renderAll(); 
 
     fabric.util.addListener(document.getElementById('wrapper'), 'scroll', function () {
     canvas.calcOffset();

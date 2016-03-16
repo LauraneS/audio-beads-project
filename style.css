@@ -1,37 +1,57 @@
 html *
 {
-   /*font-size: 0.9em;*/
    color: #000;
    font-family: Trebuchet MS !important;
 }
-
 body{
-	padding: 10px;
+	padding-top: 10px;
+	padding-left:5px;
+	padding-right: 5px;
 }
-
 img{
 	max-width: 100%;
 	max-height:100%;
 }
 h3{
-	margin: 10px 0px 0px 0px; 
+	margin: 20px 0px 0px 0px; 
 	padding: 0px 0px 0px 0px;
 }
+button{
+	border: 1px solid #D9D9D9;
+	border-radius: 3px;
+	padding: 0.2em 0.2em;
+	background-color: white;
+}
+
 .row{
 	display:-webkit-box;
 	display:-webkit-flex;
 	display:-ms-flexbox;
 	display:flex;
-	justify-content:space-around;
 }
 .row > [class*='col-']{
 	display:flex;
 	flex-direction:column;
 }
-
+canvas{
+	height:95%;
+}
 div#sidebar-left{
 	border: 2px solid black;
+	margin-right: 2px;
+    padding: 0px;
 }
+div#wrapper {	
+    border: 2px solid black;
+    margin: 0px;
+    padding: 0px;
+}
+div#sidebar-right{
+	padding:5px;
+	margin-left:2px;
+    border: 2px solid black;
+}
+
 .icon{
 	margin-bottom: 20px;
 	margin-left: auto;
@@ -40,16 +60,16 @@ div#sidebar-left{
 	height:80px;
 	width: 80px;
 }
-.plusBtn{
-	width: 25px;
-	image-rendering: -webkit-optimize-contrast;
-	display:inline; 
-	position:absolute; 
-	right: 5%;
+
+div#node-name{
+	padding: 0.5em 0.2em;
 }
 
-div#wrapper {	
-    border: 2px solid black;
+div#play {
+	margin:auto;
+}
+div#stop {
+	margin:auto;
 }
 div#delete {
 	position: absolute;
@@ -57,24 +77,13 @@ div#delete {
     right: 0.5%;
 }
 div#undelete{
+	position: absolute;
 	right:0.5%;
 }
 
-div#sidebar-right{
-    border: 2px solid black;
-}
+
 .param{
-	padding: 0.5em 0.5em;
-}
-
-div#node-name{
-	padding: 0.2em 0em;
-}
-
-div#menu {
-
-	/*border: 1px solid #D9D9D9;*/
-	/*border-radius: 3px;*/
+	padding: 0.5em 0.2em;
 }
 
 .buttons {
@@ -85,16 +94,13 @@ div#menu {
 	border: 1px solid #D9D9D9;
 	border-radius: 3px;
 }
-div#centBut{
-	margin: 0 auto;
-}
-div#play {
-	left:100px;
-}
-div#stop {
-	left: 200px;
-}
-
 .effect-menu{
 	right: 1%;
+}
+.plusBtn{
+	width: 25px;
+	image-rendering: -webkit-optimize-contrast;
+	display:inline; 
+	position:absolute; 
+	right: 5%;
 }

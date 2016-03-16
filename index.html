@@ -69,13 +69,13 @@
 
         <div class = "param" id="play-info" style="display:none">
           <form onSubmit="return false;">
-            Wave form:
+            Wave form: <br>
             <select id="wave-type">
               <option value="sawtooth">Sawtooth</option>
               <option value="sine">Sine</option>
               <option value="square">Square</option>
               <option value="triangle">Triangle</option>
-            </select> <br>
+            </select> <br><br>
 
             Note: <input type="text" id="noteInput" value="60", onchange=" document.getElementById('note').value=this.value;", style="width: 20px; text-align: center"><br>
             <input type="range" id="note" min="0" max="127", step="1", value= "60" onchange=" document.getElementById('noteInput').value=this.value;"> <br>                                                   
@@ -83,13 +83,14 @@
             <input type="range" id="duration" min="0" max = "10" step= "1" value="2" onchange=" document.getElementById('durationInput').value=this.value;"> <br> <br>
 
             Effects <img class="plusBtn" id="effect-menu" src="png/circle.svg" onclick="addEffect('#play-effects')"/>
+            <br><br>
             <div id="play-effects"></div>
           </form>
         </div>
 
         <div class = "param" id="sample-info" style="display:none">
           <form onSubmit="return false;">
-              Sample: 
+              Sample: <br>
             <select id="sample">
               <option value="hihat" selected>High-hat</option>
               <option value="drum-kick">Drum kick</option>
@@ -97,7 +98,7 @@
               <option value="beat">Beat</option>
               <option value="bass">Bass</option>
               <option value="flute">Flute</option>
-            </select> <br>
+            </select> <br> <br>
 
             Loop
             <input type="checkbox" id="loop" value="Loop"><br><br>
@@ -118,9 +119,8 @@
           <form onSubmit="return false;">
             Repeat: 
             <select id="iteration">
-              <option disabled selected> -- select an option -- </option>
-                <option value="forever">Forever</option>
-                <option value="x">x times</option>
+              <option value="forever">Forever</option>
+              <option value="x">x times</option>
             </select> <br>
           </form>
           <form onSubmit="return false;" id="xtimes-nbr" style="display:none">
@@ -132,7 +132,6 @@
           <form onSubmit="return false;">
             Condition: 
             <select id="condition">
-              <option disabled selected> -- select an option -- </option>
                 <option value="mouse">Mouse event</option>
                 <option value="key">Key press</option>
                 <option value="rand"> Randomization</option>
@@ -173,16 +172,28 @@
         </div>
       </div>
     </div>
-    <div class="row">
-      <div id="play" class="buttons" onclick="canvasState()">
-            <img src="png/playBtn.png" alt="Play" id="playBtn" title="play">
-          </div>
-          <div id="stop" class="buttons" onclick="stopSound()">
-            <img src="png/stopBtn.png" alt="Stop" id="stopBtn">
+    <div class="row" style="padding-top:5px">
+      <div class="col-sm-11">
+        <div class="row">
+          <div class="col-sm-1 col-sm-offset-2">
+            <div class="row">
+              <div id="play" class="buttons" onclick="canvasState()">
+                <img src="png/playBtn.png" alt="Play" id="playBtn" title="play">
+              </div>
+              <div id="stop" class="buttons" onclick="stopSound()">
+                <img src="png/stopBtn.png" alt="Stop" id="stopBtn">
+              </div>
+            </div>
           </div>
           <div id="undelete" class="buttons" onclick="undelete()">
             <img src="png/undelete.png" alt="Undelete" id="undeleteBtn">
           </div>
+        </div>
+        
+        
+        
+      </div>
+      
     </div>
   </div>
 
@@ -202,7 +213,6 @@
 <script src="js/BufferLoader.js"></script>
 <script src="js/CondNode.js"></script>
 <script src="js/Display.js"></script>
-<script src="js/EffectNode.js"></script>
 <script src="js/Interpreter.js"></script>
 <script src="js/LoopNode.js"></script>
 <script src="js/Node.js"></script>
@@ -211,7 +221,6 @@
 <script src="js/SampleNode.js"></script>
 <script src="js/SleepNode.js"></script>
 <script src="js/StartNode.js"></script>
-<script src ="js/TempoNode.js"></script>
 
 
 <script src="js/main.js"></script>

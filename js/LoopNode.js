@@ -4,7 +4,7 @@ function LoopNode(coords){
   loopGroup.item(0).set({stroke:'#86269B', fill: '', strokeWidth: 2});
   loopGroup.loopChildren = [];
   var ite = document.getElementById("iteration");
-  loopGroup.iteration = ite.options[ite.selectedIndex].value;
+  loopGroup.iteration = 'forever';
   loopGroup.x = document.getElementById("xInput").value;
   loopGroup.shadow = {
         color: '#0b030d',
