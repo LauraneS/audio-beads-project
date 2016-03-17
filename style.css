@@ -66,10 +66,10 @@ div#node-name{
 }
 
 div#play {
-	margin:auto;
+
 }
 div#stop {
-	margin:auto;
+
 }
 div#delete {
 	position: absolute;
@@ -93,6 +93,26 @@ div#undelete{
 	width: 40px;
 	border: 1px solid #D9D9D9;
 	border-radius: 3px;
+
+}
+.task{
+	cursor: pointer;
+	padding: 0.2em 0.2em;
+	height:25px;
+	width: 50px;
+	border: 1px solid #D9D9D9;
+	border-radius: 3px;
+	text-align: center;
+}
+.taskN{
+	cursor: pointer;
+	padding: 0.2em 0.2em;
+	height:25px;
+	width: 50px;
+	border: 1px solid white;
+	border-radius: 3px;
+	text-align: center;
+	font-weight:bold;
 }
 .effect-menu{
 	right: 1%;

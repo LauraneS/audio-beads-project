@@ -40,6 +40,58 @@ function dragDrop(ev) {
     ev.stopPropagation();
     return false;
 }
+var ongoing;
+function taskStart(){
+    if (ongoing){
+        return
+    } else {
+        clickCount = 0;
+        delCount = 0;
+        startTime = undefined;
+        endTime = undefined;
+        ongoing = true;
+        //load new task
+        //reset mouse clicks and deletion counters
+        startTime = new Date().getTime();
+        console.log(startTime);
+        $('#taskStart').attr('style', 'background-color: grey');
+        $('#taskFinish').attr('style', 'background-color: white');
+    }
+}
+
+function taskFinish(){
+    if (ongoing){
+        endTime = new Date().getTime();
+        var elapsedT = (endTime-startTime)/1000;
+        //CSV
+        data.push([userID, taskCounter, elapsedT, clickCount, delCount]);
+        console.log(data)
+        //Need condition for last task
+        taskCounter++;
+        // if (last Task){
+            // data.forEach(function(infoArray, index){
+            //     dataString = infoArray.join(",");
+            //     csvContent += index < data.length ? dataString+ "\n" : dataString;
+
+            // }); 
+            // var encodedUri = encodeURI(csvContent);
+            // var link = document.createElement("a");
+            // var title = "user" + userID + "_data.csv"
+            // link.setAttribute("href", encodedUri);
+            // link.setAttribute("download", title);
+
+            // link.click();
+            //document.getElementById("taskNbr").innerHTML = "Done!";
+        // }
+        // else 
+        document.getElementById("taskNbr").innerHTML = "Task "+ taskCounter;
+        $('#taskFinish').attr('style', 'background-color: grey');
+        $('#taskStart').attr('style', 'background-color: white');
+        ongoing = false;
+    } else {
+        return
+    }
+}
 
 function displayNothing(){
     canvas.forEachObject(function(obj){
@@ -352,6 +404,7 @@ document.getElementById("delete-line").onchange = function(){
         canvas.remove(canvas.getActiveObject());
         document.getElementById("node-name").innerHTML = "The line has been deleted.";
         document.getElementById('line-info').style.display = 'none';
+        delCount++;
         smtgChanged = true;
     }
 }
@@ -376,17 +429,20 @@ document.getElementById('delete').onmouseup = function(){
                 var line = actObject.addChild.from[i];
                 line.addChildRemove();
                 canvas.remove(line);
+                delCount++;
             }
         if (actObject.addChild.to)
             for (var i = actObject.addChild.to.length - 1; i >= 0; i--) {
                 var line = actObject.addChild.to[i];
                 line.addChildRemove();
                 canvas.remove(line);
+                delCount++;
             }
     }
     lastDeleted = actObject;
     canvas.remove(actObject);
     canvas.renderAll();
+    delCount++;
     smtgChanged = true;
 }
 

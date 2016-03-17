@@ -1,10 +1,14 @@
-window.onload = init;
-
 var line, smtgChanged = false;
 var canvas, bufferLoader, bList, ac = new AudioContext(), tuna = new Tuna(ac);
 var lastAdded= window._lastAdded = [];
 
 var sourceMouseDown, line, side, keyDown, isDown;
+var userID, taskCounter=1, startTime, endTime, clickCount=0, delCount=0, data=[], csvContent = "data:text/csv;charset=utf-8,";
+
+window.onload = init;
+document.onclick = function(){
+    clickCount++
+}
 
 document.onkeydown = function(e){
     switch (e.keyCode){
@@ -67,6 +71,13 @@ function init(){
     );
 
   bufferLoader.load();
+
+  //UserID
+  // userID = prompt("Please enter your userID.");
+
+  //   if (userID === "") {
+  //       userID = prompt("Please enter your userID.");
+  //   }
 }
 
 function finishedLoading(bufferList){
@@ -268,13 +279,13 @@ canvas.on('mouse:up', function(e){
                 canvas.setActiveObject(line);
                 displayParam(line, 'line', 'added');
                 smtgChanged = true;
-                if (sourceMouseDown.type !== 'startNode'){
-                    sourceMouseDown.set({lockMovementX: false, lockMovementY: false});
-                }
             }
         } else {
             canvas.remove(line);
             canvas.renderAll();
+        }
+        if (sourceMouseDown.type !== 'startNode'){
+            sourceMouseDown.set({lockMovementX: false, lockMovementY: false});
         }
         line = undefined;
         sourceMouseDown = undefined;
