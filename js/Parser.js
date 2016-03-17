@@ -195,7 +195,14 @@ function connectEffect(effect){
 
 function parseSleep(canvasObject, t){
 	var tt = parseInt(canvasObject.duration);
-	parse(canvasObject.children, tt);
+	if (canvasObject.children[0] === undefined){
+			doneThreads++;
+			if (doneThreads === threads) {
+				setButton();
+			}
+		} else {
+			parse(canvasObject.children, tt);
+		}		
 }
 
 function parseSample(canvasObject, t){
