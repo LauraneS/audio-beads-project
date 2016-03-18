@@ -147,6 +147,10 @@ function parsePlay(canvasObject, t){
 					setButton();
 				}
 			} else {
+				if (canvasObject.children.length > 1){
+					threads += canvasObject.children.length -1;
+					console.log(threads);
+				}
 				parse(canvasObject.children);
 			}
 		}
@@ -201,6 +205,11 @@ function parseSleep(canvasObject, t){
 				setButton();
 			}
 		} else {
+			if (canvasObject.children.length > 1){
+				threads += canvasObject.children.length -1;
+				console.log(threads);
+
+			}
 			parse(canvasObject.children, tt);
 		}		
 }
@@ -260,6 +269,9 @@ function parseSample(canvasObject, t){
 				setButton();
 			}
 		} else {
+			if (canvasObject.children.length > 1){
+				threads += canvasObject.children.length -1;
+			}
 			parse(canvasObject.children);
 		}		
 	}
@@ -329,6 +341,10 @@ function parseLoop(loopObject){
 				setButton();
 			}
 		} else {
+			if (loopObject.children.length > 1){
+				threads += loopObject.children.length -1;
+				console.log(threads);
+			}
 				parse(loopObject.children, t);
 		}
 	}
