@@ -54,8 +54,9 @@ function taskStart(){
         //reset mouse clicks and deletion counters
         startTime = new Date().getTime();
         console.log(startTime);
-        $('#taskStart').attr('style', 'background-color: grey');
-        $('#taskFinish').attr('style', 'background-color: white');
+        document.getElementById("taskStart").innerHTML = "Started";
+        $('#taskStart').attr('style', 'margin-left:15px;background-color: grey');
+        $('#taskFinish').attr('style', 'margin-left:5px;background-color: white');
     }
 }
 
@@ -80,8 +81,8 @@ function taskFinish(){
 
             document.getElementById("taskNbr").innerHTML = "Done!";
             setTimeout(function(){link.click();}, 60000);
-            $('#taskFinish').attr('style', 'background-color: grey');
-            $('#taskStart').attr('style', 'background-color: grey');
+            $('#taskFinish').attr('style', 'margin-left:5px;background-color: grey');
+            $('#taskStart').attr('style', 'margin-left:15px; background-color: grey');
             $('#taskFinish').onclick = function(){
                 return false;
             }
@@ -92,8 +93,9 @@ function taskFinish(){
         } else {
             taskCounter++;
             document.getElementById("taskNbr").innerHTML = "Task "+ taskCounter;
-            $('#taskFinish').attr('style', 'background-color: grey');
-            $('#taskStart').attr('style', 'background-color: white');
+            document.getElementById("taskStart").innerHTML = "Start";
+            $('#taskFinish').attr('style', 'margin-left:5px; background-color: grey');
+            $('#taskStart').attr('style', 'margin-left:15px; background-color: white');
             ongoing = false;
         }
         
@@ -484,6 +486,9 @@ window.addEventListener('resize', function(){
 //Deleting objects
 document.getElementById('delete').onmouseup = function(){
     var actObject = canvas.getActiveObject();
+    if (actObject.type = 'line'){
+        actObject.addChildRemove();
+    }
 
     //Deleting lines (if any) connected to the node
     if (actObject.addChild) {
