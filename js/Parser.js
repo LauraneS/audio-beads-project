@@ -1,10 +1,12 @@
-var doneThreads, threads;
+var doneThreads, threads, done=true;
 function setButton() {
 	
 	var button = document.getElementById("playBtn");
 	button.src="/png/playBtn.png";
     button.title = "Play";
     smtgChanged = false;
+    done = true;
+    $('#playBtn').attr('style', 'background-color: white');
 }
 
 function unflatten(canvasObjectArray) {

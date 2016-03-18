@@ -394,37 +394,40 @@ function addChildMoveLine(event) {
 function canvasState(){
     var ctxtState = ac.state;
     var button = document.getElementById("playBtn");
-    if (button.title === "Play" && ctxtState === 'running'){
+    if (button.title === "Play" && ctxtState === 'running' && done){
         //Playing from parse
         smtgChanged = false;
-        button.src='/png/pauseBtn.png';
-        button.title = "Pause";
+        $('#playBtn').attr('style', 'background-color: grey');
+        done = false;
+        // button.src='/png/pauseBtn.png';
+        // button.title = "Pause";
         var state = (JSON.stringify(canvas));
         var stateArray = $.parseJSON(state.substring(11, state.length - 17));
         var tree = unflatten(stateArray);
         parse(tree); 
-    } else if(button.title=== "Play" && ctxtState === 'suspended' && !smtgChanged){
-        //Sound was paused, nothing (significant) has changed in the meantime
-        smtgChanged = false;
-        button.src="/png/pauseBtn.png";
-        button.title = "Pause";
-        ac.resume();
-    } else if (button.title === "Play" && ctxtState === 'suspended' && smtgChanged) {
-        //Sound was paused, something changed in the representation, need to parse again
-        smtgChanged = false;
-        button.src="/png/pauseBtn.png";
-        button.title = "Pause";
-        var state = (JSON.stringify(canvas));
-        var stateArray = $.parseJSON(state.substring(11, state.length - 17));
-        var tree = unflatten(stateArray);
-        parse(tree);
-    } else if (button.src="/png/pauseBtn.png"){
-        //Pausing the sound
-        ac.suspend();
-        button.src="/png/playBtn.png";
-        button.title = "Play";
-        smtgChanged = false;
     } 
+    // else if(button.title=== "Play" && ctxtState === 'suspended' && !smtgChanged){
+    //     //Sound was paused, nothing (significant) has changed in the meantime
+    //     smtgChanged = false;
+    //     button.src="/png/pauseBtn.png";
+    //     button.title = "Pause";
+    //     ac.resume();
+    // } else if (button.title === "Play" && ctxtState === 'suspended' && smtgChanged) {
+    //     //Sound was paused, something changed in the representation, need to parse again
+    //     smtgChanged = false;
+    //     button.src="/png/pauseBtn.png";
+    //     button.title = "Pause";
+    //     var state = (JSON.stringify(canvas));
+    //     var stateArray = $.parseJSON(state.substring(11, state.length - 17));
+    //     var tree = unflatten(stateArray);
+    //     parse(tree);
+    // } else if (button.src="/png/pauseBtn.png"){
+    //     //Pausing the sound
+    //     ac.suspend();
+    //     button.src="/png/playBtn.png";
+    //     button.title = "Play";
+    //     smtgChanged = false;
+    // } 
 }
 
 function stopSound(){

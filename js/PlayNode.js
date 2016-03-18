@@ -2,10 +2,9 @@ function PlayNode(coords){
 
 	var playGroup = Node('playNode', coords, 30, true, true);
 	playGroup.item(0).set({stroke:'#FE9601'});
-	playGroup.note = document.getElementById("note").value;
-	playGroup.duration = document.getElementById("duration").value;
-	var wave = document.getElementById('wave-type')
-	playGroup.wave = wave.options[wave.selectedIndex].value;
+	playGroup.note = 60;
+	playGroup.duration = 1;
+	playGroup.wave = 'sine';
 	playGroup.effects = [];
 	playGroup.shadow = {
 		    color: '#FE9601',
