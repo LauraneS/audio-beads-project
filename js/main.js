@@ -424,6 +424,7 @@ function stopSound(){
         document.getElementById("playBtn").src="/png/playBtn.png";
         document.getElementById("playBtn").title = "Play";
         ac = new AudioContext();
+        tuna = new Tuna(ac); 
     } catch(err){
         console.log("There is nothing to stop");
     }

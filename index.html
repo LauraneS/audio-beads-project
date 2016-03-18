@@ -42,16 +42,16 @@
   <div class="container-fluid" oncontextmenu="return false;">
     <div class="row" id="mainbar">
       <div class="col-sm-1" id="sidebar-left">
-        <h3 style="text-align:center">Node Box</h3>
-        <div class="icon" title="Play Node"draggable="true" id="playIcon" ondragstart="return dragStart(event)" style="text-align:center"> Note
+        <h3 style="text-align:center">Bead Box</h3>
+        <div class="icon" title="Note bead"draggable="true" id="playIcon" ondragstart="return dragStart(event)" style="text-align:center"> Note
           <img src="png/PlayNode.png" alt="PlayNode" id="playImg">
         </div> 
 
-        <div class="icon" title="Sleep Node" draggable="true" id="sleepIcon" ondragstart="return dragStart(event)" style="text-align:center"> Sleep
+        <div class="icon" title="Sleep bead" draggable="true" id="sleepIcon" ondragstart="return dragStart(event)" style="text-align:center"> Sleep
           <img src="png/SleepNode.png" alt="SleepNode" id="sleepImg">
         </div> 
 
-        <div class="icon" title="Sample Node" draggable="true" id="SampleIcon" ondragstart="return dragStart(event)" style="text-align:center"> Sample
+        <div class="icon" title="Sample bead" draggable="true" id="SampleIcon" ondragstart="return dragStart(event)" style="text-align:center"> Sample
           <img src="png/SampleNode.png" alt="SampleNode" id="sampleImg">
         </div> 
 
@@ -112,9 +112,9 @@
           <form onSubmit="return false;">
               Sample: <br>
             <select id="sample">
-              <option value="hihat" selected>High-hat</option>
+              <option value="hihat">High-hat</option>
               <option value="drum-kick">Drum kick</option>
-              <option value="alien">Alien</option>
+              <option value="alien" selected>Alien</option>
               <option value="beat">Beat</option>
               <option value="bass">Bass</option>
               <option value="flute">Flute</option>
@@ -154,7 +154,7 @@
             <select id="condition">
                 <option value="mouse">Mouse event</option>
                 <option value="key">Key press</option>
-                <option value="rand"> Randomization</option>
+                <option value="rand"> Random</option>
             </select> <br><br>
           </form>
 
@@ -200,6 +200,7 @@
               <div class="taskN" id="taskNbr">Task 1</div>
               <div class="task" id="taskStart" style="margin-left:5px;" onclick="taskStart();">Start</div>
               <div class="task" id="taskFinish" style="margin-left:5px; background-color:grey" onclick="taskFinish();">Finish</div>
+              <div class="task" id="clear" style="margin-left:5px; background-color:white;" onclick="clearCanvas();">Clear</div>
             </div>
           </div>
           <div class="col-sm-2 col-sm-offset-2">
@@ -216,11 +217,7 @@
             <img src="png/undelete.png" alt="Undelete" id="undeleteBtn">
           </div>
         </div>
-        
-        
-        
-      </div>
-      
+      </div>     
     </div>
   </div>
 

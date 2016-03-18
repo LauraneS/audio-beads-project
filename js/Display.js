@@ -260,13 +260,51 @@ function displayParam(node, nodeType, evt){
             }
             break;
     }
-    if (nodeType === 'startNode'){
-        document.getElementById('node-name').innerHTML = "This is the "+ nodeType + ". <br><br> Connect other nodes to it to start playing.";
+    if (evt === 'selected'){
+        switch (nodeType){
+            case 'startNode':
+                document.getElementById('node-name').innerHTML = "This is the Start bead. <br><br> Connect other nodes to it to start playing.";
+                break;
+            case 'playNode':
+                document.getElementById('node-name').innerHTML = "This is a Note bead.";
+                break;
+            case 'sleepNode':
+                document.getElementById('node-name').innerHTML = "This is a Sleep bead.";
+                break;
+            case 'sampleNode':
+                document.getElementById('node-name').innerHTML = "This is a Sample bead.";
+                break;
+            case 'loop':
+                document.getElementById('node-name').innerHTML = "This is a Loop.";
+                break;
+            case 'condition':
+                document.getElementById('node-name').innerHTML = "This is a Condition.";
+                break;
+            case 'line':
+                document.getElementById('node-name').innerHTML = "This is a line.";
+                break;
+        }
+        
     } else {
-        if (evt === 'selected'){
-            document.getElementById('node-name').innerHTML = "This is a "+ nodeType + ".";
-        } else {
-            document.getElementById('node-name').innerHTML = "You added a "+ nodeType + ".";
+        switch (nodeType){
+            case 'playNode':
+                document.getElementById('node-name').innerHTML = "You added a Note bead.";
+                break;
+            case 'sleepNode':
+                document.getElementById('node-name').innerHTML = "You added a Sleep bead.";
+                break;
+            case 'sampleNode':
+                document.getElementById('node-name').innerHTML = "You added a Sample bead.";
+                break;
+            case 'loop':
+                document.getElementById('node-name').innerHTML = "You added a Loop.";
+                break;
+            case 'condition':
+                document.getElementById('node-name').innerHTML = "You added a Condition.";
+                break;
+            case 'line':
+                document.getElementById('node-name').innerHTML = "You added a line.";
+                break;
         }
     }
 }
@@ -562,6 +600,11 @@ function undelete(){
         console.log("Nothing to undelete.");
     }
     
+}
+
+function clearCanvas(){
+    canvas.clear();
+    StartNode({x:canvas.getWidth()/2 - 30, y: 15});
 }
 
 // var isDClicked = false;
