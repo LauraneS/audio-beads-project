@@ -73,11 +73,11 @@ function init(){
   bufferLoader.load();
 
   //UserID
-  // userID = prompt("Please enter your userID.");
+  userID = prompt("Please enter your userID.");
 
-  //   if (userID === "") {
-  //       userID = prompt("Please enter your userID.");
-  //   }
+    if (userID === "") {
+        userID = prompt("Please enter your userID.");
+    }
 }
 
 function finishedLoading(bufferList){
@@ -421,7 +421,6 @@ function canvasState(){
 function stopSound(){
     try{
         ac.close();
-        playBtClicks = 0;
         //Reset the play/pause button to initial play from parse
         document.getElementById("playBtn").src="/png/playBtn.png";
         document.getElementById("playBtn").title = "Play";
