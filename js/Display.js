@@ -65,9 +65,38 @@ function taskFinish(){
         var elapsedT = (endTime-startTime)/1000;
         //CSV
         data.push([userID, taskCounter, elapsedT, clickCount, delCount]);
-        console.log(data)
-        //Need condition for last task
-        taskCounter++;
+        //8 tasks timed by the system
+        if(taskCounter === 8){
+            data.forEach(function(infoArray, index){
+                dataString = infoArray.join(",");
+                csvContent += index < data.length ? dataString+ "\n" : dataString;
+
+            }); 
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            var title = "user" + userID + "_data.csv"
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", title);
+
+            document.getElementById("taskNbr").innerHTML = "Done!";
+            setTimeout(function(){link.click();}, 60000);
+            $('#taskFinish').attr('style', 'background-color: grey');
+            $('#taskStart').attr('style', 'background-color: grey');
+            $('#taskFinish').onclick = function(){
+                return false;
+            }
+            $('#taskStart').onclick = function(){
+                return false;
+            }
+
+        } else {
+            taskCounter++;
+            document.getElementById("taskNbr").innerHTML = "Task "+ taskCounter;
+            $('#taskFinish').attr('style', 'background-color: grey');
+            $('#taskStart').attr('style', 'background-color: white');
+            ongoing = false;
+        }
+        
         // if (last Task){
             // data.forEach(function(infoArray, index){
             //     dataString = infoArray.join(",");
@@ -84,10 +113,7 @@ function taskFinish(){
             //document.getElementById("taskNbr").innerHTML = "Done!";
         // }
         // else 
-        document.getElementById("taskNbr").innerHTML = "Task "+ taskCounter;
-        $('#taskFinish').attr('style', 'background-color: grey');
-        $('#taskStart').attr('style', 'background-color: white');
-        ongoing = false;
+        
     } else {
         return
     }

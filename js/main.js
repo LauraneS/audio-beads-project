@@ -147,7 +147,8 @@ canvas.on('object:added', function(e){
         if (e.target.intersectsWithObject(obj) && obj.type === 'loop' && e.target.type !== 'loop' && e.target.type !== 'condition'){
             var center = e.target.getCenterPoint();
             var newleft = obj.closestLoopPoint(center).x-e.target.getWidth()/2;
-            var newtop = obj.closestLoopPoint(center).y-e.target.getHeight()/2
+            var newtop = obj.closestLoopPoint(center).y-e.target.getHeight()/2;
+            obj.sendToBack();
             e.target.set({left:newleft, top: newtop}).setCoords();
             canvas.renderAll(); 
             if (e.target.loopParent !== obj.ID){
@@ -177,7 +178,8 @@ function onObjectMoving(e){
             }
             var center = activeObject.getCenterPoint();
             var newleft = obj.closestLoopPoint(center).x-activeObject.getWidth()/2;
-            var newtop = obj.closestLoopPoint(center).y-activeObject.getHeight()/2
+            var newtop = obj.closestLoopPoint(center).y-activeObject.getHeight()/2;
+            obj.sendToBack();
             activeObject.set({left:newleft, top: newtop}).setCoords();
             canvas.renderAll(); 
             if (activeObject.loopParent !== obj.ID){
