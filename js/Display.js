@@ -486,8 +486,13 @@ window.addEventListener('resize', function(){
 //Deleting objects
 document.getElementById('delete').onmouseup = function(){
     var actObject = canvas.getActiveObject();
-    if (actObject.type = 'line'){
+    if (actObject.type === 'line'){
         actObject.addChildRemove();
+        canvas.remove(actObject);
+        canvas.renderAll();
+        delCount++;
+        smtgChanged = true;
+        return
     }
 
     //Deleting lines (if any) connected to the node
