@@ -3,7 +3,7 @@ var canvas, bufferLoader, bList, ac = new AudioContext(), tuna = new Tuna(ac);
 var lastAdded= window._lastAdded = [];
 
 var sourceMouseDown, line, side, keyDown, isDown;
-var userID, taskCounter=1, startTime, endTime, clickCount=0, delCount=0, data=[], csvContent = "data:text/csv;charset=utf-8,";
+var userID, taskS, taskF, startTime, endTime, clickCount=0, delCount=0, data=[], csvContent = "data:text/csv;charset=utf-8,";
 
 window.onload = init;
 document.onclick = function(){
@@ -73,11 +73,20 @@ function init(){
   bufferLoader.load();
 
   //UserID
-  userID = prompt("Please enter your userID.");
+  // userID = prompt("Please enter your userID.");
 
-    if (userID === "") {
-        userID = prompt("Please enter your userID.");
-    }
+  //   if (userID === "") {
+  //       userID = prompt("Please enter your userID.");
+  //   }
+
+  //Task to start on & How many tasks
+  var tasks = prompt("Start task; nbr of tasks.");
+  taskS = parseInt(tasks.substring(0,1));
+  taskF = parseInt(tasks.substring(2,3));
+
+  document.getElementById("taskNbr").innerHTML = "Task "+ taskS;
+  console.log(taskS, taskF);
+
 }
 
 function finishedLoading(bufferList){

@@ -65,9 +65,9 @@ function taskFinish(){
         endTime = new Date().getTime();
         var elapsedT = (endTime-startTime)/1000;
         //CSV
-        data.push([userID, taskCounter, elapsedT, clickCount, delCount]);
+        data.push([userID, taskS, elapsedT, clickCount, delCount]);
         //8 tasks timed by the system
-        if(taskCounter === 8){
+        if(taskS === taskF){
             data.forEach(function(infoArray, index){
                 dataString = infoArray.join(",");
                 csvContent += index < data.length ? dataString+ "\n" : dataString;
@@ -91,8 +91,8 @@ function taskFinish(){
             }
 
         } else {
-            taskCounter++;
-            document.getElementById("taskNbr").innerHTML = "Task "+ taskCounter;
+            taskS++;
+            document.getElementById("taskNbr").innerHTML = "Task "+ taskS;
             document.getElementById("taskStart").innerHTML = "Start";
             $('#taskFinish').attr('style', 'margin-left:5px; background-color: grey');
             $('#taskStart').attr('style', 'margin-left:15px; background-color: white');
@@ -379,7 +379,7 @@ document.getElementById("iteration").onchange = function(){
         document.getElementById("xtimes-nbr").style.display = "none";
     }
 }
-document.getElementById("xInput").onchange = function(){
+document.getElementById("xInput").oninput = function(){
     canvas.getActiveObject().x = this.value;
     smtgChanged = true;
 }

@@ -93,7 +93,7 @@ div#undelete{
 	cursor: pointer;
 	padding: 0.2em 0.2em;
 	height:25px;
-	width: 50px;
+	width: 60px;
 	border: 1px solid #D9D9D9;
 	border-radius: 3px;
 	text-align: center;
@@ -110,6 +110,11 @@ div#undelete{
 	text-align: center;
 	font-weight:bold;
 	font-size: 16px;
+}
+.text{
+  position:absolute;
+  top: 50%;
+
 }
 .effect-menu{
 	right: 1%;
