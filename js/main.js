@@ -73,16 +73,16 @@ function init(){
   bufferLoader.load();
 
   //UserID
-  // userID = prompt("Please enter your userID.");
+  userID = prompt("Please enter your userID.");
 
-  //   if (userID === "") {
-  //       userID = prompt("Please enter your userID.");
-  //   }
+    if (userID === "") {
+        userID = prompt("Please enter your userID.");
+    }
 
   //Task to start on & How many tasks
   var tasks = prompt("Start task; nbr of tasks.");
-  taskS = parseInt(tasks.substring(0,1));
-  taskF = parseInt(tasks.substring(2,3));
+  taskS = parseInt(tasks.substring(0,2));
+  taskF = parseInt(tasks.substring(3,5));
 
   document.getElementById("taskNbr").innerHTML = "Task "+ taskS;
   console.log(taskS, taskF);
@@ -136,6 +136,26 @@ fabric.Object.prototype.toObject = (function (toObject){
         });
     };
 })(fabric.Object.prototype.toObject);
+
+function newUser(){
+    userID = prompt("Please enter your userID.");
+
+    if (userID === "") {
+        userID = prompt("Please enter your userID.");
+    }
+
+  //Task to start on & How many tasks
+  var tasks = prompt("Start task; nbr of tasks.");
+  taskS = parseInt(tasks.substring(0,2));
+  taskF = parseInt(tasks.substring(3,5));
+
+  document.getElementById("taskNbr").innerHTML = "Task "+ taskS;
+  console.log(taskS, taskF);
+  document.getElementById("taskStart").innerHTML = "Start";
+        $('#taskStart').attr('style', 'margin-left:15px;background-color: white');
+        $('#taskFinish').attr('style', 'margin-left:5px;background-color: white');
+        $('#taskStart').onclick = taskStart();
+}
 
 canvas.on('object:selected', function(e){
     var activeObject = e.target;
@@ -436,6 +456,8 @@ function stopSound(){
         //Reset the play/pause button to initial play from parse
         document.getElementById("playBtn").src="/png/playBtn.png";
         document.getElementById("playBtn").title = "Play";
+        $('#playBtn').attr('style', 'background-color: white');
+        done = true;
         ac = new AudioContext();
         tuna = new Tuna(ac); 
     } catch(err){

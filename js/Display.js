@@ -75,12 +75,12 @@ function taskFinish(){
             }); 
             var encodedUri = encodeURI(csvContent);
             var link = document.createElement("a");
-            var title = "user" + userID + "_data.csv"
+            var title = "user" + userID + "task"+taskS+"_data.csv";
             link.setAttribute("href", encodedUri);
             link.setAttribute("download", title);
 
             document.getElementById("taskNbr").innerHTML = "Done!";
-            setTimeout(function(){link.click();}, 60000);
+            setTimeout(function(){link.click();}, 5000);
             $('#taskFinish').attr('style', 'margin-left:5px;background-color: grey');
             $('#taskStart').attr('style', 'margin-left:15px; background-color: grey');
             $('#taskFinish').onclick = function(){
@@ -91,7 +91,19 @@ function taskFinish(){
             }
 
         } else {
-            taskS++;
+            data.forEach(function(infoArray, index){
+                dataString = infoArray.join(",");
+                csvContent += index < data.length ? dataString+ "\n" : dataString;
+
+            }); 
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            var title = "user" + userID + "task" + taskS+ "_data.csv"
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", title);
+
+            setTimeout(function(){link.click();}, 60000);
+             taskS++;
             document.getElementById("taskNbr").innerHTML = "Task "+ taskS;
             document.getElementById("taskStart").innerHTML = "Start";
             $('#taskFinish').attr('style', 'margin-left:5px; background-color: grey');
